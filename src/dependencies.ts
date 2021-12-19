@@ -1,6 +1,5 @@
 import { Module } from 'didi';
 import Stack from '@/domain/Stack';
-import type { Injector } from 'didi';
 
 const dependencies = new Module();
 
