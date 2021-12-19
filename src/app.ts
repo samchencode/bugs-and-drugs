@@ -1,4 +1,10 @@
-import Stack from '@/Stack';
+import { Injector } from 'didi';
+import type Stack from '@/domain/Stack';
+import dependencies from '@/dependencies';
 
-const stack = new Stack();
+const container = new Injector([dependencies]);
+const stack = container.get<Stack<any>>('stack');
+
 console.log(stack);
+
+container.get('test');

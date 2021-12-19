@@ -1210,6 +1210,11 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
+didi@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/didi/-/didi-6.1.0.tgz#0aff027f26586b097a3c568695a86d4881badb62"
+  integrity sha512-9895eB/9KKRZgjBq5ITjU3PdbboM5X+pZFNvmhRQmUZuFM3qhhZ21RjsptAmpvOk7YddEZt3IF8ZT8uHH182dw==
+
 diff-sequences@^27.4.0:
   version "27.4.0"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-27.4.0.tgz#d783920ad8d06ec718a060d00196dfef25b132a5"

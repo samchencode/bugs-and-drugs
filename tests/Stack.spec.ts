@@ -1,4 +1,4 @@
-import Stack from '@/Stack';
+import Stack from '@/domain/Stack';
 
 describe('Basic stack implementation', () => {
   let myStack: Stack<number>;
