@@ -1,4 +1,4 @@
-class Antibiotic {
+class Organism {
   id: number;
   name: string;
 
@@ -7,9 +7,9 @@ class Antibiotic {
     this.name = name;
   }
 
-  equals(abx: Antibiotic) {
-    return this.id === abx.id
+  equals(org: Organism) {
+    return this.id === org.id;
   }
 }
 
-export default Antibiotic;
+export default Organism;
