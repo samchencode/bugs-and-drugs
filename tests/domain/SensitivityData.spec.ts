@@ -1,5 +1,5 @@
 import SensitivityData from '@/domain/SensitivityData';
-import SensitivityValue from '@/domain/SensivityValue/SensitivityValue';
+import SensitivityValue from '@/domain/SensivityValue';
 import Antibiotic from '@/domain/Antibiotic';
 import Organism from '@/domain/Organism';
 

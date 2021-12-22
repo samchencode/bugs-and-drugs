@@ -2,7 +2,7 @@ import Antibiogram from '@/domain/Antibiogram';
 import SensitivityData from '@/domain/SensitivityData';
 import Organism from '@/domain/Organism';
 import Antibiotic from '@/domain/Antibiotic';
-import SensitivityValue from '@/domain/SensivityValue/SensitivityValue';
+import SensitivityValue from '@/domain/SensivityValue';
 
 describe('Antibiogram', () => {
   let data: SensitivityData[];
