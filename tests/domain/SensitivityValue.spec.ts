@@ -1,4 +1,4 @@
-import SensitivityValue from '@/domain/SensitivityValue';
+import SensitivityValue from '@/domain/SensivityValue/SensitivityValue';
 
 describe('Sensitivity Value', () => {
   it('should be instantiated with a value', () => {
@@ -13,4 +13,10 @@ describe('Sensitivity Value', () => {
     const value2 = new SensitivityValue('R');
     expect(value2.getValue()).toBe('R');
   });
+
+  it('should be resistant', () => {
+    const value = new SensitivityValue('R');
+    expect(value.isResistent()).toBe(true);
+    expect(value.getValue()).toBe('R');
+  })
 })
