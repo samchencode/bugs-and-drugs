@@ -1,13 +1,15 @@
+import Entity from '@/domain/Entity';
 import type SensitivityData from '@/domain/SensitivityData';
 import type Antibiotic from '@/domain/Antibiotic';
 import type Organism from '@/domain/Organism';
 
-class Antibiogram {
+class Antibiogram extends Entity {
   organisms: Organism[] = [];
   antibiotics: Antibiotic[] = [];
   sensitivities: SensitivityData[];
 
   constructor(data: SensitivityData[]) {
+    super();
     const hasIdentical = (arr: any[], value: any) =>
       arr.find((x) => x.equals(value));
 

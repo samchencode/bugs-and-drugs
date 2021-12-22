@@ -1,14 +1,13 @@
-class Organism {
+import Entity from '@/domain/Entity';
+
+class Organism extends Entity {
   id: number;
   name: string;
 
   constructor(id: number, name: string) {
+    super();
     this.id = id;
     this.name = name;
-  }
-
-  equals(org: Organism) {
-    return this.id === org.id;
   }
 }
 
