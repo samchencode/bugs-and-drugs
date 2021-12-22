@@ -10,10 +10,10 @@ class Antibiogram extends Entity {
 
   constructor(data: SensitivityData[]) {
     super();
-    const hasIdentical = (arr: any[], value: any) =>
+    const hasIdentical = (arr: Entity[], value: Entity) =>
       arr.find((x) => x.equals(value));
 
-    const addIfUnique = (arr: unknown[], value: any) =>
+    const addIfUnique = (arr: Entity[], value: Entity) =>
       hasIdentical(arr, value) || arr.push(value);
 
     this.sensitivities = data;
