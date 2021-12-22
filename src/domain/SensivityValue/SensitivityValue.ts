@@ -34,4 +34,3 @@ class SensitivityValue {
 }
 
 export default SensitivityValue;
-export type { SensitivityValueBehavior };
