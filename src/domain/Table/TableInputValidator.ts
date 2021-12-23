@@ -1,4 +1,5 @@
 import { Cell } from "./Cell";
+import { LabelParams } from "./Table";
 
 class TableInputValidator {
   rules: Rule[];
@@ -7,15 +8,15 @@ class TableInputValidator {
     this.rules = rules;
   }
 
-  validate(input: Cell<unknown>[][]) {
+  validate() {
     for (const rule of this.rules) {
-      rule.check(input);
+      rule.check();
     }
   }
 }
 
 interface Rule {
-  check(input: Cell<unknown>[][]): void;
+  check(): void;
 }
 
 export default TableInputValidator;

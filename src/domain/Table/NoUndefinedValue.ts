@@ -2,7 +2,15 @@ import { Cell } from './Cell';
 import type { Rule } from './TableInputValidator';
 
 class NoUndefinedValues implements Rule {
-  check(input: Cell<unknown>[][]): void {
+
+  input: Cell<unknown>[][];
+
+  constructor(input: Cell<unknown>[][]) {
+    this.input = input;
+  }
+
+  check(): void {
+    const { input } = this;
     input.forEach((r, i) => {
       if (this.#isUndefined(r)) throw new UndefinedValueError(i);
 

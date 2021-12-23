@@ -13,7 +13,7 @@ describe('Table', () => {
   let data: D[][];
   let labels = {
     columns: ['c1', 'c2', 'c3'],
-    rows: ['r1', 'r2', 'r3'],
+    rows: ['r1', 'r2', 'r3', 'r4'],
   };
 
   beforeEach(() => {
@@ -63,8 +63,17 @@ describe('Table', () => {
 
     it('should throw error with undefiend columns', () => {
       let badData = [undefined, [new D(1)]];
-      let boom = () => Table.makeTable(badData as any);
+      const boom = () => Table.makeTable(badData as any);
       expect(boom).toThrowError('Undefined value');
+    });
+
+    it('should throw an error if the number of rows in the data is not equal to the number of row labels', () => {
+      let badLabels = {
+        columns: ['c1', 'c2', 'c3'],
+        rows: ['r1', 'r2', 'r3'],
+      };
+      const boom = () => Table.makeTable(data,badLabels);
+      expect(boom).toThrowError('Row labels do not match number of rows in data');
     });
   });
 
@@ -72,7 +81,7 @@ describe('Table', () => {
     let table: Table<number>;
 
     beforeEach(() => {
-      table = Table.makeTable(data);
+      table = Table.makeTable(data, labels);
     });
 
     it('should get all values', () => {
@@ -95,6 +104,11 @@ describe('Table', () => {
       const expectedRows = 4;
       const expectedColumns = 3;
       expect(table.getShape()).toEqual([expectedRows, expectedColumns]);
+    });
+
+    it('should get row and column names', () => {
+      expect(table.getRowLabels()).toBe(labels.rows);
+      expect(table.getColumnLabels()).toBe(labels.columns);
     });
   });
 });

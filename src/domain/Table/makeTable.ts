@@ -1,18 +1,20 @@
 import type { Cell } from './Cell';
 import NoInconsistentRowColumnNumber from './NoInconsistentRowColumnNumber';
+import NoInconsistentRowColumnLabelNumber from './NoInconsistentRowColumnLabelNumber';
 import NoUndefinedValue from './NoUndefinedValue';
 import TableInputValidator from './TableInputValidator';
-import Table from './Table';
+import Table, { LabelParams } from './Table';
 
-function makeTable<T>(data: Cell<T>[][]) {
+function makeTable<T>(data: Cell<T>[][], labels?: LabelParams) {
   const validator = new TableInputValidator([
-    new NoUndefinedValue(),
-    new NoInconsistentRowColumnNumber(),
+    new NoUndefinedValue(data),
+    new NoInconsistentRowColumnNumber(data),
+    new NoInconsistentRowColumnLabelNumber(data, labels),
   ]);
 
-  validator.validate(data);
+  validator.validate();
 
-  return new Table(data);
+  return new Table(data, labels);
 }
 
 export default makeTable;

@@ -1,11 +1,21 @@
 import makeTable from './makeTable';
 import { Cell } from './Cell';
 
+interface LabelParams {
+  rows: string[];
+  columns: string[];
+}
+
 class Table<T> {
   data: Cell<T>[][];
+  labels?: {
+    rows: string[];
+    columns: string[];
+  }
 
-  constructor(data: Cell<T>[][]) {
+  constructor(data: Cell<T>[][], labels?: LabelParams) {
     this.data = data;
+    this.labels = labels;
   }
 
   getData() {
@@ -33,7 +43,16 @@ class Table<T> {
     return { values: this.data };
   }
 
+  getRowLabels(){
+    return this.labels?.rows;
+  }
+
+  getColumnLabels(){
+    return this.labels?.columns;
+  }
+
   static makeTable = makeTable;
 }
 
 export default Table;
+export type { LabelParams };
