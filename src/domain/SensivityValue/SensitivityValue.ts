@@ -3,28 +3,28 @@ import ResistantValue from './ResistantValue';
 import NumericValue from './NumericValue';
 
 class SensitivityValue {
-  value: SensitivityValueBehavior;
+  #value: SensitivityValueBehavior;
 
   constructor(value: string) {
     this.validateInput(value);
-    if (value === 'R') this.value = new ResistantValue();
-    else this.value = new NumericValue(+value);
+    if (value === 'R') this.#value = new ResistantValue();
+    else this.#value = new NumericValue(+value);
   }
 
   isResistent() {
-    return this.value.isResistant();
+    return this.#value.isResistant();
   }
 
   getValue() {
-    return this.value.getValue();
+    return this.#value.getValue();
   }
 
   toString() {
-    return this.value.toString();
+    return this.#value.toString();
   }
 
   valueOf() {
-    return this.value.valueOf();
+    return this.#value.valueOf();
   }
 
   private validateInput(value: string) {
