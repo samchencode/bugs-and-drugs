@@ -1,10 +1,11 @@
-import type { Cell } from './Cell';
 import Validator, {
   NoUndefinedValue,
   NoInconsistentRowColumnLabelNumber,
   NoInconsistentRowColumnNumber,
 } from './Validator';
-import Table, { LabelParams } from './Table';
+import Table from './Table';
+import type { Cell } from './Cell';
+import type { LabelParams } from './Table';
 
 function makeTable<T>(data: Cell<T>[][], labels?: LabelParams) {
   const validator = new Validator([
