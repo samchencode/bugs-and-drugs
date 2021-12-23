@@ -4,15 +4,15 @@ import type Antibiotic from '@/domain/Antibiotic';
 import type Organism from '@/domain/Organism';
 
 class Antibiogram extends Entity {
-  organisms: Organism[] = [];
-  antibiotics: Antibiotic[] = [];
+  organisms: Organism[];
+  antibiotics: Antibiotic[];
   sensitivities: SensitivityData[];
 
   constructor(data: SensitivityData[]) {
     super();
     this.sensitivities = data;
-    this.antibiotics = data.map((d) => d.antibiotic).filter(uniqueEntity());
-    this.organisms = data.map((d) => d.organism).filter(uniqueEntity());
+    this.antibiotics = filterUniqueEntity(data.map((d) => d.antibiotic));
+    this.organisms = filterUniqueEntity(data.map((d) => d.organism));
   }
 
   isEmpty() {
@@ -20,9 +20,10 @@ class Antibiogram extends Entity {
   }
 }
 
-function uniqueEntity() {
+function filterUniqueEntity<T extends Entity>(arr: T[]) {
   const memo = new Set();
-  return (e: Entity) => (memo.has(e.id) ? false : memo.add(e.id));
+  const isUnique = (e: Entity) => (memo.has(e.id) ? false : memo.add(e.id));
+  return arr.filter(isUnique);
 }
 
 export default Antibiogram;
