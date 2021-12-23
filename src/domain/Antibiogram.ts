@@ -18,6 +18,14 @@ class Antibiogram extends Entity {
   isEmpty() {
     return this.sensitivities.length === 0;
   }
+
+  getData() {
+    return this.sensitivities;
+  }
+
+  getValues() {
+    return this.sensitivities.map(s => s.value);
+  }
 }
 
 function filterUniqueEntity<T extends Entity>(arr: T[]) {

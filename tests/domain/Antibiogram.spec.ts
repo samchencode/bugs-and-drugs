@@ -58,5 +58,17 @@ describe('Antibiogram', () => {
         expect.objectContaining({ id: 1 }),
       ]);
     });
+
+    it('should get list of all data', () => {
+      expect(antibiogram.getData()).toEqual(data);
+    });
+
+    it('should get list of all values', () => {
+      expect(antibiogram.getValues()).toEqual([
+        expect.any(SensitivityValue),
+        expect.any(SensitivityValue),
+        expect.any(SensitivityValue),
+      ]);
+    });
   });
 });
