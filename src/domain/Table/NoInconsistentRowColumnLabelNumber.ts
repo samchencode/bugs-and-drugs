@@ -1,9 +1,8 @@
-import { Cell } from "./Cell";
+import { Cell } from './Cell';
 import type { Rule } from './TableInputValidator';
 import type { LabelParams } from './Table';
 
 class NoInconsistentRowColumnLabelNumber implements Rule {
-
   input: Cell<unknown>[][];
   labels?: LabelParams;
 
@@ -13,17 +12,16 @@ class NoInconsistentRowColumnLabelNumber implements Rule {
   }
 
   check(): void {
-    if(typeof this.labels === 'undefined') return;
+    if (typeof this.labels === 'undefined') return;
 
     const numRows = this.input.length;
-    const numColumns = this.input[0]?.length
+    const numColumns = this.input[0]?.length;
     const unequalRows = numRows !== this.labels.rows.length;
     const unequalColumns = numColumns !== this.labels.columns.length;
 
-    if(unequalRows) throw new InconsistentRowLabelsError();
-    if(unequalColumns) throw new InconsistentColumnLabelsError()
+    if (unequalRows) throw new InconsistentRowLabelsError();
+    if (unequalColumns) throw new InconsistentColumnLabelsError();
   }
-
 }
 
 class InconsistentRowLabelsError extends Error {
@@ -40,4 +38,4 @@ class InconsistentColumnLabelsError extends Error {
   }
 }
 
-export default NoInconsistentRowColumnLabelNumber
+export default NoInconsistentRowColumnLabelNumber;
