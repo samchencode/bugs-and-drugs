@@ -27,22 +27,36 @@ describe('Antibiogram', () => {
     ];
   });
 
-  it('should create empty antibiogram without data', () => {
-    const antibiogram = new Antibiogram([]);
-    expect(antibiogram.isEmpty()).toBe(true);
+  describe('instantiation', () => {
+    it('should create empty antibiogram without data', () => {
+      const antibiogram = new Antibiogram([]);
+      expect(antibiogram.isEmpty()).toBe(true);
+    });
+
+    it('should create antibiogram with sensitivity data', () => {
+      const antibiogram = new Antibiogram(data);
+      expect(antibiogram.isEmpty()).toBe(false);
+      expect(antibiogram.organisms).toBeInstanceOf(Array);
+      expect(antibiogram.antibiotics).toBeInstanceOf(Array);
+    });
   });
 
-  it('should create antibiogram with sensitivity data', () => {
-    const antibiogram = new Antibiogram(data);
-    expect(antibiogram.isEmpty()).toBe(false);
-    expect(antibiogram.organisms).toBeInstanceOf(Array);
-    expect(antibiogram.antibiotics).toBeInstanceOf(Array);
-    
-    const orgIds = antibiogram.organisms.map(x => x.id)
-    expect(orgIds).toEqual([1,2,3]);
-    
-    const abxIds = antibiogram.antibiotics.map(x => x.id)
-    expect(abxIds).toEqual([1]);
-  });
+  describe('behavior', () => {
+    let antibiogram: Antibiogram;
 
+    beforeEach(() => {
+      antibiogram = new Antibiogram(data);
+    });
+
+    it('should retrieve list of all unique organisms and antibiotics', () => {
+      expect(antibiogram.organisms).toEqual([
+        expect.objectContaining({ id: 1 }),
+        expect.objectContaining({ id: 2 }),
+        expect.objectContaining({ id: 3 }),
+      ]);
+      expect(antibiogram.antibiotics).toEqual([
+        expect.objectContaining({ id: 1 }),
+      ]);
+    });
+  });
 });
