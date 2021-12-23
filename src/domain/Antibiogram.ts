@@ -10,23 +10,19 @@ class Antibiogram extends Entity {
 
   constructor(data: SensitivityData[]) {
     super();
-    const hasIdentical = (arr: Entity[], value: Entity) =>
-      arr.find((x) => x.equals(value));
-
-    const addIfUnique = (arr: Entity[], value: Entity) =>
-      hasIdentical(arr, value) || arr.push(value);
-
     this.sensitivities = data;
-
-    for (let d of data) {
-      addIfUnique(this.antibiotics, d.antibiotic);
-      addIfUnique(this.organisms, d.organism);
-    }
+    this.antibiotics = data.map((d) => d.antibiotic).filter(uniqueEntity());
+    this.organisms = data.map((d) => d.organism).filter(uniqueEntity());
   }
 
   isEmpty() {
     return this.sensitivities.length === 0;
   }
+}
+
+function uniqueEntity() {
+  const memo = new Set();
+  return (e: Entity) => (memo.has(e.id) ? false : memo.add(e.id));
 }
 
 export default Antibiogram;
