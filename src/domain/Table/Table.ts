@@ -1,5 +1,5 @@
 import makeTable from './makeTable';
-import { Cell } from './Cell';
+import type { Cell } from './Cell';
 
 interface LabelParams {
   rows: string[];
