@@ -11,8 +11,8 @@ class Antibiogram extends Entity {
   constructor(data: SensitivityData[]) {
     super();
     this.sensitivities = data;
-    this.antibiotics = filterUniqueEntity(data.map((d) => d.antibiotic));
-    this.organisms = filterUniqueEntity(data.map((d) => d.organism));
+    this.antibiotics = Entity.filterUniqueEntity(data.map((d) => d.antibiotic));
+    this.organisms = Entity.filterUniqueEntity(data.map((d) => d.organism));
   }
 
   isEmpty() {
@@ -26,12 +26,6 @@ class Antibiogram extends Entity {
   getValues() {
     return this.sensitivities.map(s => s.value);
   }
-}
-
-function filterUniqueEntity<T extends Entity>(arr: T[]) {
-  const memo = new Set();
-  const isUnique = (e: Entity) => (memo.has(e.id) ? false : memo.add(e.id));
-  return arr.filter(isUnique);
 }
 
 export default Antibiogram;
