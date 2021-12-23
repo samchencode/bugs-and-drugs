@@ -1,5 +1,5 @@
-import { Cell } from './Cell';
-import type { Rule } from './TableInputValidator';
+import { Cell } from '../Cell';
+import type { Rule } from "./Rule";
 
 class NoInconsistentRowColumnNumber implements Rule {
   input: Cell<unknown>[][];

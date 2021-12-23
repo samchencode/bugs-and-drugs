@@ -1,3 +1,5 @@
+import type { Rule } from './Rule';
+
 class TableInputValidator {
   rules: Rule[];
 
@@ -12,9 +14,4 @@ class TableInputValidator {
   }
 }
 
-interface Rule {
-  check(): void;
-}
-
 export default TableInputValidator;
-export type { Rule };
