@@ -1,6 +1,3 @@
-import { Cell } from "./Cell";
-import { LabelParams } from "./Table";
-
 class TableInputValidator {
   rules: Rule[];
 
