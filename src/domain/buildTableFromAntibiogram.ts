@@ -3,22 +3,20 @@ import type { Cell } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/SensitivityData';
 
-interface AntibiogramTableCell extends Cell<string> {
-  value: string;
-}
+interface AntibiogramTableCell extends Cell<string> {}
 
 class EmptyAntibiogramTableCell implements AntibiogramTableCell {
+  value: string;
   constructor() {
     this.value = 'NA';
   }
-  value: string;
 }
 
 class FilledAntibiogramTableCell implements AntibiogramTableCell {
+  value: string;
   constructor(data: SensitivityData) {
     this.value = data.value.toString();
   }
-  value: string;
 }
 
 function buildTableFromAntibiogram(antibiogram: Antibiogram) {
