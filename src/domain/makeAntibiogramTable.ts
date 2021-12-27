@@ -4,6 +4,7 @@ import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/SensitivityData';
 
 interface AntibiogramTableCell extends Cell<string> {}
+interface AntibiogramTable extends Table<string> {}
 
 class EmptyAntibiogramTableCell implements AntibiogramTableCell {
   value: string;
@@ -19,7 +20,7 @@ class FilledAntibiogramTableCell implements AntibiogramTableCell {
   }
 }
 
-function buildTableFromAntibiogram(antibiogram: Antibiogram) {
+function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
   if (antibiogram.isEmpty())
     return Table.makeTable([] as AntibiogramTableCell[][]);
   const { antibiotics, organisms } = antibiogram;
@@ -53,4 +54,5 @@ function makeEmptyMatrix(
     );
 }
 
-export default buildTableFromAntibiogram;
+export default makeAntibiogramTable;
+export type { AntibiogramTable, AntibiogramTableCell };

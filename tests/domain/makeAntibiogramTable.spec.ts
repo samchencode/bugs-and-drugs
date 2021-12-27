@@ -1,4 +1,4 @@
-import buildTableFromAntibiogram from '@/domain/buildTableFromAntibiogram';
+import makeAntibiogramTable from '@/domain/makeAntibiogramTable';
 import Antibiogram from '@/domain/Antibiogram';
 import SensitivityData from '@/domain/SensitivityData';
 import Table from '@/domain/Table';
@@ -9,7 +9,7 @@ import SensitivityValue from '@/domain/SensivityValue/SensitivityValue';
 describe('make table using antibiogram', () => {
   it('creates table using empty antibiogram', () => {
     let abg = new Antibiogram([]);
-    const table = buildTableFromAntibiogram(abg);
+    const table = makeAntibiogramTable(abg);
     expect(table).toBeInstanceOf(Table);
     expect(table.getData()).toEqual([]);
   });
@@ -39,7 +39,7 @@ describe('make table using antibiogram', () => {
     });
 
     it('creates table using antibiogram', () => {
-      const table = buildTableFromAntibiogram(abg);
+      const table = makeAntibiogramTable(abg);
       expect(table.getRowLabels()).toEqual(
         expect.arrayContaining(['Klebsiella', 'Pseudomonas', 'Staph aureus'])
       );
