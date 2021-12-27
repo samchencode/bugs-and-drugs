@@ -1,7 +1,7 @@
-import Antibiogram from '@/domain/Antibiogram';
-import type { Cell } from './Table/Cell';
 import makeTable from './Table/makeTable';
-import SensitivityData from './SensitivityData';
+import type Antibiogram from '@/domain/Antibiogram';
+import type { Cell } from './Table/Cell';
+import type SensitivityData from './SensitivityData';
 
 interface AntibiogramTableCell extends Cell<string> {
   value: string;
