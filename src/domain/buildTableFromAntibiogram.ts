@@ -20,7 +20,8 @@ class FilledAntibiogramTableCell implements AntibiogramTableCell {
 }
 
 function buildTableFromAntibiogram(antibiogram: Antibiogram) {
-  if(antibiogram.isEmpty()) return Table.makeTable([]);
+  if (antibiogram.isEmpty())
+    return Table.makeTable([] as AntibiogramTableCell[][]);
   const { antibiotics, organisms } = antibiogram;
   const labels = {
     rows: organisms.map((o) => o.name),
@@ -28,7 +29,7 @@ function buildTableFromAntibiogram(antibiogram: Antibiogram) {
   };
   const nRows = labels.rows.length;
   const nColumns = labels.columns.length;
-  let cells: AntibiogramTableCell[][] = makeEmptyMatrix(nRows, nColumns);
+  const cells: AntibiogramTableCell[][] = makeEmptyMatrix(nRows, nColumns);
 
   for (const d of antibiogram.getData()) {
     const row = labels.rows.indexOf(d.organism.name);
