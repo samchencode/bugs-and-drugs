@@ -1,6 +1,6 @@
-import Organism from '@/domain/Organism';
-import Antibiotic from '@/domain/Antibiotic';
-import SensitivityValue from '@/domain/SensivityValue';
+import type Organism from '@/domain/Organism';
+import type Antibiotic from '@/domain/Antibiotic';
+import type SensitivityValue from '@/domain/SensivityValue';
 
 interface SensitivityDataParams {
   organism: Organism;

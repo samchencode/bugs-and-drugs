@@ -1,5 +1,5 @@
 import Table from '@/domain/Table/Table';
-import { Cell } from '@/domain/Table/Cell';
+import type { Cell } from '@/domain/Table/Cell';
 
 describe('Table', () => {
   class D implements Cell<number> {

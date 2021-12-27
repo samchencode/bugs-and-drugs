@@ -1,4 +1,4 @@
-import { SensitivityValueBehavior } from "./SensitivityValueBehavior";
+import type { SensitivityValueBehavior } from "./SensitivityValueBehavior";
 
 class ResistantValue implements SensitivityValueBehavior {
   getValue(): 'R' {
