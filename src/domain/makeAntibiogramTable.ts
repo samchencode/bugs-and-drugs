@@ -21,8 +21,7 @@ class FilledAntibiogramTableCell implements AntibiogramTableCell {
 }
 
 function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
-  if (antibiogram.isEmpty())
-    return Table.makeTable([] as AntibiogramTableCell[][]);
+  if (antibiogram.isEmpty()) return Table.makeTable([]);
   const { antibiotics, organisms } = antibiogram;
   const labels = {
     rows: organisms.map((o) => o.name),
