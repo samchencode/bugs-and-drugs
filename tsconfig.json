@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2016",
-    "lib": ["es2021"],
-    "module": "commonjs",
+    "lib": ["es2021", "dom"],
     "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"]
@@ -17,7 +16,10 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitThis": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "importsNotUsedAsValues": "error",
+    "preserveValueImports": true,
+    "isolatedModules": true
   },
-  "include": ["src/**/*", "tests/**/*", "index.ts"]
+  "include": ["src/**/*", "tests/**/*", "*.d.ts"]
 }

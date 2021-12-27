@@ -15,7 +15,7 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   globals: {
     'ts-jest': {
-      isolatedModules: true,
+      tsconfig: './tsconfig.jest.json',
     },
   },
 };
