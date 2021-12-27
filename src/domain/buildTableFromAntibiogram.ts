@@ -1,7 +1,7 @@
-import makeTable from './Table/makeTable';
+import Table from '@/domain/Table';
+import type { Cell } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
-import type { Cell } from './Table/Cell';
-import type SensitivityData from './SensitivityData';
+import type SensitivityData from '@/domain/SensitivityData';
 
 interface AntibiogramTableCell extends Cell<string> {
   value: string;
@@ -22,7 +22,7 @@ class FilledAntibiogramTableCell implements AntibiogramTableCell {
 }
 
 function buildTableFromAntibiogram(antibiogram: Antibiogram) {
-  if(antibiogram.isEmpty()) return makeTable([]);
+  if(antibiogram.isEmpty()) return Table.makeTable([]);
   const { antibiotics, organisms } = antibiogram;
   const labels = {
     rows: organisms.map((o) => o.name),
@@ -38,7 +38,7 @@ function buildTableFromAntibiogram(antibiogram: Antibiogram) {
     cells[row][column] = new FilledAntibiogramTableCell(d);
   }
 
-  return makeTable(cells, labels);
+  return Table.makeTable(cells, labels);
 }
 
 function makeEmptyMatrix(
