@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 
-	const inj = getContext('inj');
+	const tableController: any = getContext('tableController');
+	tableController.showTable((table: any) => {
+		console.log(table);
+	});
 
 	export let name: string;
 </script>
 
 <main>
-	<h1>Hello {name}! {inj}</h1>
+	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 </main>
 

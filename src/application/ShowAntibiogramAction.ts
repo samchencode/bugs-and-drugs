@@ -6,6 +6,8 @@ interface ShowAntibiogramActionParams {
   id: number;
 }
 
+type Table = ReturnType<typeof makeAntibiogramTable>;
+
 class ShowAntibiogramAction {
   antibiogramRepository: AntibiogramRepository;
 
@@ -13,10 +15,10 @@ class ShowAntibiogramAction {
     this.antibiogramRepository = antibiogramRepository;
   }
 
-  execute(params: ShowAntibiogramActionParams, presenter: Presenter) {
+  execute(params: ShowAntibiogramActionParams, callback: (t: Table) => void) {
     const abg = this.antibiogramRepository.getAll()[0];
     const table = makeAntibiogramTable(abg);
-    presenter.showTable(table);
+    callback(table);
   }
 }
 

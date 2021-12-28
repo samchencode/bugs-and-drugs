@@ -1,22 +1,23 @@
 import { Module } from 'didi';
 import App from '@/view/App.svelte';
+import TableController from '@/infrastructure/view/controllers/TableController';
+import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
+import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 
 const dependencies = new Module();
 
-dependencies.factory('test', function (key: string) {
-  return 'testvalue';
-});
+dependencies.type('antibiogramRepository', FakeAntibiogramRepository);
+dependencies.type('showAntibiogramAction', ShowAntibiogramAction);
+dependencies.type('tableController', TableController);
 
-dependencies.factory('svelte', (test) => {
+dependencies.factory('svelte', (tableController) => {
   return new App({
     target: document.body,
     props: {
       name: 'bugs and drugs',
     },
-    context: new Map([['inj', test]]),
+    context: new Map([['tableController', tableController]]),
   });
 });
-
-dependencies.value('key', 'Foo Bar Baz!');
 
 export default dependencies;
