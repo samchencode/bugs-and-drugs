@@ -4,7 +4,6 @@ import App from '@/view/App.svelte';
 const dependencies = new Module();
 
 dependencies.factory('test', function (key: string) {
-  console.log(key);
   return 'testvalue';
 });
 
