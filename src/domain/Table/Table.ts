@@ -1,4 +1,5 @@
-import makeTable from './makeTable';
+import validate from './Validator';
+import rules from './rules';
 import type { Cell } from './Cell';
 
 interface LabelParams {
@@ -11,7 +12,7 @@ class Table<T> {
   labels?: {
     rows: string[];
     columns: string[];
-  }
+  };
 
   constructor(data: Cell<T>[][], labels?: LabelParams) {
     this.data = data;
@@ -43,15 +44,18 @@ class Table<T> {
     return { values: this.data };
   }
 
-  getRowLabels(){
+  getRowLabels() {
     return this.labels?.rows;
   }
 
-  getColumnLabels(){
+  getColumnLabels() {
     return this.labels?.columns;
   }
 
-  static makeTable = makeTable;
+  static makeTable<T>(data: Cell<T>[][], labels?: LabelParams) {
+    validate(rules(data, labels));
+    return new this(data, labels);
+  }
 }
 
 export default Table;
