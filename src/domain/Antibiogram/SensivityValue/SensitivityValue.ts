@@ -1,11 +1,13 @@
+import ValueObject from '@/domain/ValueObject';
 import type { SensitivityValueBehavior } from './SensitivityValueBehavior';
 import ResistantValue from './ResistantValue';
 import PercentValue from './PercentValue';
 
-class SensitivityValue {
+class SensitivityValue extends ValueObject {
   #value: SensitivityValueBehavior;
 
   constructor(value: string) {
+    super();
     this.#validateInput(value);
     if (value === 'R') this.#value = new ResistantValue();
     else this.#value = new PercentValue(+value);
@@ -31,6 +33,10 @@ class SensitivityValue {
     if (value === 'R') return;
     if (!stringContainsNumber(value))
       throw new SensitivityValueValidationError(value);
+  }
+
+  protected isIdentical(v: SensitivityValue): boolean {
+    return this.#value.getValue() === v.getValue();
   }
 }
 

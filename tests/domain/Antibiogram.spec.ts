@@ -1,31 +1,13 @@
-import Antibiogram from '@/domain/Antibiogram';
-import SensitivityData from '@/domain/SensitivityData';
-import Organism from '@/domain/Organism';
-import Antibiotic from '@/domain/Antibiotic';
-import SensitivityValue from '@/domain/SensivityValue';
+import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
+import Antibiogram, {
+  SensitivityValue,
+  OrganismValue,
+  AntibioticValue,
+} from '@/domain/Antibiogram';
+import type { SensitivityData } from '@/domain/Antibiogram';
 
 describe('Antibiogram', () => {
-  let data: SensitivityData[];
-
-  beforeEach(() => {
-    data = [
-      new SensitivityData({
-        organism: new Organism(1, 'Klebsiella'),
-        antibiotic: new Antibiotic(1, 'Azithromycin'),
-        value: new SensitivityValue('100'),
-      }),
-      new SensitivityData({
-        organism: new Organism(2, 'Pseudomonas'),
-        antibiotic: new Antibiotic(1, 'Azithromycin'),
-        value: new SensitivityValue('R'),
-      }),
-      new SensitivityData({
-        organism: new Organism(3, 'Staph aureus'),
-        antibiotic: new Antibiotic(1, 'Azithromycin'),
-        value: new SensitivityValue('90'),
-      }),
-    ];
-  });
+  let data: SensitivityData[] = FakeAntibiogramRepository.data;
 
   describe('instantiation', () => {
     it('should create empty antibiogram without data', () => {
@@ -50,13 +32,16 @@ describe('Antibiogram', () => {
 
     it('should retrieve list of all unique organisms and antibiotics', () => {
       expect(antibiogram.organisms).toEqual([
-        expect.objectContaining({ id: 1 }),
-        expect.objectContaining({ id: 2 }),
-        expect.objectContaining({ id: 3 }),
+        expect.any(OrganismValue),
+        expect.any(OrganismValue),
+        expect.any(OrganismValue),
       ]);
-      expect(antibiogram.antibiotics).toEqual([
-        expect.objectContaining({ id: 1 }),
-      ]);
+      expect(antibiogram.antibiotics).toEqual([expect.any(AntibioticValue)]);
+
+      const oNames = antibiogram.organisms.map((o) => o.getName());
+      expect(oNames).toEqual(['Klebsiella', 'Pseudomonas', 'Staph aureus']);
+      const aNames = antibiogram.antibiotics.map((a) => a.getName());
+      expect(aNames).toEqual(['Azithromycin']);
     });
 
     it('should get list of all data', () => {

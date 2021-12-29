@@ -1,7 +1,7 @@
 import Table from '@/domain/Table';
 import type { Cell } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
-import type SensitivityData from '@/domain/SensitivityData';
+import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 
 interface AntibiogramTableCell extends Cell<string> {}
 interface AntibiogramTable extends Table<string> {}
@@ -22,7 +22,7 @@ class FilledAntibiogramTableCell implements AntibiogramTableCell {
   #value: string;
 
   constructor(data: SensitivityData) {
-    this.#value = data.value.toString();
+    this.#value = data.getValue().toString();
   }
 
   getValue(): string {
@@ -47,16 +47,16 @@ function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
   if (antibiogram.isEmpty()) return Table.makeTable([]);
   const { antibiotics, organisms } = antibiogram;
   const labels = {
-    rows: organisms.map((o) => o.name),
-    columns: antibiotics.map((a) => a.name),
+    rows: organisms.map((o) => o.getName()),
+    columns: antibiotics.map((a) => a.getName()),
   };
   const nRows = labels.rows.length;
   const nColumns = labels.columns.length;
   const cells: AntibiogramTableCell[][] = makeEmptyMatrix(nRows, nColumns);
 
   for (const d of antibiogram.getSensitivities()) {
-    const row = labels.rows.indexOf(d.organism.name);
-    const column = labels.columns.indexOf(d.antibiotic.name);
+    const row = labels.rows.indexOf(d.getOrganism().getName());
+    const column = labels.columns.indexOf(d.getAntibiotic().getName());
     cells[row][column] = new FilledAntibiogramTableCell(d);
   }
 

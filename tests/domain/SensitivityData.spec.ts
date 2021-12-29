@@ -1,19 +1,28 @@
-import SensitivityData from '@/domain/SensitivityData';
-import SensitivityValue from '@/domain/SensivityValue';
-import Antibiotic from '@/domain/Antibiotic';
-import Organism from '@/domain/Organism';
+import {
+  AntibioticValue,
+  OrganismValue,
+  SensitivityData,
+  SensitivityValue,
+} from '@/domain/Antibiogram';
 
 describe('Sensitivty Data', () => {
   it('should create new sensitivity data', () => {
     const data = new SensitivityData({
       value: new SensitivityValue('90'),
-      antibiotic: new Antibiotic(1, 'Azithromycin'),
-      organism: new Organism(1, 'Klebsiella'),
+      antibiotic: new AntibioticValue('Azithromycin'),
+      organism: new OrganismValue('Klebsiella'),
     });
 
     expect(data).toBeDefined();
-    expect(data.value).toBeInstanceOf(SensitivityValue);
-    expect(data.antibiotic).toBeInstanceOf(Antibiotic);
-    expect(data.organism).toBeInstanceOf(Organism);
+    const value = data.getValue();
+    expect(value).toBeInstanceOf(SensitivityValue);
+    const abx = data.getAntibiotic();
+    expect(abx).toBeInstanceOf(AntibioticValue);
+    const org = data.getOrganism();
+    expect(org).toBeInstanceOf(OrganismValue);
+
+    expect(value.getValue()).toBe(90);
+    expect(abx.getName()).toBe('Azithromycin');
+    expect(org.getName()).toBe('Klebsiella');
   });
 });

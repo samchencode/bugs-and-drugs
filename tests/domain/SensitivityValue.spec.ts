@@ -1,4 +1,4 @@
-import SensitivityValue from '@/domain/SensivityValue';
+import SensitivityValue from '@/domain/Antibiogram/SensivityValue';
 
 describe('Sensitivity Value', () => {
   it('should be instantiated with a value', () => {
