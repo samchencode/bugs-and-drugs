@@ -25,7 +25,7 @@
           <th scope="row">{table?.getRowLabels()?.[i] ?? ''}</th>
           {#each row ?? [] as cell}
             <td>
-              {cell.value}
+              {cell.getValue()}
             </td>
           {/each}
         </tr>

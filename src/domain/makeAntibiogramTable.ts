@@ -7,17 +7,40 @@ interface AntibiogramTableCell extends Cell<string> {}
 interface AntibiogramTable extends Table<string> {}
 
 class EmptyAntibiogramTableCell implements AntibiogramTableCell {
-  value: string;
+  #value: string;
+
   constructor() {
-    this.value = 'NA';
+    this.#value = 'NA';
+  }
+
+  getValue(): string {
+    return this.#value;
   }
 }
 
 class FilledAntibiogramTableCell implements AntibiogramTableCell {
-  value: string;
+  #value: string;
+
   constructor(data: SensitivityData) {
-    this.value = data.value.toString();
+    this.#value = data.value.toString();
   }
+
+  getValue(): string {
+    return this.#value;
+  }
+}
+
+function makeEmptyMatrix(
+  nRows: number,
+  nColumns: number
+): EmptyAntibiogramTableCell[][] {
+  return new Array(nRows)
+    .fill(undefined)
+    .map(() =>
+      new Array(nColumns)
+        .fill(undefined)
+        .map(() => new EmptyAntibiogramTableCell())
+    );
 }
 
 function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
@@ -38,19 +61,6 @@ function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
   }
 
   return Table.makeTable(cells, labels);
-}
-
-function makeEmptyMatrix(
-  nRows: number,
-  nColumns: number
-): EmptyAntibiogramTableCell[][] {
-  return new Array(nRows)
-    .fill(undefined)
-    .map(() =>
-      new Array(nColumns)
-        .fill(undefined)
-        .map(() => new EmptyAntibiogramTableCell())
-    );
 }
 
 export default makeAntibiogramTable;

@@ -1,5 +1,5 @@
 interface Cell<T> {
-  value: T;
+  getValue(): T;
 }
 
 export type { Cell };

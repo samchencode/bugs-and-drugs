@@ -12,6 +12,7 @@ td,
 tr,
 th,
 thead,
-tbody {
+tbody,
+tfoot {
   font-weight: normal;
 }

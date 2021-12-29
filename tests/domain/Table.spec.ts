@@ -8,6 +8,10 @@ describe('Table', () => {
     constructor(v: number) {
       this.value = v;
     }
+
+    getValue() {
+      return this.value;
+    }
   }
 
   let data: D[][];
