@@ -1,14 +1,14 @@
 import type { SensitivityValueBehavior } from './SensitivityValueBehavior';
 import ResistantValue from './ResistantValue';
-import NumericValue from './NumericValue';
+import PercentValue from './PercentValue';
 
 class SensitivityValue {
   #value: SensitivityValueBehavior;
 
   constructor(value: string) {
-    this.validateInput(value);
+    this.#validateInput(value);
     if (value === 'R') this.#value = new ResistantValue();
-    else this.#value = new NumericValue(+value);
+    else this.#value = new PercentValue(+value);
   }
 
   isResistent() {
@@ -27,9 +27,25 @@ class SensitivityValue {
     return this.#value.valueOf();
   }
 
-  private validateInput(value: string) {
-    const isValid = !Number.isNaN(value) || value === 'R';
-    if (!isValid) throw Error('Invalid sensitivity value ' + value);
+  #validateInput(value: string) {
+    if (value === 'R') return;
+    if (!stringContainsNumber(value))
+      throw new SensitivityValueValidationError(value);
+  }
+}
+
+function stringContainsNumber(input: string) {
+  const trimmedInput = input.trim();
+  if (trimmedInput.length === 0) return false;
+  const coercedToNaN = Number.isNaN(+trimmedInput);
+  if (coercedToNaN) return false;
+  return true;
+}
+
+class SensitivityValueValidationError extends Error {
+  constructor(inputValue: string) {
+    super();
+    this.message = 'Invalid sensitivity value: ' + inputValue;
   }
 }
 
