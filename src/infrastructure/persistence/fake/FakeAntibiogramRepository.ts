@@ -6,7 +6,8 @@ import Antibiogram, {
   SensitivityValue,
 } from '@/domain/Antibiogram';
 
-const data: SensitivityData[] = [
+const fakeAbgId: string = '0';
+const fakeData: SensitivityData[] = [
   new SensitivityData({
     organism: new OrganismValue('Klebsiella'),
     antibiotic: new AntibioticValue('Azithromycin'),
@@ -26,10 +27,10 @@ const data: SensitivityData[] = [
 
 class FakeAntibiogramRepository implements AntibiogramRepository {
   async getAll(): Promise<Antibiogram[]> {
-    return [new Antibiogram(data)];
+    return [new Antibiogram(fakeAbgId, fakeData)];
   }
 
-  static data = data;
+  static data = fakeData;
 }
 
 export default FakeAntibiogramRepository;

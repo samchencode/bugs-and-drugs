@@ -1,4 +1,4 @@
-import ValueObject from '@/domain/ValueObject';
+import ValueObject from '@/domain/base/ValueObject';
 import type OrganismValue from '@/domain/Antibiogram/OrganismValue';
 import type AntibioticValue from '@/domain/Antibiogram/AntibioticValue';
 import type SensitivityValue from '@/domain/Antibiogram/SensivityValue';

@@ -1,4 +1,4 @@
-import ValueObject from '@/domain/ValueObject';
+import ValueObject from '@/domain/base/ValueObject';
 import type Antibiotic from '@/domain/Antibiotic';
 
 class OrganismValue extends ValueObject {

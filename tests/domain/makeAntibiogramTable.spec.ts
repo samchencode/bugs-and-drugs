@@ -5,7 +5,7 @@ import Table from '@/domain/Table';
 
 describe('make table using antibiogram', () => {
   it('creates table using empty antibiogram', () => {
-    let abg = new Antibiogram([]);
+    let abg = new Antibiogram('0', []);
     const table = makeAntibiogramTable(abg);
     expect(table).toBeInstanceOf(Table);
     expect(table.getData()).toEqual([]);

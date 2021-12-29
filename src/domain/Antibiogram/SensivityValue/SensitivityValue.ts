@@ -1,4 +1,4 @@
-import ValueObject from '@/domain/ValueObject';
+import ValueObject from '@/domain/base/ValueObject';
 import type { SensitivityValueBehavior } from './SensitivityValueBehavior';
 import ResistantValue from './ResistantValue';
 import PercentValue from './PercentValue';

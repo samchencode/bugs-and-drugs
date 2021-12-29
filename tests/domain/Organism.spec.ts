@@ -4,7 +4,7 @@ describe('Organism', () => {
   let organism: Organism;
 
   beforeEach(() => {
-    organism = new Organism(1, 'Klebsiella');
+    organism = new Organism('1', 'Klebsiella');
   });
 
   it('should create new organism with name and id', () => {
@@ -12,15 +12,15 @@ describe('Organism', () => {
   });
 
   it('should be able to retrieve the name and ID of the abx', () => {
-    expect(organism.id).toBe(1);
+    expect(organism.id.getValue()).toBe('1');
     expect(organism.name).toBe('Klebsiella');
   });
 
   it('should equal another organism of same id', () => {
-    const sameAbx = new Organism(1, 'Klebsiella pneumoniae');
-    const diffAbx = new Organism(2, 'Yersina pestis');
+    const sameOrg = new Organism('1', 'Klebsiella pneumoniae');
+    const diffOrg = new Organism('2', 'Yersina pestis');
 
-    expect(organism.equals(sameAbx)).toBe(true);
-    expect(organism.equals(diffAbx)).toBe(false);
-  })
+    expect(organism.is(sameOrg)).toBe(true);
+    expect(organism.is(diffOrg)).toBe(false);
+  });
 });

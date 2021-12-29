@@ -1,4 +1,4 @@
-import ValueObject from '@/domain/ValueObject';
+import ValueObject from '@/domain/base/ValueObject';
 
 describe('value object', () => {
   class A extends ValueObject {

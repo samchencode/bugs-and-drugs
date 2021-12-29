@@ -11,12 +11,12 @@ describe('Antibiogram', () => {
 
   describe('instantiation', () => {
     it('should create empty antibiogram without data', () => {
-      const antibiogram = new Antibiogram([]);
+      const antibiogram = new Antibiogram('0', []);
       expect(antibiogram.isEmpty()).toBe(true);
     });
 
     it('should create antibiogram with sensitivity data', () => {
-      const antibiogram = new Antibiogram(data);
+      const antibiogram = new Antibiogram('0', data);
       expect(antibiogram.isEmpty()).toBe(false);
       expect(antibiogram.organisms).toBeInstanceOf(Array);
       expect(antibiogram.antibiotics).toBeInstanceOf(Array);
@@ -27,7 +27,7 @@ describe('Antibiogram', () => {
     let antibiogram: Antibiogram;
 
     beforeEach(() => {
-      antibiogram = new Antibiogram(data);
+      antibiogram = new Antibiogram('0', data);
     });
 
     it('should retrieve list of all unique organisms and antibiotics', () => {
