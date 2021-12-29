@@ -1,5 +1,5 @@
 import { Module } from 'didi';
-import App from '@/view/App.svelte';
+import App from '@/infrastructure/view/templates/App.svelte';
 import TableController from '@/infrastructure/view/controllers/TableController';
 import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
@@ -13,9 +13,6 @@ dependencies.type('tableController', TableController);
 dependencies.factory('svelte', (tableController) => {
   return new App({
     target: document.body,
-    props: {
-      name: 'bugs and drugs',
-    },
     context: new Map([['tableController', tableController]]),
   });
 });
