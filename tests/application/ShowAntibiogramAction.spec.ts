@@ -14,9 +14,7 @@ describe('ShowAntibiogramAction', () => {
   it('should show antibiogram as table', () => {
     const dummyParams = { id: -1 };
     const spy = jest.fn();
-    showAbg.execute(dummyParams, {
-      showTable: spy,
-    });
+    showAbg.execute(dummyParams, spy);
 
     expect(spy).toBeCalledWith(expect.any(Table));
   });
