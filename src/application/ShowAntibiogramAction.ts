@@ -1,5 +1,4 @@
 import type { AntibiogramRepository } from '@/domain/ports/AntibiogramRepository';
-import type { Presenter } from '@/domain/ports/Presenter';
 import makeAntibiogramTable from '@/domain/makeAntibiogramTable';
 
 interface ShowAntibiogramActionParams {
@@ -23,3 +22,4 @@ class ShowAntibiogramAction {
 }
 
 export default ShowAntibiogramAction;
+export type { ShowAntibiogramActionParams };

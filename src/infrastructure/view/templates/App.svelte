@@ -3,7 +3,7 @@
   import MyCmpt from './common/MyCmpt.svelte';
 
   const tableController: any = getContext('tableController');
-  tableController.showTable((table: any) => {
+  tableController.showTable().then((table: any) => {
     console.log(table);
   });
 
