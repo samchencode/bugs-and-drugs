@@ -90,18 +90,6 @@ describe('Table', () => {
       expect(table.getData()).toEqual(data);
     });
 
-    it('should get data by rows', () => {
-      expect(table.getRows().values).toEqual(data);
-    });
-
-    it('should get data by columns', () => {
-      expect(table.getColumns().values).toEqual([
-        [new D(10), new D(40), new D(70), new D(100)],
-        [new D(20), new D(50), new D(80), new D(110)],
-        [new D(30), new D(60), new D(90), new D(120)],
-      ]);
-    });
-
     it('should get number of rows and columns', () => {
       const expectedRows = 4;
       const expectedColumns = 3;
