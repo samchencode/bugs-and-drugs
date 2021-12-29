@@ -1,5 +1,5 @@
-import Table from '@/domain/Table/Table';
-import type { Cell } from '@/domain/Table/Cell';
+import Table from '@/domain/Table';
+import type { Cell } from '@/domain/Table';
 
 describe('Table', () => {
   class D implements Cell<number> {
@@ -72,8 +72,10 @@ describe('Table', () => {
         columns: ['c1', 'c2', 'c3'],
         rows: ['r1', 'r2', 'r3'],
       };
-      const boom = () => Table.makeTable(data,badLabels);
-      expect(boom).toThrowError('Row labels do not match number of rows in data');
+      const boom = () => Table.makeTable(data, badLabels);
+      expect(boom).toThrowError(
+        'Row labels do not match number of rows in data'
+      );
     });
   });
 
