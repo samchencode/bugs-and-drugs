@@ -15,10 +15,10 @@ class ShowAntibiogramAction {
     this.antibiogramRepository = antibiogramRepository;
   }
 
-  execute(params: ShowAntibiogramActionParams, callback: (t: Table) => void) {
-    const abg = this.antibiogramRepository.getAll()[0];
+  async execute(params: ShowAntibiogramActionParams): Promise<Table> {
+    const [abg] = await this.antibiogramRepository.getAll();
     const table = makeAntibiogramTable(abg);
-    callback(table);
+    return table;
   }
 }
 
