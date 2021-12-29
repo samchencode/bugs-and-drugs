@@ -60,7 +60,7 @@ describe('Antibiogram', () => {
     });
 
     it('should get list of all data', () => {
-      expect(antibiogram.getData()).toEqual(data);
+      expect(antibiogram.getSensitivities()).toEqual(data);
     });
 
     it('should get list of all values', () => {

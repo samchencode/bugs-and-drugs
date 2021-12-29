@@ -54,7 +54,7 @@ function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
   const nColumns = labels.columns.length;
   const cells: AntibiogramTableCell[][] = makeEmptyMatrix(nRows, nColumns);
 
-  for (const d of antibiogram.getData()) {
+  for (const d of antibiogram.getSensitivities()) {
     const row = labels.rows.indexOf(d.organism.name);
     const column = labels.columns.indexOf(d.antibiotic.name);
     cells[row][column] = new FilledAntibiogramTableCell(d);

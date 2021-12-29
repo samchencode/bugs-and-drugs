@@ -19,12 +19,12 @@ class Antibiogram extends Entity {
     return this.sensitivities.length === 0;
   }
 
-  getData() {
+  getSensitivities() {
     return this.sensitivities;
   }
 
   getValues() {
-    return this.sensitivities.map(s => s.value);
+    return this.sensitivities.map((s) => s.value);
   }
 }
 
