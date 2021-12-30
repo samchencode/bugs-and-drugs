@@ -6,7 +6,13 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["*.svelte"],
+      "processor": "svelte3/svelte3"
+    }
+  ],
+  "plugins": ["@typescript-eslint", "svelte3"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -15,11 +21,10 @@
     "airbnb-typescript/base",
     "prettier"
   ],
-  "rules": {
-    //
-  },
+  "rules": {},
   "env": {
     "es2021": true,
-    "node": true
+    "node": true,
+    "browser": true
   }
 }
