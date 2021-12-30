@@ -1,7 +1,7 @@
 import ValueObject from '@/domain/base/ValueObject';
 import type Antibiotic from '@/domain/Antibiotic';
 
-class OrganismValue extends ValueObject {
+class AntibioticValue extends ValueObject {
   #name: string;
   #antibiotic?: Antibiotic;
 
@@ -19,9 +19,9 @@ class OrganismValue extends ValueObject {
     return this.#antibiotic;
   }
 
-  isIdentical(organismValue: OrganismValue) {
+  isIdentical(organismValue: AntibioticValue) {
     return this.#name === organismValue.getName();
   }
 }
 
-export default OrganismValue;
+export default AntibioticValue;
