@@ -5,10 +5,9 @@ import Antibiogram, {
   AntibioticValue,
   AntibiogramId,
 } from '@/domain/Antibiogram';
-import type { SensitivityData } from '@/domain/Antibiogram';
 
 describe('Antibiogram', () => {
-  let data: SensitivityData[] = FakeAntibiogramRepository.data;
+  let [data] = FakeAntibiogramRepository.data;
   const id = new AntibiogramId('0');
 
   describe('instantiation', () => {
