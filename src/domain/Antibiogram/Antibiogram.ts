@@ -1,7 +1,7 @@
 import Entity from '@/domain/base/Entity';
 import ValueObject from '@/domain/base/ValueObject';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
-import type AntibioticValue from '@/domain/Antibiogram/AntibioticValue';
+import type { AntibioticValue } from '@/domain/Antibiogram/AntibioticValue';
 import type OrganismValue from '@/domain/Antibiogram/OrganismValue';
 import type AntibiogramId from './AntibiogramId';
 

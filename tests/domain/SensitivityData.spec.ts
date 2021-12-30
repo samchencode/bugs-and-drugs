@@ -1,10 +1,10 @@
 import {
   AntibioticValue,
+  SynergisticAntibioticValue,
   OrganismValue,
   SensitivityData,
   SensitivityValue,
 } from '@/domain/Antibiogram';
-import Organism from '@/domain/Organism';
 import FakeOrganismRepository from '@/infrastructure/persistence/fake/FakeOrganismRepository';
 
 describe('Sensitivty Data', () => {
@@ -36,5 +36,41 @@ describe('Sensitivty Data', () => {
       organism: new OrganismValue('Klebsiella', org),
     });
     expect(data.getOrganism().getOrganism()?.id.is(org.id)).toBe(true);
+  });
+
+  describe('antibiotic synergy', () => {
+    it('should create new antibiotic value that holds two synergystic antibiotics', () => {
+      const abx1 = new AntibioticValue('Neomycin');
+      const abx2 = new AntibioticValue('Polymixin B');
+      const synergisticAbx = new SynergisticAntibioticValue([abx1, abx2]);
+
+      expect(synergisticAbx).toBeDefined();
+      expect(synergisticAbx.is(abx1)).toBe(false);
+      expect(synergisticAbx.is(abx2)).toBe(false);
+    });
+
+    it('should equate synergistic antibiotics holding same antibiotic values', () => {
+      const abx1 = new AntibioticValue('Neomycin');
+      const abx2 = new AntibioticValue('Polymixin B');
+      const abx3 = new AntibioticValue('Penicillin V');
+      const synergisticAbx = new SynergisticAntibioticValue([abx1, abx2]);
+
+      expect(
+        synergisticAbx.is(new SynergisticAntibioticValue([abx1, abx2]))
+      ).toBe(true);
+      expect(
+        synergisticAbx.is(new SynergisticAntibioticValue([abx2, abx1]))
+      ).toBe(true);
+      expect(
+        synergisticAbx.is(new SynergisticAntibioticValue([abx2, abx3]))
+      ).toBe(false);
+    });
+
+    it('should combine the names of synergistic abx to one', () => {
+      const abx1 = new AntibioticValue('Neomycin');
+      const abx2 = new AntibioticValue('Polymixin B');
+      const syn = new SynergisticAntibioticValue([abx1, abx2]);
+      expect(syn.getName()).toBe('Neomycin + Polymixin B');
+    });
   });
 });
