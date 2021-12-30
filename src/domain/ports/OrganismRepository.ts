@@ -1,7 +1,8 @@
 import type Organism from '@/domain/Organism';
+import type { OrganismId } from '@/domain/Organism';
 
 interface OrganismRepository {
-  getById(id: string): Promise<Organism>;
+  getById(id: OrganismId): Promise<Organism>;
   getAll(): Promise<Organism[]>;
 }
 

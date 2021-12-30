@@ -1,8 +1,9 @@
 import Organism from './Organism';
+import OrganismId from './OrganismId';
 
 class NullOrganism extends Organism {
   constructor() {
-    super('', 'unknown');
+    super(new OrganismId('NA'), 'unknown');
   }
 }
 

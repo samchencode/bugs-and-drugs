@@ -1,13 +1,13 @@
 import Entity from '@/domain/base/Entity';
-import OrganismId from './OrganismId';
+import type OrganismId from './OrganismId';
 import type Quality from './Quality';
 
 class Organism extends Entity {
   name?: string;
   qualities: Quality[];
 
-  constructor(id: string, name?: string, qualities?: Quality[]) {
-    super(new OrganismId(id));
+  constructor(id: OrganismId, name?: string, qualities?: Quality[]) {
+    super(id);
     this.name = name;
     this.qualities = qualities ?? [];
   }

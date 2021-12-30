@@ -4,9 +4,11 @@ import Antibiogram, {
   AntibioticValue,
   SensitivityData,
   SensitivityValue,
+  AntibiogramId,
+  NullAntibiogram,
 } from '@/domain/Antibiogram';
 
-const fakeAbgId: string = '0';
+const fakeAbgId = new AntibiogramId('0');
 const fakeData: SensitivityData[] = [
   new SensitivityData({
     organism: new OrganismValue('Klebsiella'),
@@ -26,10 +28,11 @@ const fakeData: SensitivityData[] = [
 ];
 
 class FakeAntibiogramRepository implements AntibiogramRepository {
-  async getById(id: string): Promise<Antibiogram | null> {
-    if (id !== fakeAbgId) return null;
+  async getById(id: AntibiogramId): Promise<Antibiogram> {
+    if (!id.is(fakeAbgId)) return new NullAntibiogram();
     return new Antibiogram(fakeAbgId, fakeData);
   }
+
   async getAll(): Promise<Antibiogram[]> {
     return [new Antibiogram(fakeAbgId, fakeData)];
   }

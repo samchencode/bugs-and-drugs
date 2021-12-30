@@ -4,8 +4,8 @@ import EntityId from '@/domain/base/EntityId';
 class Antibiotic extends Entity {
   name: string;
 
-  constructor(id: string, name: string) {
-    super(new AntibioticId(id));
+  constructor(id: AntibioticId, name: string) {
+    super(id);
     this.name = name;
   }
 }
@@ -17,3 +17,4 @@ class AntibioticId extends EntityId {
 }
 
 export default Antibiotic;
+export { AntibioticId };

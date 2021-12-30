@@ -5,6 +5,7 @@ import {
   SensitivityValue,
 } from '@/domain/Antibiogram';
 import Organism from '@/domain/Organism';
+import FakeOrganismRepository from '@/infrastructure/persistence/fake/FakeOrganismRepository';
 
 describe('Sensitivty Data', () => {
   it('should create new sensitivity data', () => {
@@ -28,7 +29,7 @@ describe('Sensitivty Data', () => {
   });
 
   it('should associate sensitivity data with Organism entity', () => {
-    const org = new Organism('0', 'Klebsiella pneumoniae');
+    const [org] = FakeOrganismRepository.data;
     const data = new SensitivityData({
       value: new SensitivityValue('90'),
       antibiotic: new AntibioticValue('Azithromycin'),

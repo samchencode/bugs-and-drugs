@@ -1,10 +1,11 @@
-import Antibiotic from '@/domain/Antibiotic';
+import Antibiotic, { AntibioticId } from '@/domain/Antibiotic';
 
 describe('Antibiotic', () => {
   let antibiotic: Antibiotic;
 
   beforeEach(() => {
-    antibiotic = new Antibiotic('1', 'Azithromycin');
+    let id = new AntibioticId('1');
+    antibiotic = new Antibiotic(id, 'Azithromycin');
   });
 
   it('should create new antibiotic with name and id', () => {
@@ -17,8 +18,8 @@ describe('Antibiotic', () => {
   });
 
   it('should equal another antibiotic of same id', () => {
-    const sameAbx = new Antibiotic('1', 'AzithroMax');
-    const diffAbx = new Antibiotic('2', 'Ampicillin');
+    const sameAbx = new Antibiotic(new AntibioticId('1'), 'AzithroMax');
+    const diffAbx = new Antibiotic(new AntibioticId('2'), 'Ampicillin');
 
     expect(antibiotic.is(sameAbx)).toBe(true);
     expect(antibiotic.is(diffAbx)).toBe(false);

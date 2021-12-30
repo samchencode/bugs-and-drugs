@@ -3,15 +3,15 @@ import ValueObject from '@/domain/base/ValueObject';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 import type AntibioticValue from '@/domain/Antibiogram/AntibioticValue';
 import type OrganismValue from '@/domain/Antibiogram/OrganismValue';
-import AntibiogramId from './AntibiogramId';
+import type AntibiogramId from './AntibiogramId';
 
 class Antibiogram extends Entity {
   organisms: OrganismValue[];
   antibiotics: AntibioticValue[];
   sensitivities: SensitivityData[];
 
-  constructor(id: string, data: SensitivityData[]) {
-    super(new AntibiogramId(id));
+  constructor(id: AntibiogramId, data: SensitivityData[]) {
+    super(id);
     this.sensitivities = data;
     this.antibiotics = ValueObject.filterUniqueValues(
       data.map((d) => d.getAntibiotic())

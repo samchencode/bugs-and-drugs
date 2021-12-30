@@ -1,33 +1,32 @@
-import Organism from '@/domain/Organism';
+import Organism, { OrganismId } from '@/domain/Organism';
 import { GramStain } from '@/domain/Organism/Quality';
 import { Result as G } from '@/domain/Organism/Quality/GramStain';
+import FakeOrganismRepository from '@/infrastructure/persistence/fake/FakeOrganismRepository';
 
 describe('Organism', () => {
-  let organism: Organism;
+  let organism: Organism, differentOrganism: Organism;
 
   beforeEach(() => {
-    organism = new Organism('1', 'Klebsiella');
+    [organism, differentOrganism] = FakeOrganismRepository.data;
   });
 
   it('should create new organism with name and id', () => {
+    const organism = new Organism(new OrganismId('1'));
     expect(organism).toBeDefined();
   });
 
   it('should be able to retrieve the name and ID of the abx', () => {
-    expect(organism.id.getValue()).toBe('1');
+    expect(organism.id.getValue()).toBe('0');
     expect(organism.name).toBe('Klebsiella');
   });
 
   it('should equal another organism of same id', () => {
-    const sameOrg = new Organism('1', 'Klebsiella pneumoniae');
-    const diffOrg = new Organism('2', 'Yersina pestis');
-
-    expect(organism.is(sameOrg)).toBe(true);
-    expect(organism.is(diffOrg)).toBe(false);
+    expect(organism.is(organism)).toBe(true);
+    expect(organism.is(differentOrganism)).toBe(false);
   });
 
   it('can be gram positive or negative', () => {
-    const gPositive = new Organism('1', 'Staph aureus', [
+    const gPositive = new Organism(new OrganismId('1'), 'Staph aureus', [
       new GramStain(G.POSITIVE),
     ]);
     const isGramPositive = gPositive.hasQuality(new GramStain(G.POSITIVE));

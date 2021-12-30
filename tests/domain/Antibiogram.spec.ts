@@ -3,20 +3,22 @@ import Antibiogram, {
   SensitivityValue,
   OrganismValue,
   AntibioticValue,
+  AntibiogramId,
 } from '@/domain/Antibiogram';
 import type { SensitivityData } from '@/domain/Antibiogram';
 
 describe('Antibiogram', () => {
   let data: SensitivityData[] = FakeAntibiogramRepository.data;
+  const id = new AntibiogramId('0');
 
   describe('instantiation', () => {
     it('should create empty antibiogram without data', () => {
-      const antibiogram = new Antibiogram('0', []);
+      const antibiogram = new Antibiogram(id, []);
       expect(antibiogram.isEmpty()).toBe(true);
     });
 
     it('should create antibiogram with sensitivity data', () => {
-      const antibiogram = new Antibiogram('0', data);
+      const antibiogram = new Antibiogram(id, data);
       expect(antibiogram.isEmpty()).toBe(false);
       expect(antibiogram.organisms).toBeInstanceOf(Array);
       expect(antibiogram.antibiotics).toBeInstanceOf(Array);
@@ -27,7 +29,7 @@ describe('Antibiogram', () => {
     let antibiogram: Antibiogram;
 
     beforeEach(() => {
-      antibiogram = new Antibiogram('0', data);
+      antibiogram = new Antibiogram(id, data);
     });
 
     it('should retrieve list of all unique organisms and antibiotics', () => {
