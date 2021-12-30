@@ -1,2 +1,2 @@
-export { default as Quality } from './Quality';
+export { default as default } from './Quality';
 export { default as GramStain } from './GramStain';

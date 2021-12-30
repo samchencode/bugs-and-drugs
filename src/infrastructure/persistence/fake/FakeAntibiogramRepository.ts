@@ -26,6 +26,10 @@ const fakeData: SensitivityData[] = [
 ];
 
 class FakeAntibiogramRepository implements AntibiogramRepository {
+  async getById(id: string): Promise<Antibiogram | null> {
+    if (id !== fakeAbgId) return null;
+    return new Antibiogram(fakeAbgId, fakeData);
+  }
   async getAll(): Promise<Antibiogram[]> {
     return [new Antibiogram(fakeAbgId, fakeData)];
   }
