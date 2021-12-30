@@ -28,8 +28,6 @@
     "deepmerge": "^4.2.2",
     "didi": "^6.1.0",
     "eslint": "^8.4.1",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^16.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-svelte3": "^3.2.1",
