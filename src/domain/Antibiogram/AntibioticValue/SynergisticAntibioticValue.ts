@@ -1,13 +1,14 @@
 import ValueObject from '@/domain/base/ValueObject';
 import type { AntibioticValue } from '@/domain/Antibiogram/AntibioticValue/AntibioticValue';
+import type SingleAntibioticValue from '@/domain/Antibiogram/AntibioticValue/SingleAntibioticValue';
 
 class SynergisticAntibioticValue
   extends ValueObject
   implements AntibioticValue
 {
-  #antibiotics: AntibioticValue[];
+  #antibiotics: SingleAntibioticValue[];
 
-  constructor(antibiotics: AntibioticValue[]) {
+  constructor(antibiotics: SingleAntibioticValue[]) {
     super();
     this.#antibiotics = antibiotics;
   }
