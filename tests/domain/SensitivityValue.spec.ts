@@ -36,4 +36,14 @@ describe('Sensitivity Value', () => {
     const boom = () => new SensitivityValue('-1');
     expect(boom).toThrowError('Invalid sensitivity value');
   });
+
+  it('should round any decimal values on toString', () => {
+    const zero = new SensitivityValue('0.1');
+    const one = new SensitivityValue('1.1');
+    const two = new SensitivityValue('1.9');
+
+    expect(zero.toString()).toBe('0%');
+    expect(one.toString()).toBe('1%');
+    expect(two.toString()).toBe('2%');
+  });
 });

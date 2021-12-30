@@ -13,7 +13,7 @@ class PercentValue implements SensitivityValueBehavior {
   }
 
   toString(): string {
-    return '' + this.#value + '%';
+    return '' + Math.round(this.#value) + '%';
   }
   valueOf(): number {
     return this.getValue();
