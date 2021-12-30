@@ -21,7 +21,19 @@
     "airbnb-typescript/base",
     "prettier"
   ],
-  "rules": {},
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": [".*"],
+            "message": "Please use absolute path imports instead."
+          }
+        ]
+      }
+    ]
+  },
   "env": {
     "es2021": true,
     "node": true,
