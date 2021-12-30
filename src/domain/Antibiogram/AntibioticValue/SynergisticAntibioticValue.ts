@@ -1,5 +1,5 @@
 import ValueObject from '@/domain/base/ValueObject';
-import type { AntibioticValue } from './AntibioticValue';
+import type { AntibioticValue } from '@/domain/Antibiogram/AntibioticValue/AntibioticValue';
 
 class SynergisticAntibioticValue
   extends ValueObject

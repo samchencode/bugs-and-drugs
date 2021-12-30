@@ -7,7 +7,7 @@ import Antibiogram, {
 } from '@/domain/Antibiogram';
 
 describe('Antibiogram', () => {
-  let [data] = FakeAntibiogramRepository.data;
+  const [data] = FakeAntibiogramRepository.data;
   const id = new AntibiogramId('0');
 
   describe('instantiation', () => {

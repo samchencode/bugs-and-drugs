@@ -1,5 +1,5 @@
-import Quality from '../Quality';
-import type GramStainResult from './Result/GramStainResult';
+import Quality from '@/domain/Organism/Quality/Quality';
+import type GramStainResult from '@/domain/Organism/Quality/GramStain/Result/GramStainResult';
 
 class GramStain extends Quality {
   constructor(gramStainResult: GramStainResult) {

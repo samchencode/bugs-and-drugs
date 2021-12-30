@@ -3,7 +3,9 @@ import type { Cell } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AntibiogramTableCell extends Cell<string> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AntibiogramTable extends Table<string> {}
 
 class EmptyAntibiogramTableCell implements AntibiogramTableCell {

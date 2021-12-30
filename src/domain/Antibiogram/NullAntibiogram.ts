@@ -1,5 +1,5 @@
-import Antibiogram from './Antibiogram';
-import AntibiogramId from './AntibiogramId';
+import Antibiogram from '@/domain/Antibiogram/Antibiogram';
+import AntibiogramId from '@/domain/Antibiogram/AntibiogramId';
 
 class NullAntibiogram extends Antibiogram {
   constructor() {

@@ -1,10 +1,10 @@
-import GramStainResult from './GramStainResult';
+import GramStainResult from '@/domain/Organism/Quality/GramStain/Result/GramStainResult';
 
 class PositiveGramStain extends GramStainResult {
   toString(): string {
     return 'Gram Positive';
   }
-  protected isIdentical(v: PositiveGramStain): boolean {
+  protected isIdentical(): boolean {
     return true;
   }
 }

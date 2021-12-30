@@ -1,4 +1,4 @@
-import type { SensitivityValueBehavior } from './SensitivityValueBehavior';
+import type { SensitivityValueBehavior } from '@/domain/Antibiogram/SensitivityValue/SensitivityValueBehavior';
 
 class PercentValue implements SensitivityValueBehavior {
   #value: number;

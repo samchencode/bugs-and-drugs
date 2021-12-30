@@ -15,7 +15,7 @@ describe('Table', () => {
   }
 
   let data: D[][];
-  let labels = {
+  const labels = {
     columns: ['c1', 'c2', 'c3'],
     rows: ['r1', 'r2', 'r3', 'r4'],
   };
@@ -53,26 +53,31 @@ describe('Table', () => {
         [new D(1), undefined, new D(3)],
         [new D(4), undefined, undefined],
       ];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let boom = () => Table.makeTable(badData as any);
       expect(boom).toThrowError('Undefined value');
 
       badData = [
+        // eslint-disable-next-line no-sparse-arrays
         [new D(1), , new D(3)],
+        // eslint-disable-next-line no-sparse-arrays
         [new D(4), ,],
       ];
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       boom = () => Table.makeTable(badData as any);
       expect(boom).toThrowError('Undefined value');
     });
 
     it('should throw error with undefiend columns', () => {
-      let badData = [undefined, [new D(1)]];
+      const badData = [undefined, [new D(1)]];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const boom = () => Table.makeTable(badData as any);
       expect(boom).toThrowError('Undefined value');
     });
 
     it('should throw an error if the number of rows in the data is not equal to the number of row labels', () => {
-      let badLabels = {
+      const badLabels = {
         columns: ['c1', 'c2', 'c3'],
         rows: ['r1', 'r2', 'r3'],
       };

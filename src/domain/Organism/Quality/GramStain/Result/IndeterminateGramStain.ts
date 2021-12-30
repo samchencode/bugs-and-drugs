@@ -1,10 +1,10 @@
-import GramStainResult from './GramStainResult';
+import GramStainResult from '@/domain/Organism/Quality/GramStain/Result/GramStainResult';
 
 class IndeterminateGramStain extends GramStainResult {
   toString(): string {
     return 'Gram Indeterminate';
   }
-  protected isIdentical(v: IndeterminateGramStain): boolean {
+  protected isIdentical(): boolean {
     return true;
   }
 }

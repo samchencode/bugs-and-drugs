@@ -1,2 +1,2 @@
-export { default as default } from './Quality';
-export { default as GramStain } from './GramStain';
+export { default as default } from '@/domain/Organism/Quality/Quality';
+export { default as GramStain } from '@/domain/Organism/Quality/GramStain';

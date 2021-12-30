@@ -1,6 +1,6 @@
-import validate from './Validator';
-import rules from './rules';
-import type { Cell } from './Cell';
+import validate from '@/domain/Table/Validator';
+import rules from '@/domain/Table/rules';
+import type { Cell } from '@/domain/Table/Cell';
 
 interface LabelParams {
   rows: string[];

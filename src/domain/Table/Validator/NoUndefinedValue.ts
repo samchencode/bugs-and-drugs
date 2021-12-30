@@ -1,8 +1,7 @@
-import type { Cell } from '../Cell';
-import type { Rule } from "./Rule";
+import type { Cell } from '@/domain/Table/Cell';
+import type { Rule } from '@/domain/Table/Validator/Rule';
 
 class NoUndefinedValues implements Rule {
-
   input: Cell<unknown>[][];
 
   constructor(input: Cell<unknown>[][]) {
@@ -18,12 +17,12 @@ class NoUndefinedValues implements Rule {
         if (this.#isUndefined(c)) throw new UndefinedValueError(i, j);
       });
 
-      const hasEmpty = r.includes(undefined as any);
+      const hasEmpty = r.includes(undefined as never);
       if (hasEmpty) throw new UndefinedValueError(i);
     });
   }
 
-  #isUndefined(value: any) {
+  #isUndefined(value: Cell<unknown> | Cell<unknown>[] | undefined) {
     return typeof value === 'undefined';
   }
 }

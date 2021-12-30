@@ -2,9 +2,9 @@ import {
   NoInconsistentRowColumnLabelNumber,
   NoInconsistentRowColumnNumber,
   NoUndefinedValue,
-} from './Validator';
-import type { Cell } from './Cell';
-import type { LabelParams } from './Table';
+} from '@/domain/Table/Validator';
+import type { Cell } from '@/domain/Table/Cell';
+import type { LabelParams } from '@/domain/Table/Table';
 
 export default (data: Cell<unknown>[][], labels?: LabelParams) => [
   new NoUndefinedValue(data),

@@ -1,5 +1,5 @@
 import ValueObject from '@/domain/base/ValueObject';
-import type QualityValue from './QualityValue';
+import type QualityValue from '@/domain/Organism/Quality/QualityValue';
 
 abstract class Quality extends ValueObject {
   #name: string;

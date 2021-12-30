@@ -4,7 +4,7 @@ describe('Antibiotic', () => {
   let antibiotic: Antibiotic;
 
   beforeEach(() => {
-    let id = new AntibioticId('1');
+    const id = new AntibioticId('1');
     antibiotic = new Antibiotic(id, 'Azithromycin');
   });
 

@@ -1,5 +1,5 @@
-import Organism from './Organism';
-import OrganismId from './OrganismId';
+import Organism from '@/domain/Organism/Organism';
+import OrganismId from '@/domain/Organism/OrganismId';
 
 class NullOrganism extends Organism {
   constructor() {

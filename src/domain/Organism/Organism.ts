@@ -1,6 +1,6 @@
 import Entity from '@/domain/base/Entity';
-import type OrganismId from './OrganismId';
-import type Quality from './Quality';
+import type OrganismId from '@/domain/Organism//OrganismId';
+import type Quality from '@/domain/Organism//Quality';
 
 class Organism extends Entity {
   name?: string;

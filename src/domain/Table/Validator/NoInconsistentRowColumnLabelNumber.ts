@@ -1,6 +1,6 @@
-import type { Cell } from '../Cell';
-import type { Rule } from "./Rule";
-import type { LabelParams } from '../Table';
+import type { Cell } from '@/domain/Table/Cell';
+import type { Rule } from '@/domain/Table/Validator/Rule';
+import type { LabelParams } from '@/domain/Table/Table';
 
 class NoInconsistentRowColumnLabelNumber implements Rule {
   input: Cell<unknown>[][];

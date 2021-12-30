@@ -1,4 +1,4 @@
-import type { Rule } from './Rule';
+import type { Rule } from '@/domain/Table/Validator/Rule';
 
 function validate(rules: Rule[]) {
   for (const rule of rules) {

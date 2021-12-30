@@ -1,4 +1,4 @@
-import QualityValue from '../../QualityValue';
+import QualityValue from '@/domain/Organism/Quality/QualityValue';
 
 abstract class GramStainResult extends QualityValue {}
 

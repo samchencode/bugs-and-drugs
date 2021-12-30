@@ -1,7 +1,7 @@
-export type { default as GramStainResult } from './GramStainResult';
-import IndeterminateGramStain from './IndeterminateGramStain';
-import NegativeGramStain from './NegativeGramStain';
-import PositiveGramStain from './PositiveGramStain';
+export type { default as GramStainResult } from '@/domain/Organism/Quality/GramStain/Result/GramStainResult';
+import IndeterminateGramStain from '@/domain/Organism/Quality/GramStain/Result/IndeterminateGramStain';
+import NegativeGramStain from '@/domain/Organism/Quality/GramStain/Result/NegativeGramStain';
+import PositiveGramStain from '@/domain/Organism/Quality/GramStain/Result/PositiveGramStain';
 
 const resultValueFactory = {
   get POSITIVE() {

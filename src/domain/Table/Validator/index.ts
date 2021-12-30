@@ -1,4 +1,4 @@
-export { default as default } from './validate';
-export { default as NoInconsistentRowColumnNumber } from './NoInconsistentRowColumnNumber';
-export { default as NoInconsistentRowColumnLabelNumber } from './NoInconsistentRowColumnLabelNumber';
-export { default as NoUndefinedValue } from './NoUndefinedValue';
+export { default as default } from '@/domain/Table/Validator/validate';
+export { default as NoInconsistentRowColumnNumber } from '@/domain/Table/Validator/NoInconsistentRowColumnNumber';
+export { default as NoInconsistentRowColumnLabelNumber } from '@/domain/Table/Validator/NoInconsistentRowColumnLabelNumber';
+export { default as NoUndefinedValue } from '@/domain/Table/Validator/NoUndefinedValue';

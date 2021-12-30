@@ -14,7 +14,7 @@ class ShowAntibiogramAction {
     this.antibiogramRepository = antibiogramRepository;
   }
 
-  async execute(params: ShowAntibiogramActionParams): Promise<Table> {
+  async execute(): Promise<Table> {
     const [abg] = await this.antibiogramRepository.getAll();
     const table = makeAntibiogramTable(abg);
     return table;

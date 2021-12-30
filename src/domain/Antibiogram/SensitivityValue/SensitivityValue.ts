@@ -1,7 +1,7 @@
 import ValueObject from '@/domain/base/ValueObject';
-import type { SensitivityValueBehavior } from './SensitivityValueBehavior';
-import ResistantValue from './ResistantValue';
-import PercentValue from './PercentValue';
+import type { SensitivityValueBehavior } from '@/domain/Antibiogram/SensitivityValue/SensitivityValueBehavior';
+import ResistantValue from '@/domain/Antibiogram/SensitivityValue/ResistantValue';
+import PercentValue from '@/domain/Antibiogram/SensitivityValue/PercentValue';
 
 class SensitivityValue extends ValueObject {
   #value: SensitivityValueBehavior;

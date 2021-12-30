@@ -1,4 +1,4 @@
-import type EntityId from './EntityId';
+import type EntityId from '@/domain/base/EntityId';
 
 abstract class Entity {
   id: EntityId;

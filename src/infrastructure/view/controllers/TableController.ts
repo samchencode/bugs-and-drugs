@@ -7,8 +7,9 @@ class TableController {
     this.showAbg = showAntibiogramAction;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async showTable(id: number) {
-    return await this.showAbg.execute({ id: id });
+    return await this.showAbg.execute();
   }
 }
 
