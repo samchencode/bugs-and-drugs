@@ -4,6 +4,7 @@ import {
   SensitivityData,
   SensitivityValue,
 } from '@/domain/Antibiogram';
+import { IntegerNumberOfIsolates } from '@/domain/Antibiogram/NumberOfIsolates';
 import FakeOrganismRepository from '@/infrastructure/persistence/fake/FakeOrganismRepository';
 
 describe('Sensitivty Data', () => {
@@ -35,5 +36,26 @@ describe('Sensitivty Data', () => {
       organism: new OrganismValue('Klebsiella', org),
     });
     expect(data.getOrganism().getOrganism()?.id.is(org.id)).toBe(true);
+  });
+
+  it('should detail number of isolates for organism-setting-source triplet', () => {
+    const data = new SensitivityData({
+      value: new SensitivityValue('90'),
+      antibiotic: new AntibioticValue('AzithroMax'),
+      organism: new OrganismValue('Borrelia burgdorferi'),
+      isolates: new IntegerNumberOfIsolates(50),
+    });
+
+    expect(data.getIsolates().getValue()).toBe(50);
+  });
+
+  it('should default to unknown number of isolates', () => {
+    const data = new SensitivityData({
+      value: new SensitivityValue('90'),
+      antibiotic: new AntibioticValue('Azithromycin'),
+      organism: new OrganismValue('Klebsiella'),
+    });
+
+    expect(data.getIsolates().isUnknown()).toBe(true);
   });
 });
