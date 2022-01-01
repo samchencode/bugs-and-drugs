@@ -4,12 +4,14 @@ import type { AntibioticValue } from '@/domain/Antibiogram/AntibioticValue';
 import type SensitivityValue from '@/domain/Antibiogram/SensitivityValue';
 import type { NumberOfIsolates } from '@/domain/Antibiogram/NumberOfIsolates';
 import { UnknownNumberOfIsolates } from '@/domain/Antibiogram/NumberOfIsolates';
+import SampleInfo from '@/domain/Antibiogram/SampleInfo';
 
 interface SensitivityDataParams {
   organism: OrganismValue;
   antibiotic: AntibioticValue;
   value: SensitivityValue;
   isolates?: NumberOfIsolates;
+  sampleInfo?: SampleInfo;
 }
 
 class SensitivityData extends ValueObject {
@@ -17,18 +19,15 @@ class SensitivityData extends ValueObject {
   #antibiotic: AntibioticValue;
   #value: SensitivityValue;
   #isolates: NumberOfIsolates;
+  #sampleInfo: SampleInfo;
 
-  constructor({
-    organism,
-    antibiotic,
-    value,
-    isolates,
-  }: SensitivityDataParams) {
+  constructor(p: SensitivityDataParams) {
     super();
-    this.#organism = organism;
-    this.#antibiotic = antibiotic;
-    this.#value = value;
-    this.#isolates = isolates ?? new UnknownNumberOfIsolates();
+    this.#organism = p.organism;
+    this.#antibiotic = p.antibiotic;
+    this.#value = p.value;
+    this.#isolates = p.isolates ?? new UnknownNumberOfIsolates();
+    this.#sampleInfo = p.sampleInfo ?? new SampleInfo([]);
   }
 
   getOrganism(): OrganismValue {
@@ -45,6 +44,10 @@ class SensitivityData extends ValueObject {
 
   getIsolates(): NumberOfIsolates {
     return this.#isolates;
+  }
+
+  getSampleInfo(): SampleInfo {
+    return this.#sampleInfo;
   }
 
   protected isIdentical(v: SensitivityData): boolean {

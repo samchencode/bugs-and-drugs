@@ -64,4 +64,20 @@ describe('SampleInfo', () => {
     const info2 = new SampleInfo([new DemoInfo('1'), new DemoInfo2('2')]);
     expect(info.is(info2)).toBe(true);
   });
+
+  it('should check whether it has a certain item-value combo', () => {
+    const info = new SampleInfo([new DemoInfo('1'), new DemoInfo2('2')]);
+    expect(info.hasItem(new DemoInfo('1'))).toBe(true);
+    expect(info.hasItem(new DemoInfo('2'))).toBe(false);
+    expect(info.hasItem(new DemoInfo2('1'))).toBe(false);
+  });
+
+  it('should get item by constructor', () => {
+    const infoItem1 = new DemoInfo('1');
+    const infoItem2 = new DemoInfo2('2');
+    const info = new SampleInfo([infoItem1, infoItem2]);
+
+    expect(info.getItem(DemoInfo)?.is(new DemoInfo('1'))).toBe(true);
+    expect(info.getItem(DemoInfo2)?.is(new DemoInfo2('2'))).toBe(true);
+  });
 });

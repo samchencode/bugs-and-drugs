@@ -1,35 +1,50 @@
 import ValueObject from '@/domain/base/ValueObject';
 import type SampleInfoItem from '@/domain/Antibiogram/SampleInfo/SampleInfoItem';
 
+type SampleInfoItemConstructor = new (...args: never[]) => SampleInfoItem;
+
 class SampleInfo extends ValueObject {
-  #facts: Map<string, SampleInfoItem>;
+  #itemsByType: Map<string, SampleInfoItem>;
+  #itemsByConstructor: Map<SampleInfoItemConstructor, SampleInfoItem>;
 
   constructor(facts: SampleInfoItem[]) {
     super();
-    this.#facts = facts.reduce((ag, v) => {
-      ag.set(v.getType(), v);
-      return ag;
-    }, new Map<string, SampleInfoItem>());
+    this.#itemsByType = facts.reduce(
+      (a, v) => a.set(v.getType(), v),
+      new Map<string, SampleInfoItem>()
+    );
+    this.#itemsByConstructor = facts.reduce(
+      (a, v) => a.set(Object.getPrototypeOf(v).constructor, v),
+      new Map<SampleInfoItemConstructor, SampleInfoItem>()
+    );
   }
 
   getItems() {
-    return this.#facts;
+    return this.#itemsByType;
   }
 
-  getItem(type: string) {
-    return this.#facts.get(type);
+  getItem(type: string | SampleInfoItemConstructor) {
+    if (typeof type === 'string') return this.#itemsByType.get(type);
+    return this.#itemsByConstructor.get(type);
+  }
+
+  hasItem(value: SampleInfoItem) {
+    const type = value.getType();
+    const ourValue = this.#itemsByType.get(type);
+    if (!ourValue) return false;
+    return ourValue.is(value);
   }
 
   #hasSameKeys(facts: Map<string, SampleInfoItem>): boolean {
     const theirKeys = Array.from(facts.keys());
-    const ourKeys = Array.from(this.#facts.keys());
+    const ourKeys = Array.from(this.#itemsByType.keys());
     return areShallowEqual(ourKeys, theirKeys);
   }
 
   protected isIdentical(v: SampleInfo): boolean {
     this.#hasSameKeys(v.getItems());
     for (const [key, value] of v.getItems()) {
-      const valueIsSame = this.#facts.get(key)?.is(value);
+      const valueIsSame = this.#itemsByType.get(key)?.is(value);
       if (!valueIsSame) return false;
     }
     return true;

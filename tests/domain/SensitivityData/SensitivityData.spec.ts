@@ -5,15 +5,20 @@ import {
   SensitivityValue,
 } from '@/domain/Antibiogram';
 import { IntegerNumberOfIsolates } from '@/domain/Antibiogram/NumberOfIsolates';
+import SampleInfo from '@/domain/Antibiogram/SampleInfo';
+import Setting, { Settings } from '@/domain/Antibiogram/SampleInfo/Setting';
+import Source, { Sources } from '@/domain/Antibiogram/SampleInfo/Source';
 import FakeOrganismRepository from '@/infrastructure/persistence/fake/FakeOrganismRepository';
 
 describe('Sensitivty Data', () => {
+  const dummyParams = {
+    value: new SensitivityValue('90'),
+    antibiotic: new AntibioticValue('Azithromycin'),
+    organism: new OrganismValue('Klebsiella'),
+  };
+
   it('should create new sensitivity data', () => {
-    const data = new SensitivityData({
-      value: new SensitivityValue('90'),
-      antibiotic: new AntibioticValue('Azithromycin'),
-      organism: new OrganismValue('Klebsiella'),
-    });
+    const data = new SensitivityData(dummyParams);
 
     expect(data).toBeDefined();
     const value = data.getValue();
@@ -40,9 +45,7 @@ describe('Sensitivty Data', () => {
 
   it('should detail number of isolates for organism-setting-source triplet', () => {
     const data = new SensitivityData({
-      value: new SensitivityValue('90'),
-      antibiotic: new AntibioticValue('AzithroMax'),
-      organism: new OrganismValue('Borrelia burgdorferi'),
+      ...dummyParams,
       isolates: new IntegerNumberOfIsolates(50),
     });
 
@@ -50,12 +53,24 @@ describe('Sensitivty Data', () => {
   });
 
   it('should default to unknown number of isolates', () => {
-    const data = new SensitivityData({
-      value: new SensitivityValue('90'),
-      antibiotic: new AntibioticValue('Azithromycin'),
-      organism: new OrganismValue('Klebsiella'),
-    });
+    const data = new SensitivityData(dummyParams);
 
     expect(data.getIsolates().isUnknown()).toBe(true);
+  });
+
+  it('should store info about sources and setting that the data were collected in', () => {
+    const data = new SensitivityData({
+      ...dummyParams,
+      sampleInfo: new SampleInfo([
+        new Setting(Settings.INPATIENT),
+        new Source(Sources.NONURINE),
+      ]),
+    });
+
+    expect(data.getSampleInfo().hasItem(new Setting(Settings.INPATIENT))).toBe(
+      true
+    );
+    const setting = data.getSampleInfo().getItem(Setting);
+    expect(setting?.is(new Setting(Settings.INPATIENT))).toBe(true);
   });
 });
