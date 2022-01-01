@@ -73,4 +73,26 @@ describe('Sensitivty Data', () => {
     const setting = data.getSampleInfo().getItem(Setting);
     expect(setting?.is(new Setting(Settings.INPATIENT))).toBe(true);
   });
+
+  describe('behavior', () => {
+    it('should be identical to other sensitivty data with same value', () => {
+      const data1 = new SensitivityData({
+        value: new SensitivityValue('90'),
+        antibiotic: new AntibioticValue('Azithromycin'),
+        organism: new OrganismValue('Klebsiella'),
+      });
+      const data2 = new SensitivityData({
+        value: new SensitivityValue('90'),
+        antibiotic: new AntibioticValue('Azithromycin'),
+        organism: new OrganismValue('Klebsiella'),
+      });
+      const data3 = new SensitivityData({
+        value: new SensitivityValue('R'),
+        antibiotic: new AntibioticValue('Azithromycin'),
+        organism: new OrganismValue('Klebsiella'),
+      });
+      expect(data1.is(data2)).toBe(true);
+      expect(data1.is(data3)).toBe(false);
+    });
+  });
 });
