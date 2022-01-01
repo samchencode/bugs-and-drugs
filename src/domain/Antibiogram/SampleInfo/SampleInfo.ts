@@ -7,13 +7,13 @@ class SampleInfo extends ValueObject {
   #itemsByType: Map<string, SampleInfoItem>;
   #itemsByConstructor: Map<SampleInfoItemConstructor, SampleInfoItem>;
 
-  constructor(facts: SampleInfoItem[]) {
+  constructor(items: SampleInfoItem[]) {
     super();
-    this.#itemsByType = facts.reduce(
+    this.#itemsByType = items.reduce(
       (a, v) => a.set(v.getType(), v),
       new Map<string, SampleInfoItem>()
     );
-    this.#itemsByConstructor = facts.reduce(
+    this.#itemsByConstructor = items.reduce(
       (a, v) => a.set(Object.getPrototypeOf(v).constructor, v),
       new Map<SampleInfoItemConstructor, SampleInfoItem>()
     );
