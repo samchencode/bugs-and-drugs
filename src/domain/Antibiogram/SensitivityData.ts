@@ -50,6 +50,12 @@ class SensitivityData extends ValueObject {
     return this.#sampleInfo;
   }
 
+  describesSameOrganismAndSamples(v: SensitivityData) {
+    if (!this.#organism.is(v.getOrganism())) return false;
+    if (!this.#sampleInfo.is(v.getSampleInfo())) return false;
+    return true;
+  }
+
   protected isIdentical(v: SensitivityData): boolean {
     if (!this.#antibiotic.is(v.getAntibiotic())) return false;
     if (!this.#organism.is(v.getOrganism())) return false;

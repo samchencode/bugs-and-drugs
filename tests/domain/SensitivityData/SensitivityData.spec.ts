@@ -94,5 +94,26 @@ describe('Sensitivty Data', () => {
       expect(data1.is(data2)).toBe(true);
       expect(data1.is(data3)).toBe(false);
     });
+
+    it('should return whether sample info and organism are the same', () => {
+      const data1 = new SensitivityData({
+        value: new SensitivityValue('90'),
+        antibiotic: new AntibioticValue('Azithromycin'),
+        organism: new OrganismValue('Klebsiella'),
+      });
+      const data2 = new SensitivityData({
+        value: new SensitivityValue('R'),
+        antibiotic: new AntibioticValue('Cefazolin'),
+        organism: new OrganismValue('Klebsiella'),
+      });
+      const data3 = new SensitivityData({
+        value: new SensitivityValue('30'),
+        antibiotic: new AntibioticValue('Cefazolin'),
+        organism: new OrganismValue('Klebsiella'),
+        sampleInfo: new SampleInfo([new Source(Sources.URINE)]),
+      });
+      expect(data1.describesSameOrganismAndSamples(data2)).toBe(true);
+      expect(data1.describesSameOrganismAndSamples(data3)).toBe(false);
+    });
   });
 });
