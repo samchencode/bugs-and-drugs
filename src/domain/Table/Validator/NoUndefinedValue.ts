@@ -1,10 +1,10 @@
-import type { Cell } from '@/domain/Table/Cell';
+import type Cell from '@/domain/Table/Cell';
 import type { Rule } from '@/domain/Table/Validator/Rule';
 
 class NoUndefinedValues implements Rule {
-  input: Cell<unknown>[][];
+  input: Cell[][];
 
-  constructor(input: Cell<unknown>[][]) {
+  constructor(input: Cell[][]) {
     this.input = input;
   }
 
@@ -22,7 +22,7 @@ class NoUndefinedValues implements Rule {
     });
   }
 
-  #isUndefined(value: Cell<unknown> | Cell<unknown>[] | undefined) {
+  #isUndefined(value: Cell | Cell[] | undefined) {
     return typeof value === 'undefined';
   }
 }

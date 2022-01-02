@@ -1,16 +1,24 @@
-import Table from '@/domain/Table';
-import type { Cell } from '@/domain/Table';
+import Table, { Cell } from '@/domain/Table';
 
 describe('Table', () => {
-  class D implements Cell<number> {
+  class D extends Cell {
     value: number;
 
     constructor(v: number) {
+      super();
       this.value = v;
     }
 
     getValue() {
       return this.value;
+    }
+
+    toString() {
+      return '' + this.value;
+    }
+
+    protected isIdentical(d: D) {
+      return d.getValue() === this.value;
     }
   }
 
@@ -89,7 +97,7 @@ describe('Table', () => {
   });
 
   describe('behavior', () => {
-    let table: Table<number>;
+    let table: Table<D>;
 
     beforeEach(() => {
       table = Table.makeTable(data, labels);

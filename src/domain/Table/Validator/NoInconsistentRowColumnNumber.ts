@@ -1,10 +1,10 @@
-import type { Cell } from '@/domain/Table/Cell';
+import type Cell from '@/domain/Table/Cell';
 import type { Rule } from '@/domain/Table/Validator/Rule';
 
 class NoInconsistentRowColumnNumber implements Rule {
-  input: Cell<unknown>[][];
+  input: Cell[][];
 
-  constructor(input: Cell<unknown>[][]) {
+  constructor(input: Cell[][]) {
     this.input = input;
   }
 

@@ -1,34 +1,39 @@
-import Table from '@/domain/Table';
-import type { Cell } from '@/domain/Table';
+import Table, { Cell } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface AntibiogramTableCell extends Cell<string> {}
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface AntibiogramTable extends Table<string> {}
-
-class EmptyAntibiogramTableCell implements AntibiogramTableCell {
-  #value: string;
-
-  constructor() {
-    this.#value = 'NA';
-  }
+class EmptyAntibiogramTableCell extends Cell {
+  #value = 'NA';
 
   getValue(): string {
     return this.#value;
   }
+  toString(): string {
+    return this.#value;
+  }
+  protected isIdentical(): boolean {
+    return false;
+  }
 }
 
-class FilledAntibiogramTableCell implements AntibiogramTableCell {
+class FilledAntibiogramTableCell extends Cell {
   #value: string;
 
   constructor(data: SensitivityData) {
+    super();
     this.#value = data.getValue().toString();
   }
 
   getValue(): string {
     return this.#value;
+  }
+
+  toString(): string {
+    return this.#value;
+  }
+
+  protected isIdentical(cell: FilledAntibiogramTableCell): boolean {
+    return this.#value === cell.getValue();
   }
 }
 
@@ -45,7 +50,7 @@ function makeEmptyMatrix(
     );
 }
 
-function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
+function makeAntibiogramTable(antibiogram: Antibiogram): Table<Cell> {
   if (antibiogram.isEmpty()) return Table.makeTable([]);
   const { antibiotics, organisms } = antibiogram;
   const labels = {
@@ -54,7 +59,7 @@ function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
   };
   const nRows = labels.rows.length;
   const nColumns = labels.columns.length;
-  const cells: AntibiogramTableCell[][] = makeEmptyMatrix(nRows, nColumns);
+  const cells: Cell[][] = makeEmptyMatrix(nRows, nColumns);
 
   for (const d of antibiogram.getSensitivities()) {
     const row = labels.rows.indexOf(d.getOrganism().getName());
@@ -66,4 +71,3 @@ function makeAntibiogramTable(antibiogram: Antibiogram): AntibiogramTable {
 }
 
 export default makeAntibiogramTable;
-export type { AntibiogramTable, AntibiogramTableCell };

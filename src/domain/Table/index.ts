@@ -1,2 +1,2 @@
 export { default as default } from '@/domain/Table/Table';
-export type { Cell } from '@/domain/Table/Cell';
+export { default as Cell } from '@/domain/Table/Cell';
