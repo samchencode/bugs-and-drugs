@@ -31,7 +31,8 @@
         ]
       }
     ],
-    "no-duplicate-imports": "error"
+    "no-duplicate-imports": "off",
+    "@typescript-eslint/no-duplicate-imports": ["error"]
   },
   "env": {
     "es2021": true,
