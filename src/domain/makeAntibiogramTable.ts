@@ -8,11 +8,9 @@ class EmptyAntibiogramTableCell extends Cell {
   getValue(): string {
     return this.#value;
   }
+
   toString(): string {
     return this.#value;
-  }
-  protected isIdentical(): boolean {
-    return false;
   }
 }
 
@@ -30,10 +28,6 @@ class FilledAntibiogramTableCell extends Cell {
 
   toString(): string {
     return this.#value;
-  }
-
-  protected isIdentical(cell: FilledAntibiogramTableCell): boolean {
-    return this.#value === cell.getValue();
   }
 }
 

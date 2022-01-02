@@ -16,10 +16,6 @@ describe('Table', () => {
     toString() {
       return '' + this.value;
     }
-
-    protected isIdentical(d: D) {
-      return d.getValue() === this.value;
-    }
   }
 
   let data: D[][];
@@ -116,6 +112,21 @@ describe('Table', () => {
     it('should get row and column names', () => {
       expect(table.getRowLabels()).toBe(labels.rows);
       expect(table.getColumnLabels()).toBe(labels.columns);
+    });
+
+    it('should equate another table with identical data', () => {
+      const table1 = Table.makeTable(data, labels);
+      const table2 = Table.makeTable(data, labels);
+      expect(table1.is(table2)).toBe(true);
+
+      const diffData = [
+        [new D(10), new D(20), new D(30)],
+        [new D(40), new D(50), new D(60)],
+        [new D(70), new D(80), new D(90)],
+        [new D(100), new D(110), new D(1200)],
+      ];
+      const table3 = Table.makeTable(diffData, labels);
+      expect(table1.is(table3)).toBe(false);
     });
   });
 });

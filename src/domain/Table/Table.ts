@@ -42,8 +42,19 @@ class Table<T extends Cell> extends ValueObject {
     return new this(data, labels);
   }
 
-  protected isIdentical() {
-    return false;
+  protected isIdentical(t: Table<T>) {
+    const data = t.getData();
+    const ourData = this.getData();
+    if (t.getShape()[0] !== this.getShape()[0]) return false;
+    if (t.getShape()[1] !== this.getShape()[1]) return false;
+
+    for (const [i, row] of data.entries()) {
+      for (const [j, cell] of row.entries()) {
+        if (!cell.is(ourData[i][j])) return false;
+      }
+    }
+
+    return true;
   }
 }
 
