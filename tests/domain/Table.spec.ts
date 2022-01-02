@@ -10,10 +10,6 @@ describe('Table', () => {
     }
 
     getValue() {
-      return this.value;
-    }
-
-    toString() {
       return '' + this.value;
     }
   }
