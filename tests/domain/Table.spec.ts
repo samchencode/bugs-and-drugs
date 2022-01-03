@@ -95,6 +95,15 @@ describe('Table', () => {
       table = Table.makeTable(data, labels);
     });
 
+    it('should report shape of empty table', () => {
+      const table = Table.makeTable([]);
+      expect(table.getShape()).toEqual([0, 0]);
+    });
+
+    it('should get shape of table', () => {
+      expect(table.getShape()).toEqual([4, 3]);
+    });
+
     it('should get all values', () => {
       expect(table.getData()).toEqual(data);
     });
@@ -106,8 +115,10 @@ describe('Table', () => {
     });
 
     it('should get row and column names', () => {
-      expect(table.getRowLabels()).toBe(labels.rows);
-      expect(table.getColumnLabels()).toBe(labels.columns);
+      const rLabels = table.getRowLabels();
+      const cLabels = table.getColumnLabels();
+      expect(rLabels.map((x) => x.toString())).toEqual(labels.rows);
+      expect(cLabels.map((x) => x.toString())).toEqual(labels.columns);
     });
 
     it('should equate another table with identical data', () => {

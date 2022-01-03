@@ -22,10 +22,12 @@ describe('make table using antibiogram', () => {
 
     it('creates table using antibiogram', () => {
       const table = makeAntibiogramTable(abg);
-      expect(table.getRowLabels()).toEqual(
+      const rLabels = table.getRowLabels();
+      const cLabels = table.getColumnLabels();
+      expect(rLabels.map((x) => x.toString())).toEqual(
         expect.arrayContaining(['Klebsiella', 'Pseudomonas', 'Staph aureus'])
       );
-      expect(table.getColumnLabels()).toEqual(
+      expect(cLabels.map((x) => x.toString())).toEqual(
         expect.arrayContaining(['Azithromycin'])
       );
 

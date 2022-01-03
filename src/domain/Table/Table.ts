@@ -2,23 +2,27 @@ import ValueObject from '@/domain/base/ValueObject';
 import validate from '@/domain/Table/Validator';
 import rules from '@/domain/Table/rules';
 import type Cell from '@/domain/Table/Cell';
+import Label, { EmptyLabel } from '@/domain/Table/Label';
 
 interface LabelParams {
   rows: string[];
   columns: string[];
 }
 
+interface TableLabels {
+  rows: Label[];
+  columns: Label[];
+}
+
 class Table<T extends Cell> extends ValueObject {
   data: T[][];
-  labels?: {
-    rows: string[];
-    columns: string[];
-  };
+  labels: TableLabels = { rows: [], columns: [] };
 
   constructor(data: T[][], labels?: LabelParams) {
     super();
     this.data = data;
-    this.labels = labels;
+    if (labels) this.#setLabels(labels);
+    else this.#makeEmptyLabels();
   }
 
   getData() {
@@ -26,15 +30,15 @@ class Table<T extends Cell> extends ValueObject {
   }
 
   getShape() {
-    return [this.data.length, this.data[0].length];
+    return [this.data.length, this.data[0]?.length ?? 0];
   }
 
   getRowLabels() {
-    return this.labels?.rows;
+    return this.labels.rows;
   }
 
   getColumnLabels() {
-    return this.labels?.columns;
+    return this.labels.columns;
   }
 
   static makeTable<T extends Cell>(data: T[][], labels?: LabelParams) {
@@ -55,6 +59,21 @@ class Table<T extends Cell> extends ValueObject {
     }
 
     return true;
+  }
+
+  #setLabels(labels: LabelParams) {
+    this.labels.rows = labels.rows.map((l) => new Label(l));
+    this.labels.columns = labels.columns.map((l) => new Label(l));
+  }
+
+  #makeEmptyLabels() {
+    const [nRow, nCol] = this.getShape();
+    this.labels.rows = new Array(nRow)
+      .fill(undefined)
+      .map(() => new EmptyLabel());
+    this.labels.columns = new Array(nCol)
+      .fill(undefined)
+      .map(() => new EmptyLabel());
   }
 }
 
