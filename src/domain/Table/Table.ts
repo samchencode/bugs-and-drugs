@@ -4,7 +4,7 @@ import rules from '@/domain/Table/rules';
 import type Cell from '@/domain/Table/Cell';
 import Label, { EmptyLabel } from '@/domain/Table/Label';
 
-interface LabelParams {
+interface TableParams {
   rows: string[];
   columns: string[];
 }
@@ -18,7 +18,7 @@ class Table<T extends Cell> extends ValueObject {
   data: T[][];
   labels: TableLabels = { rows: [], columns: [] };
 
-  constructor(data: T[][], labels?: LabelParams) {
+  constructor(data: T[][], labels?: TableParams) {
     super();
     this.data = data;
     if (labels) this.#setLabels(labels);
@@ -41,7 +41,7 @@ class Table<T extends Cell> extends ValueObject {
     return this.labels.columns;
   }
 
-  static makeTable<T extends Cell>(data: T[][], labels?: LabelParams) {
+  static makeTable<T extends Cell>(data: T[][], labels?: TableParams) {
     validate(rules(data, labels));
     return new this(data, labels);
   }
@@ -61,7 +61,7 @@ class Table<T extends Cell> extends ValueObject {
     return true;
   }
 
-  #setLabels(labels: LabelParams) {
+  #setLabels(labels: TableParams) {
     this.labels.rows = labels.rows.map((l) => new Label(l));
     this.labels.columns = labels.columns.map((l) => new Label(l));
   }
@@ -78,4 +78,4 @@ class Table<T extends Cell> extends ValueObject {
 }
 
 export default Table;
-export type { LabelParams };
+export type { TableParams as LabelParams };

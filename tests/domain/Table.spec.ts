@@ -1,16 +1,17 @@
-import Table, { Cell } from '@/domain/Table';
+import Table, { Cell, Tooltip, EmptyTooltip } from '@/domain/Table';
 
 describe('Table', () => {
   class D extends Cell {
     value: number;
-
     constructor(v: number) {
       super();
       this.value = v;
     }
-
     getValue() {
       return '' + this.value;
+    }
+    getTooltip(): Tooltip {
+      return new EmptyTooltip();
     }
   }
 
@@ -84,6 +85,16 @@ describe('Table', () => {
       const boom = () => Table.makeTable(data, badLabels);
       expect(boom).toThrowError(
         'Row labels do not match number of rows in data'
+      );
+    });
+
+    it('should make empty row and column labels if none are provided', () => {
+      const table = Table.makeTable(data);
+      expect(table.getColumnLabels().map((x) => x.toString())).toEqual(
+        expect.arrayContaining([''])
+      );
+      expect(table.getRowLabels().map((x) => x.toString())).toEqual(
+        expect.arrayContaining([''])
       );
     });
   });

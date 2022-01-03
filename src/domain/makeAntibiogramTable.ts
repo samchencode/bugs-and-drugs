@@ -1,4 +1,4 @@
-import Table, { Cell } from '@/domain/Table';
+import Table, { Cell, Tooltip } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 
@@ -11,6 +11,10 @@ class EmptyAntibiogramTableCell extends Cell {
 
   toString(): string {
     return this.#value;
+  }
+
+  getTooltip(): Tooltip {
+    throw new Error('Method not implemented.');
   }
 }
 
@@ -28,6 +32,9 @@ class FilledAntibiogramTableCell extends Cell {
 
   toString(): string {
     return this.#value;
+  }
+  getTooltip(): Tooltip {
+    throw new Error('Method not implemented.');
   }
 }
 
