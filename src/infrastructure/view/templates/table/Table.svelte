@@ -22,10 +22,10 @@
       </tr>
       {#each table?.getData() ?? [] as row, i}
         <tr>
-          <th scope="row">{table?.getRowLabels()?.[i] ?? ''}</th>
+          <th scope="row">{table?.getRowLabels()[i]}</th>
           {#each row ?? [] as cell}
             <td>
-              {cell.getValue()}
+              {cell}
             </td>
           {/each}
         </tr>
