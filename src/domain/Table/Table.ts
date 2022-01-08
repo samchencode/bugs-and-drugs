@@ -2,31 +2,54 @@ import ValueObject from '@/domain/base/ValueObject';
 import validate from '@/domain/Table/Validator';
 import rules from '@/domain/Table/rules';
 import type Cell from '@/domain/Table/Cell';
-import Label, { EmptyLabel } from '@/domain/Table/Label';
+import type TableLabels from '@/domain/Table/TableLabels';
+import {
+  EmptyTableLabels,
+  FilledTableLabels,
+} from '@/domain/Table/TableLabels';
+import CollapseBehavior from '@/domain/Table/CollapseBehavior';
 
 interface TableParams {
-  rows: string[];
-  columns: string[];
-}
-
-interface TableLabels {
-  rows: Label[];
-  columns: Label[];
+  labels: {
+    rows: string[];
+    columns: string[];
+  };
+  groups: {
+    rows: {
+      range: [number, number];
+      collapsed: boolean;
+    }[];
+  };
 }
 
 class Table<T extends Cell> extends ValueObject {
   data: T[][];
-  labels: TableLabels = { rows: [], columns: [] };
+  labels: TableLabels;
+  rowCollapse: CollapseBehavior;
 
-  constructor(data: T[][], labels?: TableParams) {
+  constructor(data: T[][], params?: Partial<TableParams>) {
     super();
     this.data = data;
-    if (labels) this.#setLabels(labels);
-    else this.#makeEmptyLabels();
+
+    const { labels } = params ?? {};
+    if (!labels)
+      this.labels = new EmptyTableLabels(
+        this.getShape()[0],
+        this.getShape()[1]
+      );
+    else this.labels = new FilledTableLabels(labels.rows, labels.columns);
+
+    const { groups } = params ?? {};
+    if (groups) {
+      const collapseRanges = groups.rows
+        .filter((g) => g.collapsed)
+        .map((g) => g.range);
+      this.rowCollapse = new CollapseBehavior(collapseRanges);
+    } else this.rowCollapse = new CollapseBehavior([]);
   }
 
   getData() {
-    return this.data;
+    return this.rowCollapse.filterData(this.data);
   }
 
   getShape() {
@@ -34,16 +57,16 @@ class Table<T extends Cell> extends ValueObject {
   }
 
   getRowLabels() {
-    return this.labels.rows;
+    return this.rowCollapse.filterLabels(this.labels.getRowLabels());
   }
 
   getColumnLabels() {
-    return this.labels.columns;
+    return this.labels.getColumnLabels();
   }
 
-  static makeTable<T extends Cell>(data: T[][], labels?: TableParams) {
-    validate(rules(data, labels));
-    return new this(data, labels);
+  static makeTable<T extends Cell>(data: T[][], params?: Partial<TableParams>) {
+    validate(rules(data, params));
+    return new this(data, params);
   }
 
   protected isIdentical(t: Table<T>) {
@@ -60,22 +83,7 @@ class Table<T extends Cell> extends ValueObject {
 
     return true;
   }
-
-  #setLabels(labels: TableParams) {
-    this.labels.rows = labels.rows.map((l) => new Label(l));
-    this.labels.columns = labels.columns.map((l) => new Label(l));
-  }
-
-  #makeEmptyLabels() {
-    const [nRow, nCol] = this.getShape();
-    this.labels.rows = new Array(nRow)
-      .fill(undefined)
-      .map(() => new EmptyLabel());
-    this.labels.columns = new Array(nCol)
-      .fill(undefined)
-      .map(() => new EmptyLabel());
-  }
 }
 
 export default Table;
-export type { TableParams as LabelParams };
+export type { TableParams };

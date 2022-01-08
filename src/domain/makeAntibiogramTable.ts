@@ -68,7 +68,7 @@ function makeAntibiogramTable(antibiogram: Antibiogram): Table<Cell> {
     cells[row][column] = new FilledAntibiogramTableCell(d);
   }
 
-  return Table.makeTable(cells, labels);
+  return Table.makeTable(cells, { labels });
 }
 
 export default makeAntibiogramTable;

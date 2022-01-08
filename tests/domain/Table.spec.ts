@@ -82,7 +82,7 @@ describe('Table', () => {
         columns: ['c1', 'c2', 'c3'],
         rows: ['r1', 'r2', 'r3'],
       };
-      const boom = () => Table.makeTable(data, badLabels);
+      const boom = () => Table.makeTable(data, { labels: badLabels });
       expect(boom).toThrowError(
         'Row labels do not match number of rows in data'
       );
@@ -97,13 +97,111 @@ describe('Table', () => {
         expect.arrayContaining([''])
       );
     });
+
+    it('should make a table with collapsible row ranges', () => {
+      const table = Table.makeTable(data, {
+        labels,
+        groups: {
+          rows: [
+            {
+              range: [1, 3],
+              collapsed: true,
+            },
+          ],
+        },
+      });
+
+      expect(table.getData()).toEqual([data[0], data[3]]);
+      const rowLabels = table.getRowLabels().map((x) => x.toString());
+      expect(rowLabels).toEqual(['r1', 'r4']);
+    });
+
+    it('should throw error with overlapping ranges', () => {
+      const badRanges1 = [
+        {
+          range: [1, 3] as [number, number],
+          collapsed: false,
+        },
+        {
+          range: [2, 4] as [number, number],
+          collapsed: false,
+        },
+      ];
+      const badRanges2 = [
+        {
+          range: [2, 4] as [number, number],
+          collapsed: false,
+        },
+        {
+          range: [1, 3] as [number, number],
+          collapsed: false,
+        },
+      ];
+      const badRanges3 = [
+        {
+          range: [1, 3] as [number, number],
+          collapsed: false,
+        },
+        {
+          range: [1, 3] as [number, number],
+          collapsed: false,
+        },
+      ];
+
+      const boom1 = () =>
+        Table.makeTable(data, {
+          groups: { rows: badRanges1 },
+        });
+      const boom2 = () =>
+        Table.makeTable(data, {
+          groups: { rows: badRanges2 },
+        });
+      const boom3 = () =>
+        Table.makeTable(data, {
+          groups: { rows: badRanges3 },
+        });
+
+      expect(boom1).toThrowError('Intersecting group ranges');
+      expect(boom2).toThrowError('Intersecting group ranges');
+      expect(boom3).toThrowError('Duplicate group ranges');
+    });
+
+    it('should not allow groups of only zero or one row', () => {
+      const badRange1 = [
+        { range: [0, 1] as [number, number], collapsed: false },
+      ];
+      const boom1 = () =>
+        Table.makeTable(data, { groups: { rows: badRange1 } });
+
+      expect(boom1).toThrowError('Group must have at least two rows');
+    });
+
+    it('should not allow negative indices for group range', () => {
+      const badRange1 = [
+        { range: [-1, 2] as [number, number], collapsed: false },
+      ];
+      const boom1 = () =>
+        Table.makeTable(data, { groups: { rows: badRange1 } });
+
+      expect(boom1).toThrowError('Invalid range');
+    });
+
+    it('should not allow invalid range', () => {
+      const badRange1 = [
+        { range: [2, 0] as [number, number], collapsed: false },
+      ];
+      const boom1 = () =>
+        Table.makeTable(data, { groups: { rows: badRange1 } });
+
+      expect(boom1).toThrowError('Invalid range');
+    });
   });
 
   describe('behavior', () => {
     let table: Table<D>;
 
     beforeEach(() => {
-      table = Table.makeTable(data, labels);
+      table = Table.makeTable(data, { labels });
     });
 
     it('should report shape of empty table', () => {
@@ -133,8 +231,8 @@ describe('Table', () => {
     });
 
     it('should equate another table with identical data', () => {
-      const table1 = Table.makeTable(data, labels);
-      const table2 = Table.makeTable(data, labels);
+      const table1 = Table.makeTable(data, { labels });
+      const table2 = Table.makeTable(data, { labels });
       expect(table1.is(table2)).toBe(true);
 
       const diffData = [
@@ -143,7 +241,7 @@ describe('Table', () => {
         [new D(70), new D(80), new D(90)],
         [new D(100), new D(110), new D(1200)],
       ];
-      const table3 = Table.makeTable(diffData, labels);
+      const table3 = Table.makeTable(diffData, { labels });
       expect(table1.is(table3)).toBe(false);
     });
   });

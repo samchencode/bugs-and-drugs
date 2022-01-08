@@ -1,12 +1,12 @@
 import type Cell from '@/domain/Table/Cell';
 import type { Rule } from '@/domain/Table/Validator/Rule';
-import type { LabelParams } from '@/domain/Table/Table';
+import type { TableParams } from '@/domain/Table/Table';
 
 class NoInconsistentRowColumnLabelNumber implements Rule {
   input: Cell[][];
-  labels?: LabelParams;
+  labels?: TableParams['labels'];
 
-  constructor(input: Cell[][], labels?: LabelParams) {
+  constructor(input: Cell[][], labels?: TableParams['labels']) {
     this.input = input;
     this.labels = labels;
   }
