@@ -15,8 +15,8 @@ describe('Table Controller', () => {
     return controller.showTable(0).then((t) => {
       expect(t.getRowLabels()).toBeDefined();
       expect(t.getColumnLabels()).toBeDefined();
-      expect(t.getData()).toBeDefined();
-      expect(t.getData().length).toBe(3);
+      expect(t.getCells()).toBeDefined();
+      expect(t.getCells().length).toBe(3);
     });
   });
 

@@ -35,13 +35,15 @@ describe('Table', () => {
     it('should create new empty table via constructor', () => {
       const table = makeTable([]);
       expect(table).toBeDefined();
-      expect(table.getData()).toEqual([]);
+      expect(table.getCells()).toEqual([]);
     });
 
     it('should create new table with data', () => {
       const table = makeTable(data);
       expect(table).toBeDefined();
-      expect(table.getData()).toEqual(data);
+      expect(table.getShape()).toEqual([4, 3]);
+      expect(table.getCells()[0][0].getValue()).toEqual('10');
+      expect(table.getCells()[3][2].getValue()).toEqual('120');
     });
 
     it('should throw error with inconsistent row/col number', () => {
@@ -112,7 +114,13 @@ describe('Table', () => {
         },
       });
 
-      expect(table.getData()).toEqual([data[0], data[1], data[3]]);
+      const values = cellArrayToStringArray(table.getCells());
+      const expectedValues = cellArrayToStringArray([
+        data[0],
+        data[1],
+        data[3],
+      ]);
+      expect(values).toEqual(expectedValues);
       const rowLabels = table.getRowLabels().map((x) => x.toString());
       expect(rowLabels).toEqual(['r1', 'r2', 'r4']);
     });
@@ -133,8 +141,13 @@ describe('Table', () => {
           ],
         },
       });
-
-      expect(table.getData()).toEqual([data[0], data[2], data[3]]);
+      const values = cellArrayToStringArray(table.getCells());
+      const expectedValues = cellArrayToStringArray([
+        data[0],
+        data[2],
+        data[3],
+      ]);
+      expect(values).toEqual(expectedValues);
       const rowLabels = table.getRowLabels().map((x) => x.toString());
       expect(rowLabels).toEqual(['r1', 'r3', 'r4']);
     });
@@ -218,7 +231,7 @@ describe('Table', () => {
   });
 
   describe('behavior', () => {
-    let table: Table<D>;
+    let table: Table;
 
     beforeEach(() => {
       table = makeTable(data, { labels });
@@ -234,7 +247,9 @@ describe('Table', () => {
     });
 
     it('should get all values', () => {
-      expect(table.getData()).toEqual(data);
+      const values = cellArrayToStringArray(table.getCells());
+      const expectedValues = cellArrayToStringArray(data);
+      expect(values).toEqual(expectedValues);
     });
 
     it('should get number of rows and columns', () => {
@@ -251,3 +266,7 @@ describe('Table', () => {
     });
   });
 });
+
+function cellArrayToStringArray(cells: { getValue(): string }[][]): string[][] {
+  return cells.map((r) => r.map((c) => c.getValue()));
+}

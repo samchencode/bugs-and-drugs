@@ -6,7 +6,7 @@ describe('make table using antibiogram', () => {
   it('creates table using empty antibiogram', () => {
     const abg = new Antibiogram(new AntibiogramId('0'), []);
     const table = makeAntibiogramTable(abg);
-    expect(table.getData()).toEqual([]);
+    expect(table.getCells()).toEqual([]);
   });
 
   describe('with data', () => {
@@ -29,7 +29,7 @@ describe('make table using antibiogram', () => {
         expect.arrayContaining(['Azithromycin'])
       );
 
-      const data = table.getData();
+      const data = table.getCells();
       expect(data).toEqual(expect.arrayContaining([expect.any(Array)]));
       expect(data.length).toBe(3);
 

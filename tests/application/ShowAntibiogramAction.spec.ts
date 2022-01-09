@@ -12,7 +12,7 @@ describe('ShowAntibiogramAction', () => {
 
   it('should show antibiogram as table', () => {
     return showAbg.execute().then((t) => {
-      expect(t.getData().length).toBe(3);
+      expect(t.getCells().length).toBe(3);
     });
   });
 });

@@ -52,7 +52,7 @@ function makeEmptyMatrix(
     );
 }
 
-function makeAntibiogramTable(antibiogram: Antibiogram): Table<Cell> {
+function makeAntibiogramTable(antibiogram: Antibiogram): Table {
   if (antibiogram.isEmpty()) return makeTable([]);
   const { antibiotics, organisms } = antibiogram;
   const labels = {
