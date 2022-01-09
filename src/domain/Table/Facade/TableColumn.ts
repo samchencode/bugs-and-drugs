@@ -9,12 +9,12 @@ class TableColumn {
     this.#label = label;
   }
 
-  setData(data: TableCell[]) {
+  setCells(data: TableCell[]) {
     this.#data = data;
   }
 
-  getData(): TableCell[] {
-    throw Error();
+  getCells(): TableCell[] {
+    return this.#data;
   }
 
   getLabel(): Label {

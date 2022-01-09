@@ -77,14 +77,14 @@ class TableFacade {
   #setColumnData(cells: TableCell[][]) {
     for (const [j, column] of this.#columns.entries()) {
       const values = cells.map((c) => c[j]);
-      column.setData(values);
+      column.setCells(values);
     }
   }
 
   #setRowData(cells: TableCell[][]) {
     for (const [i, row] of this.#rows.entries()) {
       const values = cells[i];
-      row.setData(values);
+      row.setCells(values);
     }
   }
 

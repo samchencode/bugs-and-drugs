@@ -12,12 +12,12 @@ class TableRow {
     this.#group = group ?? null;
   }
 
-  setData(data: TableCell[]) {
+  setCells(data: TableCell[]) {
     this.#data = data;
   }
 
-  getData(): TableCell[] {
-    throw Error();
+  getCells(): TableCell[] {
+    return this.#data;
   }
 
   getLabel(): Label {
