@@ -6,7 +6,12 @@ import TableRow from '@/domain/Table/Facade/TableRow';
 import TableColumn from '@/domain/Table/Facade/TableColumn';
 import TableGroup from '@/domain/Table/Facade/TableGroup';
 import type { TableParams } from '@/domain/Table/TableParams';
-import type { Range } from '@/domain/Table/Group';
+import {
+  CollapsedGroup,
+  ExpandedGroup,
+  type Group,
+  type Range,
+} from '@/domain/Table/Group';
 
 class TableFacade {
   #table: Table<Cell>;
@@ -54,18 +59,56 @@ class TableFacade {
     return this.#table.getColumnLabels();
   }
 
-  #collapseRowGroup(range: Range) {
+  #collapseRowGroup(group: Group) {
     const rowGroups = this.#table.getRowGroups();
-    const rowGroupIndex = rowGroups.findIndex((g) => g.hasRange(range));
-    const rowGroup = rowGroups.slice(rowGroupIndex, rowGroupIndex + 1)[0];
-    const newRowGroup = rowGroup.collapse();
+    const rowGroupIndex = rowGroups.findIndex((g) => g.is(group));
+    const newRowGroup = rowGroups[rowGroupIndex].collapse();
     const newRowGroups = rowGroups.slice();
     newRowGroups.splice(rowGroupIndex, 1, newRowGroup);
+
     const newParams = {
       groups: {
         rows: newRowGroups,
       },
     };
+    console.log(1, newRowGroups);
+    return this.#clone(newParams);
+  }
+
+  #expandRowGroup(group: Group) {
+    const rowGroups = this.#table.getRowGroups();
+    console.log(22, rowGroups);
+    const rowGroupIndex = rowGroups.findIndex((g) => g.is(group));
+    const rowGroup = rowGroups[rowGroupIndex];
+    const oldRange = rowGroup.getRange();
+    const oldRangeLength = rowGroup.getRangeLength();
+    const newRowGroup = rowGroups[rowGroupIndex].expand();
+    const newRowGroups = rowGroups.slice();
+    newRowGroups.splice(rowGroupIndex, 1, newRowGroup);
+
+    const addToRange = (r: Range, v: number): [number, number] => [
+      r[0] + v,
+      r[1] + v,
+    ];
+    for (const [i, group] of rowGroups.entries()) {
+      const isAffected = group.getRange()[0] >= oldRange[1];
+      console.log(222, group.getRange(), oldRange, isAffected);
+      if (!isAffected) continue;
+      const params = {
+        range: addToRange(group.getRange(), oldRangeLength),
+        expandedRange: addToRange(group.getExpandedRange(), oldRangeLength),
+      };
+      newRowGroups[i] = group.isCollapsed()
+        ? new CollapsedGroup(params)
+        : new ExpandedGroup(params);
+    }
+
+    const newParams = {
+      groups: {
+        rows: newRowGroups,
+      },
+    };
+    console.log(2, newRowGroups);
     return this.#clone(newParams);
   }
 
@@ -91,7 +134,10 @@ class TableFacade {
     return rowGroups.map(
       (g) =>
         new TableGroup(g, {
-          handleCollapse: (range) => this.#collapseRowGroup(range),
+          handleCollapse: (group) =>
+            group.isCollapsed() ? this : this.#collapseRowGroup(group),
+          handleExpand: (group) =>
+            group.isCollapsed() ? this.#expandRowGroup(group) : this,
         })
     );
   }

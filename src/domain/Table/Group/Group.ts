@@ -33,6 +33,14 @@ abstract class Group extends ValueObject {
     return [this.rangeStart, this.rangeStart + this.rangeLength];
   }
 
+  getRangeLength(): number {
+    return this.#findRangeLength(this.getRange());
+  }
+
+  getExpandedRangeLength(): number {
+    return this.rangeLength;
+  }
+
   asGroupParams(): GroupParams {
     return {
       range: this.getRange(),

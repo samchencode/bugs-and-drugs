@@ -30,7 +30,10 @@ describe('Table', () => {
   };
 
   const groups = {
-    rows: [new ExpandedGroup({ range: [0, 2] })],
+    rows: [
+      new ExpandedGroup({ range: [0, 2] }),
+      new CollapsedGroup({ range: [2, 4] }),
+    ],
   };
 
   beforeEach(() => {
@@ -152,6 +155,20 @@ describe('Table', () => {
       expect(rowLabels).toEqual(['r1', 'r3', 'r4']);
     });
 
+    it('should preserve expanded group ranges beyond collapsed range', () => {
+      const table = makeTable(data, {
+        labels,
+        groups: {
+          rows: [
+            new CollapsedGroup({ range: [0, 2] }),
+            new ExpandedGroup({ range: [2, 4] }),
+          ],
+        },
+      });
+
+      expect(table.getRowGroups()[1].getRange()).toEqual([1, 3]);
+    });
+
     it('should throw error with overlapping ranges', () => {
       const badRanges1 = [
         new ExpandedGroup({ range: [1, 3] }),
@@ -248,7 +265,9 @@ describe('Table', () => {
     beforeEach(() => {
       table = makeTable(data, {
         labels,
-        groups,
+        groups: {
+          rows: [new ExpandedGroup({ range: [0, 2] })],
+        },
       });
     });
 
@@ -274,18 +293,117 @@ describe('Table', () => {
       const group = table.getRowGroups()[0];
       expect(group.getRange()).toEqual(groups.rows[0].getRange());
     });
+  });
 
-    describe('group facade behavior', () => {
-      it('should create new table with collapsed rows', () => {
-        const collapsedTable = table.getRowGroups()[0].collapse();
-        const values = cellMatrixToStringMatrix(collapsedTable.getCells());
-        const expectedValues = cellMatrixToStringMatrix([
-          data[0],
-          data[2],
-          data[3],
-        ]);
-        expect(values).toEqual(expectedValues);
+  describe('group facade behavior', () => {
+    let table: Table;
+
+    beforeEach(() => {
+      table = makeTable(data, {
+        labels,
+        groups,
       });
+    });
+    it('should create new table with collapsed rows', () => {
+      const collapsedTable = table.getRowGroups()[0].collapse();
+      const values = cellMatrixToStringMatrix(collapsedTable.getCells());
+      const expectedValues = cellMatrixToStringMatrix([data[0], data[2]]);
+      expect(values).toEqual(expectedValues);
+    });
+
+    it('should create new table with expanded rows', () => {
+      const collapsedTable = table.getRowGroups()[1].expand();
+      const values = cellMatrixToStringMatrix(collapsedTable.getCells());
+      const expectedValues = cellMatrixToStringMatrix(data);
+      expect(values).toEqual(expectedValues);
+    });
+
+    it('should update group ranges after collapse', () => {
+      const collapsedTable = table.getRowGroups()[0].collapse();
+      const collapsedRanges = collapsedTable
+        .getRowGroups()
+        .map((x) => x.getRange());
+      expect(collapsedRanges).toEqual([
+        [0, 1],
+        [1, 2],
+      ]);
+    });
+
+    it('should update group ranges after expand', () => {
+      const table = makeTable(data, {
+        labels,
+        groups: {
+          rows: [
+            new CollapsedGroup({ range: [0, 2] }),
+            new ExpandedGroup({ range: [2, 4] }),
+          ],
+        },
+      });
+      const expandedTable = table.getRowGroups()[0].expand();
+      const expandedRanges = expandedTable
+        .getRowGroups()
+        .map((x) => x.getRange());
+      expect(expandedRanges).toEqual([
+        [0, 2],
+        [2, 4],
+      ]);
+    });
+
+    it('should return table when calling expand on expanded row', () => {
+      const sameTable = table.getRowGroups()[0].expand();
+      const values = cellMatrixToStringMatrix(sameTable.getCells());
+      const expectedValues = cellMatrixToStringMatrix([
+        data[0],
+        data[1],
+        data[2],
+      ]);
+      expect(values).toEqual(expectedValues);
+    });
+
+    it('should shift the ranges below on collapse', () => {
+      const collapsedTable = table.getRowGroups()[0].collapse();
+      const [collapsedGroup, affectedGroup] = collapsedTable.getRowGroups();
+      expect(collapsedGroup.getRange()).toEqual([0, 1]);
+      expect(affectedGroup.getRange()).toEqual([1, 2]);
+    });
+
+    it('should be the same after collapse then expand', () => {
+      const collapsedTable = table.getRowGroups()[0].collapse();
+      const revertedTable = collapsedTable.getRowGroups()[0].expand();
+      expect(revertedTable.getRowGroups()[1].getRange()).toEqual([2, 3]);
+      expect(revertedTable.getRowGroups()[1].getExpandedRange()).toEqual([
+        2, 4,
+      ]);
+
+      const values = cellMatrixToStringMatrix(revertedTable.getCells());
+      const expectedValues = cellMatrixToStringMatrix([
+        data[0],
+        data[1],
+        data[2],
+      ]);
+      expect(values).toEqual(expectedValues);
+    });
+
+    it('should be the same after expand then collapse', () => {
+      const table = makeTable(data, {
+        labels,
+        groups: {
+          rows: [
+            new CollapsedGroup({ range: [0, 2] }),
+            new ExpandedGroup({ range: [2, 4] }),
+          ],
+        },
+      });
+      const expandedTable = table.getRowGroups()[0].expand();
+      const revertedTable = expandedTable.getRowGroups()[0].collapse();
+      expect(revertedTable.getRowGroups()[1].getRange()).toEqual([1, 3]);
+      const values = cellMatrixToStringMatrix(revertedTable.getCells());
+      const expectedValues = cellMatrixToStringMatrix([
+        data[0],
+        data[2],
+        data[3],
+      ]);
+      expect(values).toEqual(expectedValues);
     });
   });
 });

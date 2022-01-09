@@ -1,9 +1,9 @@
 import type Table from '@/domain/Table/Facade/TableFacade';
-import type { Group, Range } from '@/domain/Table/Group';
+import type { Group } from '@/domain/Table/Group';
 
 interface GroupHandlers {
-  handleCollapse(range: Range): Table;
-  // handleExpand(range: Range, newRange: Range): Table;
+  handleCollapse(group: Group): Table;
+  handleExpand(group: Group): Table;
 }
 
 class TableGroup {
@@ -19,19 +19,20 @@ class TableGroup {
     return this.#group.getRange();
   }
 
+  getExpandedRange() {
+    return this.#group.getExpandedRange();
+  }
+
   isCollapsed() {
     return this.#group.isCollapsed();
   }
 
   collapse(): Table {
-    return this.#handlers.handleCollapse(this.getRange());
+    return this.#handlers.handleCollapse(this.#group);
   }
 
   expand(): Table {
-    // get tableparams from constructor?
-    // or make a Table.cloneWithModifiedParams method...
-    // and make a new table and return it
-    throw Error;
+    return this.#handlers.handleExpand(this.#group);
   }
 
   includes(index: number) {
