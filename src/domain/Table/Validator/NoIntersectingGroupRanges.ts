@@ -1,8 +1,7 @@
 import type Cell from '@/domain/Table/Cell';
 import type { TableParams } from '@/domain/Table/TableParams';
 import type { Rule } from '@/domain/Table/Validator/Rule';
-
-type Range = [number, number];
+import type { Range } from '@/domain/Table/Group';
 
 class NoIntersectingGroupRanges implements Rule {
   data: Cell[][];
@@ -18,9 +17,9 @@ class NoIntersectingGroupRanges implements Rule {
     if (this.groupInfo.length < 2) return;
 
     for (let i = 0; i < this.groupInfo.length; i++) {
-      const { range } = this.groupInfo[i];
+      const range = this.groupInfo[i].getRange();
       for (let j = i + 1; j < this.groupInfo.length; j++) {
-        const { range: otherRange } = this.groupInfo[j];
+        const otherRange = this.groupInfo[j].getRange();
         compareRanges(range, otherRange);
       }
     }

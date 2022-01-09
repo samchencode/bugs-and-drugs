@@ -1,7 +1,5 @@
 import type Table from '@/domain/Table/Facade/TableFacade';
-import type { Group } from '@/domain/Table/Group';
-
-type Range = [number, number];
+import type { Group, Range } from '@/domain/Table/Group';
 
 interface GroupHandlers {
   handleCollapse(range: Range): Table;
@@ -18,11 +16,11 @@ class TableGroup {
   }
 
   getRange() {
-    return this.#group.range;
+    return this.#group.getRange();
   }
 
   isCollapsed() {
-    return this.#group.collapsed;
+    return this.#group.isCollapsed();
   }
 
   collapse(): Table {

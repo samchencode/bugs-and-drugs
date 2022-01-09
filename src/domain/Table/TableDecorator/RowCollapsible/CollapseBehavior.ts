@@ -1,14 +1,13 @@
 import type Cell from '@/domain/Table/Cell';
 import type Label from '@/domain/Table/Label';
-import type { Group } from '@/domain/Table/Group';
-
-type Range = [number, number];
+import { CollapsedGroup, ExpandedGroup } from '@/domain/Table/Group';
+import type { Group, Range } from '@/domain/Table/Group';
 
 class CollapseBehavior<T extends Cell> {
-  #collapseRanges: Range[];
+  #hiddenRanges: Range[];
 
   constructor(collapseRanges: Range[]) {
-    this.#collapseRanges = collapseRanges;
+    this.#hiddenRanges = collapseRanges;
   }
 
   filterData(data: T[][]) {
@@ -20,33 +19,42 @@ class CollapseBehavior<T extends Cell> {
   }
 
   findNumberOfCollapsedRows() {
-    return this.#collapseRanges.reduce(
+    return this.#hiddenRanges.reduce(
       (ag, r) => this.#findLengthOfRange(r) + ag,
       0
     );
   }
 
   collapseGroups(groups: Group[]) {
-    const resultGroups = cloneGroups(groups);
+    const resultGroups = groups.slice();
 
-    resultGroups
-      .filter((g) => g.collapsed)
-      .forEach((g) => {
-        g.range[1] = g.range[0] + 1;
-      });
-
-    for (const range of this.#collapseRanges) {
+    for (const range of this.#hiddenRanges) {
       const rangeLength = this.#findLengthOfRange(range);
       if (rangeLength === 0) continue;
-      resultGroups
-        .filter((g) => this.#rangeComesAfter(g.range, range))
-        .forEach((g) => {
-          g.range[0] -= rangeLength;
-          g.range[1] -= rangeLength;
-        });
+      const affectedGroups = resultGroups.filter((g) =>
+        this.#rangeComesAfter(g.getRange(), range)
+      );
+
+      for (const [i, g] of affectedGroups.entries()) {
+        const newRangeParams = {
+          ...g.asGroupParams(),
+          range: this.#subtractFromRange(g.getRange(), rangeLength),
+          expandedRange: this.#subtractFromRange(
+            g.getExpandedRange(),
+            rangeLength
+          ),
+        };
+        affectedGroups[i] = g.isCollapsed()
+          ? new CollapsedGroup(newRangeParams)
+          : new ExpandedGroup(newRangeParams);
+      }
     }
 
     return resultGroups;
+  }
+
+  #subtractFromRange(range: Range, value: number): [number, number] {
+    return [range[0] - value, range[1] - value];
   }
 
   #findLengthOfRange(r: Range): number {
@@ -54,7 +62,7 @@ class CollapseBehavior<T extends Cell> {
   }
 
   #indexInAnyRange(index: number): boolean {
-    const inRange = this.#collapseRanges.find((r) =>
+    const inRange = this.#hiddenRanges.find((r) =>
       this.#indexInRange(r, index)
     );
     if (!inRange) return false;
@@ -69,15 +77,6 @@ class CollapseBehavior<T extends Cell> {
   #rangeComesAfter(r1: Range, r2: Range) {
     return r2[1] <= r1[0];
   }
-}
-
-function cloneGroups(groups: Group[]) {
-  const clone = groups.slice();
-  for (const idx in clone) {
-    clone[idx] = Object.assign({}, clone[idx]);
-    clone[idx].range = clone[idx].range.slice() as [number, number];
-  }
-  return clone;
 }
 
 export default CollapseBehavior;

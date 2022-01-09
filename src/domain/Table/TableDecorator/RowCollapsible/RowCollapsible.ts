@@ -14,10 +14,13 @@ class RowCollapsible<T extends Cell> implements TableDecorator<T> {
     this.#table = table;
 
     const rowGroups = table.getRowGroups();
-    const collapseRanges = rowGroups
-      .filter((g) => g.collapsed)
-      .map<[number, number]>((g) => [g.range[0] + 1, g.range[1]]);
-    this.#collapse = new CollapseBehavior(collapseRanges);
+    const hiddenRanges = rowGroups
+      .filter((g) => g.isCollapsed())
+      .map<[number, number]>((g) => [
+        g.getExpandedRange()[0] + 1,
+        g.getExpandedRange()[1],
+      ]);
+    this.#collapse = new CollapseBehavior(hiddenRanges);
   }
 
   getRowGroups(): Group[] {

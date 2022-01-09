@@ -1,7 +1,6 @@
 import type { Rule } from '@/domain/Table/Validator/Rule';
 import type { TableParams } from '@/domain/Table/TableParams';
-
-type Range = [number, number];
+import type { Range } from '@/domain/Table/Group';
 
 class NoInvalidRowRanges implements Rule {
   groupInfo?: TableParams['groups']['rows'];
@@ -12,7 +11,8 @@ class NoInvalidRowRanges implements Rule {
 
   check(): void {
     if (!this.groupInfo) return;
-    for (const { range } of this.groupInfo) {
+    for (const group of this.groupInfo) {
+      const range = group.getRange();
       if (firstNumberIsGreaterThanSecond(range))
         throw new InvalidRangeError(range);
       if (rangeIncludesNegativeNumbers(range))

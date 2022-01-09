@@ -1,7 +1,6 @@
 import type { TableParams } from '@/domain/Table/TableParams';
 import type { Rule } from '@/domain/Table/Validator/Rule';
-
-type Range = [number, number];
+import type { Range } from '@/domain/Table/Group';
 
 class NoZeroOrOneRowGroups implements Rule {
   groupInfo?: TableParams['groups']['rows'];
@@ -12,7 +11,8 @@ class NoZeroOrOneRowGroups implements Rule {
 
   check(): void {
     if (!this.groupInfo) return;
-    for (const { range } of this.groupInfo) {
+    for (const group of this.groupInfo) {
+      const range = group.getExpandedRange();
       if (!includesMoreThanTwoIntegers(range))
         throw new GroupOfLessThanTwoRowsError(range);
     }

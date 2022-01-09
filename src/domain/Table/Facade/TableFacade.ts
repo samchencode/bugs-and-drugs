@@ -6,6 +6,7 @@ import TableRow from '@/domain/Table/Facade/TableRow';
 import TableColumn from '@/domain/Table/Facade/TableColumn';
 import TableGroup from '@/domain/Table/Facade/TableGroup';
 import type { TableParams } from '@/domain/Table/TableParams';
+import type { Range } from '@/domain/Table/Group';
 
 class TableFacade {
   #table: Table<Cell>;
@@ -55,11 +56,9 @@ class TableFacade {
 
   #collapseRowGroup(range: Range) {
     const rowGroups = this.#table.getRowGroups();
-    const rowGroupIndex = rowGroups.findIndex((g) =>
-      rangeIdentical(g.range, range)
-    );
+    const rowGroupIndex = rowGroups.findIndex((g) => g.hasRange(range));
     const rowGroup = rowGroups.slice(rowGroupIndex, rowGroupIndex + 1)[0];
-    const newRowGroup = { ...rowGroup, collapsed: true };
+    const newRowGroup = rowGroup.collapse();
     const newRowGroups = rowGroups.slice();
     newRowGroups.splice(rowGroupIndex, 1, newRowGroup);
     const newParams = {
@@ -139,9 +138,5 @@ function makeArray(n: number) {
 function makeMatrix(n: number, m: number) {
   return makeArray(n).map(() => makeArray(m));
 }
-
-type Range = [number, number];
-const rangeIdentical = (r1: Range, r2: Range): boolean =>
-  r1[0] === r2[0] && r1[1] === r2[1];
 
 export default TableFacade;

@@ -1,4 +1,11 @@
-import { Cell, Tooltip, EmptyTooltip, makeTable } from '@/domain/Table';
+import {
+  Cell,
+  Tooltip,
+  EmptyTooltip,
+  makeTable,
+  ExpandedGroup,
+  CollapsedGroup,
+} from '@/domain/Table';
 import type { Table } from '@/domain/Table';
 
 describe('Table', () => {
@@ -23,12 +30,7 @@ describe('Table', () => {
   };
 
   const groups = {
-    rows: [
-      {
-        range: [0, 2] as [number, number],
-        collapsed: false,
-      },
-    ],
+    rows: [new ExpandedGroup({ range: [0, 2] })],
   };
 
   beforeEach(() => {
@@ -114,12 +116,7 @@ describe('Table', () => {
       const table = makeTable(data, {
         labels,
         groups: {
-          rows: [
-            {
-              range: [1, 3],
-              collapsed: true,
-            },
-          ],
+          rows: [new CollapsedGroup({ range: [1, 3] })],
         },
       });
 
@@ -139,14 +136,8 @@ describe('Table', () => {
         labels,
         groups: {
           rows: [
-            {
-              range: [0, 2],
-              collapsed: true,
-            },
-            {
-              range: [2, 4],
-              collapsed: false,
-            },
+            new CollapsedGroup({ range: [0, 2] }),
+            new ExpandedGroup({ range: [2, 4] }),
           ],
         },
       });
@@ -163,34 +154,16 @@ describe('Table', () => {
 
     it('should throw error with overlapping ranges', () => {
       const badRanges1 = [
-        {
-          range: [1, 3] as [number, number],
-          collapsed: false,
-        },
-        {
-          range: [2, 4] as [number, number],
-          collapsed: false,
-        },
+        new ExpandedGroup({ range: [1, 3] }),
+        new ExpandedGroup({ range: [2, 4] }),
       ];
       const badRanges2 = [
-        {
-          range: [2, 4] as [number, number],
-          collapsed: false,
-        },
-        {
-          range: [1, 3] as [number, number],
-          collapsed: false,
-        },
+        new ExpandedGroup({ range: [2, 4] }),
+        new ExpandedGroup({ range: [1, 3] }),
       ];
       const badRanges3 = [
-        {
-          range: [1, 3] as [number, number],
-          collapsed: false,
-        },
-        {
-          range: [1, 3] as [number, number],
-          collapsed: false,
-        },
+        new ExpandedGroup({ range: [1, 3] }),
+        new ExpandedGroup({ range: [1, 3] }),
       ];
 
       const boom1 = () =>
@@ -212,27 +185,21 @@ describe('Table', () => {
     });
 
     it('should not allow groups of only zero or one row', () => {
-      const badRange1 = [
-        { range: [0, 1] as [number, number], collapsed: false },
-      ];
+      const badRange1 = [new ExpandedGroup({ range: [0, 1] })];
       const boom1 = () => makeTable(data, { groups: { rows: badRange1 } });
 
       expect(boom1).toThrowError('Group must have at least two rows');
     });
 
     it('should not allow negative indices for group range', () => {
-      const badRange1 = [
-        { range: [-1, 2] as [number, number], collapsed: false },
-      ];
+      const badRange1 = [new ExpandedGroup({ range: [-1, 2] })];
       const boom1 = () => makeTable(data, { groups: { rows: badRange1 } });
 
       expect(boom1).toThrowError('Invalid range');
     });
 
     it('should not allow invalid range', () => {
-      const badRange1 = [
-        { range: [2, 0] as [number, number], collapsed: false },
-      ];
+      const badRange1 = [new ExpandedGroup({ range: [2, 0] })];
       const boom1 = () => makeTable(data, { groups: { rows: badRange1 } });
 
       expect(boom1).toThrowError('Invalid range');
@@ -305,7 +272,7 @@ describe('Table', () => {
 
     it('should get a group', () => {
       const group = table.getRowGroups()[0];
-      expect(group.getRange()).toEqual(groups.rows[0].range);
+      expect(group.getRange()).toEqual(groups.rows[0].getRange());
     });
 
     describe('group facade behavior', () => {
