@@ -1,4 +1,3 @@
-import ValueObject from '@/domain/base/ValueObject';
 import type Cell from '@/domain/Table/Cell';
 import type TableLabels from '@/domain/Table/TableLabels';
 import {
@@ -9,13 +8,12 @@ import CollapseBehavior from '@/domain/Table/CollapseBehavior';
 import type { BaseTable } from '@/domain/Table/BaseTable';
 import type { TableParams } from '@/domain/Table/TableParams';
 
-class Table<T extends Cell> extends ValueObject implements BaseTable<T> {
+class Table<T extends Cell> implements BaseTable<T> {
   data: T[][];
   labels: TableLabels;
   rowCollapse: CollapseBehavior<T>;
 
   constructor(data: T[][], params?: Partial<TableParams>) {
-    super();
     this.data = data;
 
     const { labels } = params ?? {};
@@ -49,21 +47,6 @@ class Table<T extends Cell> extends ValueObject implements BaseTable<T> {
 
   getColumnLabels() {
     return this.labels.getColumnLabels();
-  }
-
-  protected isIdentical(t: Table<T>) {
-    const data = t.getData();
-    const ourData = this.getData();
-    if (t.getShape()[0] !== this.getShape()[0]) return false;
-    if (t.getShape()[1] !== this.getShape()[1]) return false;
-
-    for (const [i, row] of data.entries()) {
-      for (const [j, cell] of row.entries()) {
-        if (!cell.is(ourData[i][j])) return false;
-      }
-    }
-
-    return true;
   }
 }
 
