@@ -71,13 +71,11 @@ class TableFacade {
         rows: newRowGroups,
       },
     };
-    console.log(1, newRowGroups);
     return this.#clone(newParams);
   }
 
   #expandRowGroup(group: Group) {
     const rowGroups = this.#table.getRowGroups();
-    console.log(22, rowGroups);
     const rowGroupIndex = rowGroups.findIndex((g) => g.is(group));
     const rowGroup = rowGroups[rowGroupIndex];
     const oldRange = rowGroup.getRange();
@@ -92,7 +90,6 @@ class TableFacade {
     ];
     for (const [i, group] of rowGroups.entries()) {
       const isAffected = group.getRange()[0] >= oldRange[1];
-      console.log(222, group.getRange(), oldRange, isAffected);
       if (!isAffected) continue;
       const params = {
         range: addToRange(group.getRange(), oldRangeLength),
@@ -108,7 +105,6 @@ class TableFacade {
         rows: newRowGroups,
       },
     };
-    console.log(2, newRowGroups);
     return this.#clone(newParams);
   }
 
