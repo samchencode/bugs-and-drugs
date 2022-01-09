@@ -4,6 +4,7 @@ import type Label from '@/domain/Table/Label';
 import type { Group } from '@/domain/Table/Group';
 import CollapseBehavior from '@/domain/Table/TableDecorator/RowCollapsible/CollapseBehavior';
 import type { TableDecorator } from '@/domain/Table/TableDecorator/TableDecorator';
+import type { TableParams } from '@/domain/Table/TableParams';
 
 class RowCollapsible<T extends Cell> implements TableDecorator<T> {
   #table: Table<T>;
@@ -42,6 +43,11 @@ class RowCollapsible<T extends Cell> implements TableDecorator<T> {
 
   getColumnLabels(): Label[] {
     return this.#table.getColumnLabels();
+  }
+
+  clone(params: Partial<TableParams>): Table<T> {
+    const newInnerTable = this.#table.clone(params);
+    return new RowCollapsible(newInnerTable);
   }
 }
 

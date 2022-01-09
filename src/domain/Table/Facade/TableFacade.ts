@@ -5,6 +5,7 @@ import TableCell from '@/domain/Table/Facade/TableCell';
 import TableRow from '@/domain/Table/Facade/TableRow';
 import TableColumn from '@/domain/Table/Facade/TableColumn';
 import TableGroup from '@/domain/Table/Facade/TableGroup';
+import type { TableParams } from '@/domain/Table/TableParams';
 
 class TableFacade {
   #table: Table<Cell>;
@@ -12,6 +13,7 @@ class TableFacade {
   #columns: TableColumn[];
   #cells: TableCell[][];
   #groups: TableGroup[];
+
   constructor(table: Table<Cell>) {
     this.#table = table;
     this.#groups = this.#buildGroups(table);
@@ -51,6 +53,28 @@ class TableFacade {
     return this.#table.getColumnLabels();
   }
 
+  #collapseRowGroup(range: Range) {
+    const rowGroups = this.#table.getRowGroups();
+    const rowGroupIndex = rowGroups.findIndex((g) =>
+      rangeIdentical(g.range, range)
+    );
+    const rowGroup = rowGroups.slice(rowGroupIndex, rowGroupIndex + 1)[0];
+    const newRowGroup = { ...rowGroup, collapsed: true };
+    const newRowGroups = rowGroups.slice();
+    newRowGroups.splice(rowGroupIndex, 1, newRowGroup);
+    const newParams = {
+      groups: {
+        rows: newRowGroups,
+      },
+    };
+    return this.#clone(newParams);
+  }
+
+  #clone(params: Partial<TableParams>): TableFacade {
+    const newInnerTable = this.#table.clone(params);
+    return new TableFacade(newInnerTable);
+  }
+
   #buildRows(table: Table<Cell>) {
     const [nRow] = table.getShape();
     const rowLabels = table.getRowLabels();
@@ -65,7 +89,12 @@ class TableFacade {
 
   #buildGroups(table: Table<Cell>) {
     const rowGroups = table.getRowGroups();
-    return rowGroups.map((g) => new TableGroup(g));
+    return rowGroups.map(
+      (g) =>
+        new TableGroup(g, {
+          handleCollapse: (range) => this.#collapseRowGroup(range),
+        })
+    );
   }
 
   #buildColumns(table: Table<Cell>) {
@@ -110,5 +139,9 @@ function makeArray(n: number) {
 function makeMatrix(n: number, m: number) {
   return makeArray(n).map(() => makeArray(m));
 }
+
+type Range = [number, number];
+const rangeIdentical = (r1: Range, r2: Range): boolean =>
+  r1[0] === r2[0] && r1[1] === r2[1];
 
 export default TableFacade;

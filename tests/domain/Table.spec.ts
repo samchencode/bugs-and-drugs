@@ -307,6 +307,19 @@ describe('Table', () => {
       const group = table.getRowGroups()[0];
       expect(group.getRange()).toEqual(groups.rows[0].range);
     });
+
+    describe('group facade behavior', () => {
+      it('should create new table with collapsed rows', () => {
+        const collapsedTable = table.getRowGroups()[0].collapse();
+        const values = cellMatrixToStringMatrix(collapsedTable.getCells());
+        const expectedValues = cellMatrixToStringMatrix([
+          data[0],
+          data[2],
+          data[3],
+        ]);
+        expect(values).toEqual(expectedValues);
+      });
+    });
   });
 });
 

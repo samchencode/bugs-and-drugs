@@ -12,9 +12,11 @@ class BaseTable<T extends Cell> implements Table<T> {
   #data: T[][];
   #labels: TableLabels;
   #rowGroups: Group[];
+  #params: Partial<TableParams>;
 
-  constructor(data: T[][], params?: Partial<TableParams>) {
-    const { labels, groups } = params ?? {};
+  constructor(data: T[][], params: Partial<TableParams> = {}) {
+    const { labels, groups } = params;
+    this.#params = params;
     this.#data = data;
 
     this.#labels = labels
@@ -42,6 +44,14 @@ class BaseTable<T extends Cell> implements Table<T> {
 
   getColumnLabels() {
     return this.#labels.getColumnLabels();
+  }
+
+  clone(params: Partial<TableParams>): Table<T> {
+    const newParams = {
+      ...this.#params,
+      ...params,
+    };
+    return new BaseTable<T>(this.#data, newParams);
   }
 }
 
