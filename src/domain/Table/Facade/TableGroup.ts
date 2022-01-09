@@ -41,7 +41,7 @@ class TableGroup {
 
   includes(index: number) {
     const [from, to] = this.getRange();
-    return from <= index && to < index;
+    return from <= index && to > index;
   }
 }
 

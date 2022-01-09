@@ -293,6 +293,11 @@ describe('Table', () => {
       const group = table.getRowGroups()[0];
       expect(group.getRange()).toEqual(groups.rows[0].getRange());
     });
+
+    it('should get a group by row', () => {
+      const group = table.getRows()[0].getGroup();
+      expect(group).not.toBeNull();
+    });
   });
 
   describe('group facade behavior', () => {
