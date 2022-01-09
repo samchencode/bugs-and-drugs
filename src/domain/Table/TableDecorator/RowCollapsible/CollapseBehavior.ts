@@ -13,68 +13,55 @@ class CollapseBehavior<T extends Cell> {
   }
 
   filterData(data: T[][]) {
-    return data.filter((x, i) => !this.#indexInAnyRange(i));
+    return data.filter((x, i) => !inRanges(this.#hiddenRanges, i));
   }
 
   filterLabels(labels: Label[]) {
-    return labels.filter((x, i) => !this.#indexInAnyRange(i));
+    return labels.filter((x, i) => !inRanges(this.#hiddenRanges, i));
   }
 
   findNumberOfCollapsedRows() {
-    return this.#hiddenRanges.reduce(
-      (ag, r) => this.#findLengthOfRange(r) + ag,
-      0
-    );
+    return this.#hiddenRanges.reduce((ag, r) => findRangeLength(r) + ag, 0);
   }
 
   collapseGroups(groups: Group[]): Group[] {
-    const result = groups.slice();
-
-    for (const [i, g] of groups.entries()) {
-      for (const range of this.#hiddenRanges) {
-        const rangeLength = this.#findLengthOfRange(range);
-        if (rangeLength === 0) continue;
-        const isAffected = this.#rangeComesAfter(g.getRange(), range);
-        if (!isAffected) continue;
-
-        const Group = g.isCollapsed() ? CollapsedGroup : ExpandedGroup;
-        result[i] = new Group({
-          range: this.#subtractFromRange(result[i].getRange(), rangeLength),
-          expandedRange: this.#subtractFromRange(
-            result[i].getExpandedRange(),
-            rangeLength
-          ),
-        });
-      }
-    }
-
-    return result;
-  }
-
-  #subtractFromRange(range: Range, value: number): [number, number] {
-    return [range[0] - value, range[1] - value];
-  }
-
-  #findLengthOfRange(r: Range): number {
-    return r[1] - r[0];
-  }
-
-  #indexInAnyRange(index: number): boolean {
-    const inRange = this.#hiddenRanges.find((r) =>
-      this.#indexInRange(r, index)
+    return groups.map((g) =>
+      this.#hiddenRanges
+        .filter((r) => groupComesAfter(g, r))
+        .map((r) => findRangeLength(r))
+        .reduce((g, len) => shiftGroupUp(g, len), g)
     );
-    if (!inRange) return false;
-    return true;
   }
+}
 
-  #indexInRange(range: Range, index: number): boolean {
-    const [low, high] = range;
-    return index >= low && index < high;
-  }
+function shiftGroupUp(g: Group, spots: number) {
+  const Group = g.isCollapsed() ? CollapsedGroup : ExpandedGroup;
+  return new Group({
+    range: subtract(g.getRange(), spots),
+    expandedRange: subtract(g.getExpandedRange(), spots),
+  });
+}
 
-  #rangeComesAfter(r1: Range, r2: Range) {
-    return r2[1] <= r1[0];
-  }
+function inRanges(ranges: Range[], index: number): boolean {
+  return !!ranges.find((r) => inRange(r, index));
+}
+
+function inRange(range: Range, index: number): boolean {
+  const [low, high] = range;
+  return index >= low && index < high;
+}
+
+function subtract(range: Range, value: number): [number, number] {
+  return [range[0] - value, range[1] - value];
+}
+
+function findRangeLength(r: Range): number {
+  return r[1] - r[0];
+}
+
+function groupComesAfter(g: Group, r2: Range) {
+  const r1 = g.getRange();
+  return r2[1] <= r1[0];
 }
 
 export default CollapseBehavior;
