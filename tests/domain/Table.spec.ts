@@ -331,6 +331,37 @@ describe('Table', () => {
       );
     });
 
+    it('should update group ranges after collapse with many collapsed groups', () => {
+      const data = [
+        [new D(10), new D(20), new D(30)],
+        [new D(40), new D(50), new D(60)],
+        [new D(70), new D(80), new D(90)],
+        [new D(100), new D(110), new D(120)],
+        [new D(130), new D(140), new D(150)],
+        [new D(160), new D(170), new D(180)],
+      ];
+      const table = makeTable(data, {
+        groups: {
+          rows: [
+            new CollapsedGroup({ range: [0, 2] }),
+            new CollapsedGroup({ range: [2, 4] }),
+            new ExpandedGroup({ range: [4, 6] }),
+          ],
+        },
+      });
+      const collapsedTable = table.getRowGroups()[0].collapse();
+      const collapsedRanges = collapsedTable
+        .getRowGroups()
+        .map((x) => x.getRange());
+      expect(collapsedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 1],
+          [1, 2],
+          [2, 4],
+        ])
+      );
+    });
+
     it('should update group ranges after expand', () => {
       const table = makeTable(data, {
         labels,

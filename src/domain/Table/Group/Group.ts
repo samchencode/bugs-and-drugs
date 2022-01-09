@@ -33,6 +33,10 @@ abstract class Group extends ValueObject {
     return [this.rangeStart, this.rangeStart + this.rangeLength];
   }
 
+  getHideableRange(): Range {
+    return [this.rangeStart + 1, this.rangeStart + this.rangeLength];
+  }
+
   getRangeLength(): number {
     return this.#findRangeLength(this.getRange());
   }
