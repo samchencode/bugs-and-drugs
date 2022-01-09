@@ -12,15 +12,8 @@ class RowCollapsible<T extends Cell> implements TableDecorator<T> {
 
   constructor(table: Table<T>) {
     this.#table = table;
-
     const rowGroups = table.getRowGroups();
-    const hiddenRanges = rowGroups
-      .filter((g) => g.isCollapsed())
-      .map<[number, number]>((g) => [
-        g.getExpandedRange()[0] + 1,
-        g.getExpandedRange()[1],
-      ]);
-    this.#collapse = new CollapseBehavior(hiddenRanges);
+    this.#collapse = new CollapseBehavior(rowGroups);
   }
 
   getRowGroups(): Group[] {

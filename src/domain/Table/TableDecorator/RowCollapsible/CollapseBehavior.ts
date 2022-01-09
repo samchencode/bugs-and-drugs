@@ -6,8 +6,13 @@ import type { Group, Range } from '@/domain/Table/Group';
 class CollapseBehavior<T extends Cell> {
   #hiddenRanges: Range[];
 
-  constructor(collapseRanges: Range[]) {
-    this.#hiddenRanges = collapseRanges;
+  constructor(rowGroups: Group[]) {
+    this.#hiddenRanges = rowGroups
+      .filter((g) => g.isCollapsed())
+      .map<[number, number]>((g) => [
+        g.getExpandedRange()[0] + 1,
+        g.getExpandedRange()[1],
+      ]);
   }
 
   filterData(data: T[][]) {
@@ -26,16 +31,16 @@ class CollapseBehavior<T extends Cell> {
   }
 
   collapseGroups(groups: Group[]) {
-    const resultGroups = groups.slice();
+    const result = groups.slice();
 
     for (const range of this.#hiddenRanges) {
       const rangeLength = this.#findLengthOfRange(range);
       if (rangeLength === 0) continue;
-      const affectedGroups = resultGroups.filter((g) =>
-        this.#rangeComesAfter(g.getRange(), range)
-      );
 
-      for (const [i, g] of affectedGroups.entries()) {
+      for (const [i, g] of groups.entries()) {
+        const isAffected = this.#rangeComesAfter(g.getRange(), range);
+        if (!isAffected) continue;
+
         const newRangeParams = {
           ...g.asGroupParams(),
           range: this.#subtractFromRange(g.getRange(), rangeLength),
@@ -44,13 +49,13 @@ class CollapseBehavior<T extends Cell> {
             rangeLength
           ),
         };
-        affectedGroups[i] = g.isCollapsed()
+        result[i] = g.isCollapsed()
           ? new CollapsedGroup(newRangeParams)
           : new ExpandedGroup(newRangeParams);
       }
     }
 
-    return resultGroups;
+    return result;
   }
 
   #subtractFromRange(range: Range, value: number): [number, number] {
