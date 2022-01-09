@@ -1,4 +1,4 @@
-import Table, { Cell, Tooltip } from '@/domain/Table';
+import Table, { Cell, Tooltip, makeTable } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 
@@ -52,7 +52,7 @@ function makeEmptyMatrix(
 }
 
 function makeAntibiogramTable(antibiogram: Antibiogram): Table<Cell> {
-  if (antibiogram.isEmpty()) return Table.makeTable([]);
+  if (antibiogram.isEmpty()) return makeTable([]);
   const { antibiotics, organisms } = antibiogram;
   const labels = {
     rows: organisms.map((o) => o.getName()),
@@ -68,7 +68,7 @@ function makeAntibiogramTable(antibiogram: Antibiogram): Table<Cell> {
     cells[row][column] = new FilledAntibiogramTableCell(d);
   }
 
-  return Table.makeTable(cells, { labels });
+  return makeTable(cells, { labels });
 }
 
 export default makeAntibiogramTable;

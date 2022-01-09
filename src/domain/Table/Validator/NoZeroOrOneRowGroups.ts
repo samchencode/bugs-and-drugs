@@ -1,4 +1,4 @@
-import type { TableParams } from '@/domain/Table/Table';
+import type { TableParams } from '@/domain/Table/TableParams';
 import type { Rule } from '@/domain/Table/Validator/Rule';
 
 type Range = [number, number];

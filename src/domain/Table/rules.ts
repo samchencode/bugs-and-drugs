@@ -7,7 +7,7 @@ import {
   NoInvalidRowRanges,
 } from '@/domain/Table/Validator';
 import type Cell from '@/domain/Table/Cell';
-import type { TableParams } from '@/domain/Table/Table';
+import type { TableParams } from '@/domain/Table/TableParams';
 
 export default (data: Cell[][], params?: Partial<TableParams>) => [
   new NoUndefinedValue(data),

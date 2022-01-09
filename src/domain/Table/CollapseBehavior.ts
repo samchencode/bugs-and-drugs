@@ -3,14 +3,14 @@ import type Label from '@/domain/Table/Label';
 
 type Range = [number, number];
 
-class CollapseBehavior {
+class CollapseBehavior<T extends Cell> {
   ranges: Range[];
 
   constructor(ranges: Range[]) {
     this.ranges = ranges;
   }
 
-  filterData(data: Cell[][]) {
+  filterData(data: T[][]) {
     return data.filter((x, i) => !this.#indexInAnyRange(i));
   }
 

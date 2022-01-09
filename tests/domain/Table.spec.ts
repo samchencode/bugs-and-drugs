@@ -1,4 +1,4 @@
-import Table, { Cell, Tooltip, EmptyTooltip } from '@/domain/Table';
+import Table, { Cell, Tooltip, EmptyTooltip, makeTable } from '@/domain/Table';
 
 describe('Table', () => {
   class D extends Cell {
@@ -32,20 +32,20 @@ describe('Table', () => {
 
   describe('instantiation', () => {
     it('should create new empty table via constructor', () => {
-      const table = Table.makeTable([]);
+      const table = makeTable([]);
       expect(table).toBeDefined();
       expect(table.data).toEqual([]);
     });
 
     it('should create new table with data', () => {
-      const table = Table.makeTable(data);
+      const table = makeTable(data);
       expect(table).toBeDefined();
       expect(table.data).toEqual(data);
     });
 
     it('should throw error with inconsistent row/col number', () => {
       const badData = [[new D(1)], [new D(3), new D(2)]];
-      const boom = () => Table.makeTable(badData);
+      const boom = () => makeTable(badData);
       expect(boom).toThrowError('Inconsistent number of columns or rows');
     });
 
@@ -55,7 +55,7 @@ describe('Table', () => {
         [new D(4), undefined, undefined],
       ];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let boom = () => Table.makeTable(badData as any);
+      let boom = () => makeTable(badData as any);
       expect(boom).toThrowError('Undefined value');
 
       badData = [
@@ -66,14 +66,14 @@ describe('Table', () => {
       ];
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      boom = () => Table.makeTable(badData as any);
+      boom = () => makeTable(badData as any);
       expect(boom).toThrowError('Undefined value');
     });
 
     it('should throw error with undefiend columns', () => {
       const badData = [undefined, [new D(1)]];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const boom = () => Table.makeTable(badData as any);
+      const boom = () => makeTable(badData as any);
       expect(boom).toThrowError('Undefined value');
     });
 
@@ -82,14 +82,14 @@ describe('Table', () => {
         columns: ['c1', 'c2', 'c3'],
         rows: ['r1', 'r2', 'r3'],
       };
-      const boom = () => Table.makeTable(data, { labels: badLabels });
+      const boom = () => makeTable(data, { labels: badLabels });
       expect(boom).toThrowError(
         'Row labels do not match number of rows in data'
       );
     });
 
     it('should make empty row and column labels if none are provided', () => {
-      const table = Table.makeTable(data);
+      const table = makeTable(data);
       expect(table.getColumnLabels().map((x) => x.toString())).toEqual(
         expect.arrayContaining([''])
       );
@@ -99,7 +99,7 @@ describe('Table', () => {
     });
 
     it('should make a table with collapsible row ranges', () => {
-      const table = Table.makeTable(data, {
+      const table = makeTable(data, {
         labels,
         groups: {
           rows: [
@@ -149,15 +149,15 @@ describe('Table', () => {
       ];
 
       const boom1 = () =>
-        Table.makeTable(data, {
+        makeTable(data, {
           groups: { rows: badRanges1 },
         });
       const boom2 = () =>
-        Table.makeTable(data, {
+        makeTable(data, {
           groups: { rows: badRanges2 },
         });
       const boom3 = () =>
-        Table.makeTable(data, {
+        makeTable(data, {
           groups: { rows: badRanges3 },
         });
 
@@ -170,8 +170,7 @@ describe('Table', () => {
       const badRange1 = [
         { range: [0, 1] as [number, number], collapsed: false },
       ];
-      const boom1 = () =>
-        Table.makeTable(data, { groups: { rows: badRange1 } });
+      const boom1 = () => makeTable(data, { groups: { rows: badRange1 } });
 
       expect(boom1).toThrowError('Group must have at least two rows');
     });
@@ -180,8 +179,7 @@ describe('Table', () => {
       const badRange1 = [
         { range: [-1, 2] as [number, number], collapsed: false },
       ];
-      const boom1 = () =>
-        Table.makeTable(data, { groups: { rows: badRange1 } });
+      const boom1 = () => makeTable(data, { groups: { rows: badRange1 } });
 
       expect(boom1).toThrowError('Invalid range');
     });
@@ -190,8 +188,7 @@ describe('Table', () => {
       const badRange1 = [
         { range: [2, 0] as [number, number], collapsed: false },
       ];
-      const boom1 = () =>
-        Table.makeTable(data, { groups: { rows: badRange1 } });
+      const boom1 = () => makeTable(data, { groups: { rows: badRange1 } });
 
       expect(boom1).toThrowError('Invalid range');
     });
@@ -201,11 +198,11 @@ describe('Table', () => {
     let table: Table<D>;
 
     beforeEach(() => {
-      table = Table.makeTable(data, { labels });
+      table = makeTable(data, { labels });
     });
 
     it('should report shape of empty table', () => {
-      const table = Table.makeTable([]);
+      const table = makeTable([]);
       expect(table.getShape()).toEqual([0, 0]);
     });
 
@@ -231,8 +228,8 @@ describe('Table', () => {
     });
 
     it('should equate another table with identical data', () => {
-      const table1 = Table.makeTable(data, { labels });
-      const table2 = Table.makeTable(data, { labels });
+      const table1 = makeTable(data, { labels });
+      const table2 = makeTable(data, { labels });
       expect(table1.is(table2)).toBe(true);
 
       const diffData = [
@@ -241,7 +238,7 @@ describe('Table', () => {
         [new D(70), new D(80), new D(90)],
         [new D(100), new D(110), new D(1200)],
       ];
-      const table3 = Table.makeTable(diffData, { labels });
+      const table3 = makeTable(diffData, { labels });
       expect(table1.is(table3)).toBe(false);
     });
   });

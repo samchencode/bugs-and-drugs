@@ -1,6 +1,4 @@
 import ValueObject from '@/domain/base/ValueObject';
-import validate from '@/domain/Table/Validator';
-import rules from '@/domain/Table/rules';
 import type Cell from '@/domain/Table/Cell';
 import type TableLabels from '@/domain/Table/TableLabels';
 import {
@@ -8,24 +6,13 @@ import {
   FilledTableLabels,
 } from '@/domain/Table/TableLabels';
 import CollapseBehavior from '@/domain/Table/CollapseBehavior';
+import type { BaseTable } from '@/domain/Table/BaseTable';
+import type { TableParams } from '@/domain/Table/TableParams';
 
-interface TableParams {
-  labels: {
-    rows: string[];
-    columns: string[];
-  };
-  groups: {
-    rows: {
-      range: [number, number];
-      collapsed: boolean;
-    }[];
-  };
-}
-
-class Table<T extends Cell> extends ValueObject {
+class Table<T extends Cell> extends ValueObject implements BaseTable<T> {
   data: T[][];
   labels: TableLabels;
-  rowCollapse: CollapseBehavior;
+  rowCollapse: CollapseBehavior<T>;
 
   constructor(data: T[][], params?: Partial<TableParams>) {
     super();
@@ -52,7 +39,7 @@ class Table<T extends Cell> extends ValueObject {
     return this.rowCollapse.filterData(this.data);
   }
 
-  getShape() {
+  getShape(): [number, number] {
     return [this.data.length, this.data[0]?.length ?? 0];
   }
 
@@ -62,11 +49,6 @@ class Table<T extends Cell> extends ValueObject {
 
   getColumnLabels() {
     return this.labels.getColumnLabels();
-  }
-
-  static makeTable<T extends Cell>(data: T[][], params?: Partial<TableParams>) {
-    validate(rules(data, params));
-    return new this(data, params);
   }
 
   protected isIdentical(t: Table<T>) {
@@ -86,4 +68,3 @@ class Table<T extends Cell> extends ValueObject {
 }
 
 export default Table;
-export type { TableParams };
