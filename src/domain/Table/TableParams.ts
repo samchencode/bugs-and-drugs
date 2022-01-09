@@ -1,13 +1,12 @@
+import type { Group } from '@/domain/Table/Group';
+
 interface TableParams {
   labels: {
     rows: string[];
     columns: string[];
   };
   groups: {
-    rows: {
-      range: [number, number];
-      collapsed: boolean;
-    }[];
+    rows: Group[];
   };
 }
 

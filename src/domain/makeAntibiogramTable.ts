@@ -1,4 +1,5 @@
-import Table, { Cell, Tooltip, makeTable } from '@/domain/Table';
+import { Cell, Tooltip, makeTable } from '@/domain/Table';
+import type { Table } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 

@@ -1,6 +1,5 @@
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
-import Table from '@/domain/Table';
 
 describe('ShowAntibiogramAction', () => {
   let repo: FakeAntibiogramRepository;
@@ -13,8 +12,7 @@ describe('ShowAntibiogramAction', () => {
 
   it('should show antibiogram as table', () => {
     return showAbg.execute().then((t) => {
-      expect(t).toBeInstanceOf(Table);
-      expect(t.data.length).toBe(3);
+      expect(t.getData().length).toBe(3);
     });
   });
 });

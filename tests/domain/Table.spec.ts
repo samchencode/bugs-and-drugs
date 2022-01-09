@@ -1,4 +1,5 @@
-import Table, { Cell, Tooltip, EmptyTooltip, makeTable } from '@/domain/Table';
+import { Cell, Tooltip, EmptyTooltip, makeTable } from '@/domain/Table';
+import type { Table } from '@/domain/Table';
 
 describe('Table', () => {
   class D extends Cell {
@@ -34,13 +35,13 @@ describe('Table', () => {
     it('should create new empty table via constructor', () => {
       const table = makeTable([]);
       expect(table).toBeDefined();
-      expect(table.data).toEqual([]);
+      expect(table.getData()).toEqual([]);
     });
 
     it('should create new table with data', () => {
       const table = makeTable(data);
       expect(table).toBeDefined();
-      expect(table.data).toEqual(data);
+      expect(table.getData()).toEqual(data);
     });
 
     it('should throw error with inconsistent row/col number', () => {
@@ -98,7 +99,7 @@ describe('Table', () => {
       );
     });
 
-    it('should make a table with collapsible row ranges', () => {
+    it('should make a table with collapsed row group range. First row of range is not collapsed', () => {
       const table = makeTable(data, {
         labels,
         groups: {
@@ -111,9 +112,31 @@ describe('Table', () => {
         },
       });
 
-      expect(table.getData()).toEqual([data[0], data[3]]);
+      expect(table.getData()).toEqual([data[0], data[1], data[3]]);
       const rowLabels = table.getRowLabels().map((x) => x.toString());
-      expect(rowLabels).toEqual(['r1', 'r4']);
+      expect(rowLabels).toEqual(['r1', 'r2', 'r4']);
+    });
+
+    it('should preserve an expanded group that comes after a collapsed range', () => {
+      const table = makeTable(data, {
+        labels,
+        groups: {
+          rows: [
+            {
+              range: [0, 2],
+              collapsed: true,
+            },
+            {
+              range: [2, 4],
+              collapsed: false,
+            },
+          ],
+        },
+      });
+
+      expect(table.getData()).toEqual([data[0], data[2], data[3]]);
+      const rowLabels = table.getRowLabels().map((x) => x.toString());
+      expect(rowLabels).toEqual(['r1', 'r3', 'r4']);
     });
 
     it('should throw error with overlapping ranges', () => {
