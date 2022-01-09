@@ -11,16 +11,17 @@ import type { Group } from '@/domain/Table/Group';
 class BaseTable<T extends Cell> implements Table<T> {
   #data: T[][];
   #labels: TableLabels;
-  #rowGroups: Group[] = [];
+  #rowGroups: Group[];
 
   constructor(data: T[][], params?: Partial<TableParams>) {
     const { labels, groups } = params ?? {};
     this.#data = data;
-    const [nRow, nCol] = this.getShape();
-    if (!labels) this.#labels = new EmptyTableLabels(nRow, nCol);
-    else this.#labels = new FilledTableLabels(labels.rows, labels.columns);
 
-    if (groups) this.#rowGroups = groups.rows;
+    this.#labels = labels
+      ? new FilledTableLabels(labels.rows, labels.columns)
+      : new EmptyTableLabels(...this.getShape());
+
+    this.#rowGroups = groups?.rows ?? [];
   }
 
   getRowGroups(): Group[] {
