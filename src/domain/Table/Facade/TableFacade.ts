@@ -44,7 +44,11 @@ class TableFacade {
   }
 
   getRowGroups(): TableGroup[] {
-    return this.#groups;
+    return this.#groups.sort((g1, g2) => g1.getRange()[0] - g2.getRange()[0]);
+  }
+
+  getRowGroupByRange(r: Range) {
+    return this.#groups.find((g) => g.hasRange(r));
   }
 
   getShape(): [number, number] {
@@ -59,53 +63,39 @@ class TableFacade {
     return this.#table.getColumnLabels();
   }
 
-  #collapseRowGroup(group: Group) {
+  #collapseRowGroup(old: Group) {
     const rowGroups = this.#table.getRowGroups();
-    const rowGroupIndex = rowGroups.findIndex((g) => g.is(group));
-    const newRowGroup = rowGroups[rowGroupIndex].collapse();
-    const newRowGroups = rowGroups.slice();
-    newRowGroups.splice(rowGroupIndex, 1, newRowGroup);
+    const newGroups = rowGroups.filter((g) => !g.is(old));
 
-    const newParams = {
+    return this.#clone({
       groups: {
-        rows: newRowGroups,
+        rows: [...newGroups, old.collapse()],
       },
-    };
-    return this.#clone(newParams);
+    });
   }
 
-  #expandRowGroup(group: Group) {
-    const rowGroups = this.#table.getRowGroups();
-    const rowGroupIndex = rowGroups.findIndex((g) => g.is(group));
-    const rowGroup = rowGroups[rowGroupIndex];
-    const oldRange = rowGroup.getRange();
-    const oldRangeLength = rowGroup.getRangeLength();
-    const newRowGroup = rowGroups[rowGroupIndex].expand();
-    const newRowGroups = rowGroups.slice();
-    newRowGroups.splice(rowGroupIndex, 1, newRowGroup);
-
-    const addToRange = (r: Range, v: number): [number, number] => [
-      r[0] + v,
-      r[1] + v,
+  #expandRowGroup(old: Group) {
+    const otherGroups = this.#table.getRowGroups().filter((g) => !g.is(old));
+    const newGroups = [
+      ...otherGroups.filter((g) => !groupComesAfter(g, old)),
+      old.expand(),
     ];
-    for (const [i, group] of rowGroups.entries()) {
-      const isAffected = group.getRange()[0] >= oldRange[1];
-      if (!isAffected) continue;
-      const params = {
-        range: addToRange(group.getRange(), oldRangeLength),
-        expandedRange: addToRange(group.getExpandedRange(), oldRangeLength),
-      };
-      newRowGroups[i] = group.isCollapsed()
-        ? new CollapsedGroup(params)
-        : new ExpandedGroup(params);
+
+    for (const g of otherGroups.filter((g) => groupComesAfter(g, old))) {
+      const Group = g.isCollapsed() ? CollapsedGroup : ExpandedGroup;
+      newGroups.push(
+        new Group({
+          range: addToRange(g.getRange(), old.getRangeLength()),
+          expandedRange: addToRange(g.getExpandedRange(), old.getRangeLength()),
+        })
+      );
     }
 
-    const newParams = {
+    return this.#clone({
       groups: {
-        rows: newRowGroups,
+        rows: newGroups,
       },
-    };
-    return this.#clone(newParams);
+    });
   }
 
   #clone(params: Partial<TableParams>): TableFacade {
@@ -179,6 +169,16 @@ function makeArray(n: number) {
 
 function makeMatrix(n: number, m: number) {
   return makeArray(n).map(() => makeArray(m));
+}
+
+function addToRange(r: Range, v: number): [number, number] {
+  return [r[0] + v, r[1] + v];
+}
+
+function groupComesAfter(g1: Group, g2: Group) {
+  const r1 = g1.getRange();
+  const r2 = g2.getRange();
+  return r1[0] >= r2[1];
 }
 
 export default TableFacade;

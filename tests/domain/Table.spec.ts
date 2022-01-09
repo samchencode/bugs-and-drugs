@@ -323,10 +323,12 @@ describe('Table', () => {
       const collapsedRanges = collapsedTable
         .getRowGroups()
         .map((x) => x.getRange());
-      expect(collapsedRanges).toEqual([
-        [0, 1],
-        [1, 2],
-      ]);
+      expect(collapsedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 1],
+          [1, 2],
+        ])
+      );
     });
 
     it('should update group ranges after expand', () => {
@@ -339,14 +341,17 @@ describe('Table', () => {
           ],
         },
       });
-      const expandedTable = table.getRowGroups()[0].expand();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const expandedTable = table.getRowGroupByRange([0, 1])!.expand();
       const expandedRanges = expandedTable
         .getRowGroups()
         .map((x) => x.getRange());
-      expect(expandedRanges).toEqual([
-        [0, 2],
-        [2, 4],
-      ]);
+      expect(expandedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 2],
+          [2, 4],
+        ])
+      );
     });
 
     it('should return table when calling expand on expanded row', () => {
@@ -362,18 +367,39 @@ describe('Table', () => {
 
     it('should shift the ranges below on collapse', () => {
       const collapsedTable = table.getRowGroups()[0].collapse();
-      const [collapsedGroup, affectedGroup] = collapsedTable.getRowGroups();
-      expect(collapsedGroup.getRange()).toEqual([0, 1]);
-      expect(affectedGroup.getRange()).toEqual([1, 2]);
+      const newRanges = collapsedTable.getRowGroups().map((x) => x.getRange());
+      expect(newRanges).toEqual(
+        expect.arrayContaining([
+          [0, 1],
+          [1, 2],
+        ])
+      );
     });
 
     it('should be the same after collapse then expand', () => {
-      const collapsedTable = table.getRowGroups()[0].collapse();
-      const revertedTable = collapsedTable.getRowGroups()[0].expand();
-      expect(revertedTable.getRowGroups()[1].getRange()).toEqual([2, 3]);
-      expect(revertedTable.getRowGroups()[1].getExpandedRange()).toEqual([
-        2, 4,
-      ]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const collapsedTable = table.getRowGroupByRange([0, 2])!.collapse();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const revertedTable = collapsedTable.getRowGroupByRange([0, 1])!.expand();
+      const revertedRanges = revertedTable
+        .getRowGroups()
+        .map((x) => x.getRange());
+      const revertedExpandedRanges = revertedTable
+        .getRowGroups()
+        .map((x) => x.getExpandedRange());
+      console.log(revertedRanges, revertedExpandedRanges);
+      expect(revertedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 2],
+          [2, 3],
+        ])
+      );
+      expect(revertedExpandedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 2],
+          [2, 4],
+        ])
+      );
 
       const values = cellMatrixToStringMatrix(revertedTable.getCells());
       const expectedValues = cellMatrixToStringMatrix([
@@ -394,9 +420,30 @@ describe('Table', () => {
           ],
         },
       });
-      const expandedTable = table.getRowGroups()[0].expand();
-      const revertedTable = expandedTable.getRowGroups()[0].collapse();
-      expect(revertedTable.getRowGroups()[1].getRange()).toEqual([1, 3]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const expandedTable = table.getRowGroupByRange([0, 1])!.expand();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const revertedTable = expandedTable
+        .getRowGroupByRange([0, 2])!
+        .collapse();
+      const revertedRanges = revertedTable
+        .getRowGroups()
+        .map((x) => x.getRange());
+      const revertedExpandedRanges = revertedTable
+        .getRowGroups()
+        .map((x) => x.getExpandedRange());
+      expect(revertedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 1],
+          [1, 3],
+        ])
+      );
+      expect(revertedExpandedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 2],
+          [1, 3],
+        ])
+      );
       const values = cellMatrixToStringMatrix(revertedTable.getCells());
       const expectedValues = cellMatrixToStringMatrix([
         data[0],

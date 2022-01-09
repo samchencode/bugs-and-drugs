@@ -1,5 +1,5 @@
 import type Table from '@/domain/Table/Facade/TableFacade';
-import type { Group } from '@/domain/Table/Group';
+import type { Group, Range } from '@/domain/Table/Group';
 
 interface GroupHandlers {
   handleCollapse(group: Group): Table;
@@ -33,6 +33,10 @@ class TableGroup {
 
   expand(): Table {
     return this.#handlers.handleExpand(this.#group);
+  }
+
+  hasRange(r: Range) {
+    return this.#group.hasRange(r);
   }
 
   includes(index: number) {

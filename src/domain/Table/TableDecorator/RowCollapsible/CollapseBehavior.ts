@@ -40,18 +40,14 @@ class CollapseBehavior<T extends Cell> {
       for (const [i, g] of groups.entries()) {
         const isAffected = this.#rangeComesAfter(g.getRange(), range);
         if (!isAffected) continue;
-
-        const newRangeParams = {
-          ...g.asGroupParams(),
+        const Group = g.isCollapsed() ? CollapsedGroup : ExpandedGroup;
+        result[i] = new Group({
           range: this.#subtractFromRange(g.getRange(), rangeLength),
           expandedRange: this.#subtractFromRange(
             g.getExpandedRange(),
             rangeLength
           ),
-        };
-        result[i] = g.isCollapsed()
-          ? new CollapsedGroup(newRangeParams)
-          : new ExpandedGroup(newRangeParams);
+        });
       }
     }
 
