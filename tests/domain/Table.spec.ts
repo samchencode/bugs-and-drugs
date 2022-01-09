@@ -22,6 +22,15 @@ describe('Table', () => {
     rows: ['r1', 'r2', 'r3', 'r4'],
   };
 
+  const groups = {
+    rows: [
+      {
+        range: [0, 2] as [number, number],
+        collapsed: false,
+      },
+    ],
+  };
+
   beforeEach(() => {
     data = [
       [new D(10), new D(20), new D(30)],
@@ -114,8 +123,8 @@ describe('Table', () => {
         },
       });
 
-      const values = cellArrayToStringArray(table.getCells());
-      const expectedValues = cellArrayToStringArray([
+      const values = cellMatrixToStringMatrix(table.getCells());
+      const expectedValues = cellMatrixToStringMatrix([
         data[0],
         data[1],
         data[3],
@@ -141,8 +150,8 @@ describe('Table', () => {
           ],
         },
       });
-      const values = cellArrayToStringArray(table.getCells());
-      const expectedValues = cellArrayToStringArray([
+      const values = cellMatrixToStringMatrix(table.getCells());
+      const expectedValues = cellMatrixToStringMatrix([
         data[0],
         data[2],
         data[3],
@@ -247,8 +256,8 @@ describe('Table', () => {
     });
 
     it('should get all values', () => {
-      const values = cellArrayToStringArray(table.getCells());
-      const expectedValues = cellArrayToStringArray(data);
+      const values = cellMatrixToStringMatrix(table.getCells());
+      const expectedValues = cellMatrixToStringMatrix(data);
       expect(values).toEqual(expectedValues);
     });
 
@@ -265,8 +274,48 @@ describe('Table', () => {
       expect(cLabels.map((x) => x.toString())).toEqual(labels.columns);
     });
   });
+
+  describe('row, column, group facades', () => {
+    let table: Table;
+
+    beforeEach(() => {
+      table = makeTable(data, {
+        labels,
+        groups,
+      });
+    });
+
+    it('should get a row', () => {
+      const row = table.getRows()[0];
+      const values = cellArrayToStringArray(row.getCells());
+      const expectedValues = cellArrayToStringArray(data[0]);
+      expect(values).toEqual(expectedValues);
+
+      expect(row.getLabel().toString()).toBe(labels.rows[0]);
+    });
+
+    it('should get a column', () => {
+      const column = table.getColumns()[0];
+      const values = cellArrayToStringArray(column.getCells());
+      const expectedValues = cellArrayToStringArray(data.map((v) => v[0]));
+      expect(values).toEqual(expectedValues);
+
+      expect(column.getLabel().toString()).toBe(labels.columns[0]);
+    });
+
+    it('should get a group', () => {
+      const group = table.getRowGroups()[0];
+      expect(group.getRange()).toEqual(groups.rows[0].range);
+    });
+  });
 });
 
-function cellArrayToStringArray(cells: { getValue(): string }[][]): string[][] {
-  return cells.map((r) => r.map((c) => c.getValue()));
+function cellArrayToStringArray(cells: { getValue(): string }[]): string[] {
+  return cells.map((c) => c.getValue());
+}
+
+function cellMatrixToStringMatrix(
+  cells: { getValue(): string }[][]
+): string[][] {
+  return cells.map((r) => cellArrayToStringArray(r));
 }
