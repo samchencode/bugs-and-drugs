@@ -8,8 +8,5 @@
 <main>
   <Topbar />
   <GramPositiveTable />
-
-  <details class="gram-negatives">
-    <Table />
-  </details>
+  <GramPositiveTable />
 </main>

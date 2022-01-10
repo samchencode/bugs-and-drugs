@@ -19,9 +19,7 @@
           <th />
           {#each table?.getColumnLabels() ?? [] as columnHeader}
             <th scope="col" class="antibiotic-name">
-              <div class="verticle-header">
-                <span>{columnHeader}</span>
-              </div>
+              {columnHeader}
             </th>
           {/each}
         </tr>
@@ -29,8 +27,9 @@
       <tbody>
         {#each table?.getCells() ?? [] as row, i}
           <tr>
-            <th scope="row" class="organism-name">{table?.getRowLabels()[i]}</th
-            >
+            <th scope="row" class="organism-name">
+              {table?.getRowLabels()[i]}
+            </th>
             {#each row ?? [] as cell}
               <td class="sensitivity-data">
                 {cell}
@@ -48,54 +47,54 @@
     border-collapse: collapse;
     margin: 25px;
     font-size: 0.9em;
-    overflow: hidden;
   }
   .antibiotic-name {
-    position: relative;
-    height: 100px;
-  }
-  .verticle-header {
-    left: 40px;
-    bottom: 10px;
-    height: 40px;
-    width: 100px;
+    position: sticky;
+    top: 0;
+    writing-mode: vertical-rl;
+    max-height: 100px;
     text-align: left;
-    transform: rotate(-90deg);
-    transform-origin: left bottom;
-    display: inline-block;
-    position: absolute;
+    transform: rotate(180deg);
+    z-index: 0;
   }
   .organism-name {
+    position: sticky;
+    left: 0;
     text-align: left;
     font: bold;
-    margin-right: 2px;
+    padding: 16px;
   }
+
+  .antibiogram-table td {
+    position: relative;
+  }
+
   .antibiogram-table tbody tr {
     border-bottom: 2px solid #cccccc;
+    height: 52px;
   }
   .sensitivity-data {
     text-align: center;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding: 16px;
   }
 
-  .antibiogram-table tbody tr :hover,
-  .antibiogram-table thead th :hover {
+  .organism-name:hover,
+  .antibiotic-name:hover,
+  .antibiogram-table tbody td:hover,
+  .antibiogram-table tbody tr th:focus,
+  .antibiotic-name:focus,
+  .antibiogram-table tbody td:focus {
     background-color: lightgrey;
   }
 
-  .antibiogram-table td,
-  .antibiogram-table th {
-    position: relative;
-  }
-
-  body:not(.nohover) tbody tr:hover {
+  body tbody tr:hover,
+  body tbody tr:focus {
     background-color: #ffa;
   }
   td:hover::after,
-  thead th:not(:empty):hover::after,
+  .antibiotic-name:hover::after,
   td:focus::after,
-  thead th:not(:empty):focus::after {
+  .antibiotic-name:focus::after {
     background-color: #ffa;
     content: '';
     height: 10000px;
@@ -104,6 +103,7 @@
     top: -5000px;
     width: 100%;
     z-index: -1;
+    opacity: 50%;
   }
 
   @media screen and (min-width: 800px) {
