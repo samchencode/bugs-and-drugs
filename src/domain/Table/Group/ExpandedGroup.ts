@@ -1,10 +1,11 @@
-import CollapsedGroup from '@/domain/Table/Group/CollapsedGroup';
-import Group from '@/domain/Table/Group/Group';
+import Group, { type GroupParams } from '@/domain/Table/Group/Group';
 import type { Range } from '@/domain/Table/Group/Range';
 
-class ExpandedGroup extends Group {
+abstract class ExpandedGroup extends Group {
+  protected abstract makeCollapsedGroup(params: GroupParams): Group;
+
   collapse(): Group {
-    return new CollapsedGroup(this.asGroupParams());
+    return this.makeCollapsedGroup(this.asGroupParams());
   }
   expand(): Group {
     return this;
