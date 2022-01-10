@@ -25,6 +25,21 @@ const fakeData: SensitivityData[][] = [
       antibiotic: new AntibioticValue('Azithromycin'),
       value: new SensitivityValue('90'),
     }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Ampicillin'),
+      value: new SensitivityValue('90'),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Pseudomonas'),
+      antibiotic: new AntibioticValue('Ampicillin'),
+      value: new SensitivityValue('R'),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Klebsiella'),
+      antibiotic: new AntibioticValue('Ampicillin'),
+      value: new SensitivityValue('100'),
+    }),
   ],
   [
     new SensitivityData({
