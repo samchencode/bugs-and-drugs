@@ -33,7 +33,7 @@ describe('make table using antibiogram', () => {
       expect(data).toEqual(expect.arrayContaining([expect.any(Array)]));
       expect(data.length).toBe(3);
 
-      expect(table.getShape()).toEqual([3, 1]);
+      expect(table.getShape()).toEqual([3, 2]);
     });
   });
 });

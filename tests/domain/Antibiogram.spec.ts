@@ -37,12 +37,15 @@ describe('Antibiogram', () => {
         expect.any(OrganismValue),
         expect.any(OrganismValue),
       ]);
-      expect(antibiogram.antibiotics).toEqual([expect.any(AntibioticValue)]);
+      expect(antibiogram.antibiotics).toEqual([
+        expect.any(AntibioticValue),
+        expect.any(AntibioticValue),
+      ]);
 
       const oNames = antibiogram.organisms.map((o) => o.getName());
       expect(oNames).toEqual(['Klebsiella', 'Pseudomonas', 'Staph aureus']);
       const aNames = antibiogram.antibiotics.map((a) => a.getName());
-      expect(aNames).toEqual(['Azithromycin']);
+      expect(aNames).toEqual(['Azithromycin', 'Ampicillin']);
     });
 
     it('should get list of all data', () => {
@@ -51,6 +54,9 @@ describe('Antibiogram', () => {
 
     it('should get list of all values', () => {
       expect(antibiogram.getValues()).toEqual([
+        expect.any(SensitivityValue),
+        expect.any(SensitivityValue),
+        expect.any(SensitivityValue),
         expect.any(SensitivityValue),
         expect.any(SensitivityValue),
         expect.any(SensitivityValue),
