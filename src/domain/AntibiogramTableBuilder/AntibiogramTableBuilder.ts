@@ -9,11 +9,7 @@ class AntibiogramTableBuilder {
     columns: Label[];
   };
   #matrix: Cell[][] = [];
-  #factory: TableElementFactory;
-
-  constructor() {
-    this.#factory = new TableElementFactory();
-  }
+  #factory: TableElementFactory = new TableElementFactory();
 
   makeLabels({ antibiotics, organisms }: Antibiogram) {
     this.#labels = {
