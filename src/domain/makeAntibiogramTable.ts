@@ -1,4 +1,4 @@
-import { Cell, EmptyCell, FilledCell, makeTable } from '@/domain/Table';
+import { type Cell, EmptyCell, FilledCell, makeTable } from '@/domain/Table';
 import type { Table } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
@@ -22,7 +22,7 @@ class AntibiogramTableBuilder {
     const { antibiotics, organisms } = abg;
     const nRow = organisms.length;
     const nCol = antibiotics.length;
-    this.#matrix = makeEmptyMatrix(nRow, nCol);
+    this.#matrix = this.#makeEmptyMatrix(nRow, nCol);
     this.#fillMatrix(abg);
   }
 
@@ -40,32 +40,29 @@ class AntibiogramTableBuilder {
     for (const d of abg.getSensitivities()) {
       const row = abg.organisms.findIndex((o) => o.is(d.getOrganism()));
       const column = abg.antibiotics.findIndex((a) => a.is(d.getAntibiotic()));
-      this.#matrix[row][column] = makeCell(d);
+      this.#matrix[row][column] = this.#makeCell(d);
     }
+  }
+
+  #makeCell(data: SensitivityData) {
+    const value = data.getValue().toString();
+    return new FilledCell(value);
+  }
+
+  #makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {
+    return new Array(nRow).fill(undefined).map(() => this.#makeEmptyRow(nCol));
+  }
+
+  #makeEmptyRow(size: number): EmptyCell[] {
+    return new Array(size).fill(undefined).map(() => new EmptyCell());
   }
 }
 
-function makeCell(data: SensitivityData) {
-  const value = data.getValue().toString();
-  return new FilledCell(value);
-}
-
-function makeEmptyRow(size: number): EmptyCell[] {
-  return new Array(size).fill(undefined).map(() => new EmptyCell());
-}
-
-function makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {
-  return new Array(nRow).fill(undefined).map(() => makeEmptyRow(nCol));
-}
-
-function makeAntibiogramTable(
-  builder: AntibiogramTableBuilder,
-  abg: Antibiogram
-) {
-  builder.reset();
+function makeAntibiogramTable(abg: Antibiogram) {
+  const builder = new AntibiogramTableBuilder();
   builder.makeLabels(abg);
   builder.makeMatrix(abg);
   return builder.build();
 }
 
-export default makeAntibiogramTable.bind(null, new AntibiogramTableBuilder());
+export default makeAntibiogramTable;
