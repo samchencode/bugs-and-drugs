@@ -28,15 +28,13 @@ describe('Antibiogram', () => {
 
     it('should create antibiogram with common sampleInfo', () => {
       const antibiogram = new Antibiogram(id, data, {
-        info: new SampleInfo([new Setting(Settings.INPATIENT)]),
+        info: new SampleInfo([Settings.INPATIENT]),
       });
       expect(antibiogram.isEmpty()).toBe(false);
-      expect(antibiogram.info.hasItem(new Setting(Settings.INPATIENT))).toBe(
+      expect(antibiogram.info.hasItem(Settings.INPATIENT)).toBe(true);
+      expect(antibiogram.info.getItem(Setting)?.is(Settings.INPATIENT)).toBe(
         true
       );
-      expect(
-        antibiogram.info.getItem(Setting)?.is(new Setting(Settings.INPATIENT))
-      ).toBe(true);
     });
   });
 

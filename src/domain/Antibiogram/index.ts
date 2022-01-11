@@ -19,7 +19,7 @@ export {
 export {
   default as SampleInfo,
   Source,
-  Sources,
   Setting,
+  Sources,
   Settings,
 } from '@/domain/Antibiogram/SampleInfo';

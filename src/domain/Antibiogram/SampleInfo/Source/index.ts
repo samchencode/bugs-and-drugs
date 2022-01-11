@@ -1,14 +1,14 @@
-export { default as default } from '@/domain/Antibiogram/SampleInfo/Source/Source';
+import Source from '@/domain/Antibiogram/SampleInfo/Source/Source';
 import Urine from '@/domain/Antibiogram/SampleInfo/Source/Urine';
 import NonUrine from '@/domain/Antibiogram/SampleInfo/Source/NonUrine';
 
 const Sources = {
   get URINE() {
-    return new Urine();
+    return new Source(new Urine());
   },
   get NONURINE() {
-    return new NonUrine();
+    return new Source(new NonUrine());
   },
 };
 
-export { Sources };
+export { Source, Sources };
