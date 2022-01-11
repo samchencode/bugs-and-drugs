@@ -1,4 +1,4 @@
-import { Source, Sources } from '@/domain/Antibiogram';
+import { Sources } from '@/domain/Antibiogram';
 
 describe('infectious source -- a type of sample info', () => {
   it('should hold a source value', () => {
