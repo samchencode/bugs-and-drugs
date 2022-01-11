@@ -5,6 +5,7 @@ import Antibiogram, {
   AntibioticValue,
   AntibiogramId,
 } from '@/domain/Antibiogram';
+import SampleInfo, { Setting, Settings } from '@/domain/Antibiogram/SampleInfo';
 
 describe('Antibiogram', () => {
   const [data] = FakeAntibiogramRepository.data;
@@ -21,6 +22,16 @@ describe('Antibiogram', () => {
       expect(antibiogram.isEmpty()).toBe(false);
       expect(antibiogram.organisms).toBeInstanceOf(Array);
       expect(antibiogram.antibiotics).toBeInstanceOf(Array);
+    });
+
+    it('should create antibiogram with common sampleInfo', () => {
+      const antibiogram = new Antibiogram(id, data, {
+        info: new SampleInfo([new Setting(Settings.INPATIENT)]),
+      });
+      expect(antibiogram.isEmpty()).toBe(false);
+      expect(antibiogram.hasInfoItem(new Setting(Settings.INPATIENT))).toBe(
+        true
+      );
     });
   });
 
