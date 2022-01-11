@@ -4,8 +4,10 @@ import Antibiogram, {
   OrganismValue,
   SingleAntibioticValue as AntibioticValue,
   AntibiogramId,
+  SampleInfo,
+  Setting,
+  Settings,
 } from '@/domain/Antibiogram';
-import SampleInfo, { Setting, Settings } from '@/domain/Antibiogram/SampleInfo';
 
 describe('Antibiogram', () => {
   const [data] = FakeAntibiogramRepository.data;

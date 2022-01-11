@@ -1,20 +1,20 @@
 import {
   SingleAntibioticValue,
   SynergisticAntibioticValue,
+  Routes,
 } from '@/domain/Antibiogram';
-import Route from '@/domain/Antibiogram/AntibioticValue/Route';
 
 describe('antibiotic value', () => {
   describe('antibiotic route', () => {
     it('should have unknown route by default', () => {
       const abx1 = new SingleAntibioticValue('Vancomycin');
-      expect(abx1.getRoute().is(Route.UNKNOWN));
+      expect(abx1.getRoute().is(Routes.UNKNOWN));
       expect(abx1.getRoute().toString()).toBe('unknown');
     });
 
     it('should store route of antibiotic', () => {
-      const abx1 = new SingleAntibioticValue('Vancomycin', Route.IV);
-      expect(abx1.getRoute().is(Route.IV)).toBe(true);
+      const abx1 = new SingleAntibioticValue('Vancomycin', Routes.IV);
+      expect(abx1.getRoute().is(Routes.IV)).toBe(true);
       expect(abx1.getRoute().toString()).toBe('IV');
     });
   });

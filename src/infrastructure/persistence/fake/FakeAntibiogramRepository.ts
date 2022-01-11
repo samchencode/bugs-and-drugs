@@ -6,6 +6,9 @@ import Antibiogram, {
   SensitivityValue,
   AntibiogramId,
   NullAntibiogram,
+  IntegerNumberOfIsolates,
+  Routes,
+  SampleInfo,
 } from '@/domain/Antibiogram';
 
 const fakeData: SensitivityData[][] = [
@@ -541,6 +544,50 @@ const fakeData: SensitivityData[][] = [
       organism: new OrganismValue('Semnopithecus entellus'),
       antibiotic: new AntibioticValue('Ice Cream Bar - Oreo Sandwich'),
       value: new SensitivityValue('47.354'),
+    }),
+  ],
+  [
+    new SensitivityData({
+      organism: new OrganismValue('Klebsiella'),
+      antibiotic: new AntibioticValue('Azithromycin', Routes.IV_PO),
+      value: new SensitivityValue('100'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Pseudomonas'),
+      antibiotic: new AntibioticValue('Azithromycin', Routes.IV_PO),
+      value: new SensitivityValue('R'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Azithromycin', Routes.IV_PO),
+      value: new SensitivityValue('90'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.PO),
+      value: new SensitivityValue('90'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Pseudomonas'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.PO),
+      value: new SensitivityValue('R'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Klebsiella'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.PO),
+      value: new SensitivityValue('100'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([]),
     }),
   ],
 ];
