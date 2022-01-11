@@ -45,10 +45,6 @@ class Antibiogram extends Entity {
   getValues() {
     return this.sensitivities.map((s) => s.getValue());
   }
-
-  hasInfoItem(item: SampleInfoItem) {
-    return this.info.hasItem(item);
-  }
 }
 
 export default Antibiogram;

@@ -29,9 +29,12 @@ describe('Antibiogram', () => {
         info: new SampleInfo([new Setting(Settings.INPATIENT)]),
       });
       expect(antibiogram.isEmpty()).toBe(false);
-      expect(antibiogram.hasInfoItem(new Setting(Settings.INPATIENT))).toBe(
+      expect(antibiogram.info.hasItem(new Setting(Settings.INPATIENT))).toBe(
         true
       );
+      expect(
+        antibiogram.info.getItem(Setting)?.is(new Setting(Settings.INPATIENT))
+      ).toBe(true);
     });
   });
 
