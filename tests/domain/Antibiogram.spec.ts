@@ -2,7 +2,7 @@ import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAnt
 import Antibiogram, {
   SensitivityValue,
   OrganismValue,
-  AntibioticValue,
+  SingleAntibioticValue as AntibioticValue,
   AntibiogramId,
 } from '@/domain/Antibiogram';
 import SampleInfo, { Setting, Settings } from '@/domain/Antibiogram/SampleInfo';

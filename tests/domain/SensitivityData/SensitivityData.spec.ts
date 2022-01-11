@@ -1,5 +1,5 @@
 import {
-  AntibioticValue,
+  SingleAntibioticValue,
   OrganismValue,
   SensitivityData,
   SensitivityValue,
@@ -13,7 +13,7 @@ import FakeOrganismRepository from '@/infrastructure/persistence/fake/FakeOrgani
 describe('Sensitivty Data', () => {
   const dummyParams = {
     value: new SensitivityValue('90'),
-    antibiotic: new AntibioticValue('Azithromycin'),
+    antibiotic: new SingleAntibioticValue('Azithromycin'),
     organism: new OrganismValue('Klebsiella'),
   };
 
@@ -24,7 +24,7 @@ describe('Sensitivty Data', () => {
     const value = data.getValue();
     expect(value).toBeInstanceOf(SensitivityValue);
     const abx = data.getAntibiotic();
-    expect(abx).toBeInstanceOf(AntibioticValue);
+    expect(abx).toBeInstanceOf(SingleAntibioticValue);
     const org = data.getOrganism();
     expect(org).toBeInstanceOf(OrganismValue);
 
@@ -37,7 +37,7 @@ describe('Sensitivty Data', () => {
     const [org] = FakeOrganismRepository.data;
     const data = new SensitivityData({
       value: new SensitivityValue('90'),
-      antibiotic: new AntibioticValue('Azithromycin'),
+      antibiotic: new SingleAntibioticValue('Azithromycin'),
       organism: new OrganismValue('Klebsiella', org),
     });
     expect(data.getOrganism().getOrganism()?.id.is(org.id)).toBe(true);
@@ -78,17 +78,17 @@ describe('Sensitivty Data', () => {
     it('should be identical to other sensitivty data with same value', () => {
       const data1 = new SensitivityData({
         value: new SensitivityValue('90'),
-        antibiotic: new AntibioticValue('Azithromycin'),
+        antibiotic: new SingleAntibioticValue('Azithromycin'),
         organism: new OrganismValue('Klebsiella'),
       });
       const data2 = new SensitivityData({
         value: new SensitivityValue('90'),
-        antibiotic: new AntibioticValue('Azithromycin'),
+        antibiotic: new SingleAntibioticValue('Azithromycin'),
         organism: new OrganismValue('Klebsiella'),
       });
       const data3 = new SensitivityData({
         value: new SensitivityValue('R'),
-        antibiotic: new AntibioticValue('Azithromycin'),
+        antibiotic: new SingleAntibioticValue('Azithromycin'),
         organism: new OrganismValue('Klebsiella'),
       });
       expect(data1.is(data2)).toBe(true);
@@ -98,17 +98,17 @@ describe('Sensitivty Data', () => {
     it('should return whether sample info and organism are the same', () => {
       const data1 = new SensitivityData({
         value: new SensitivityValue('90'),
-        antibiotic: new AntibioticValue('Azithromycin'),
+        antibiotic: new SingleAntibioticValue('Azithromycin'),
         organism: new OrganismValue('Klebsiella'),
       });
       const data2 = new SensitivityData({
         value: new SensitivityValue('R'),
-        antibiotic: new AntibioticValue('Cefazolin'),
+        antibiotic: new SingleAntibioticValue('Cefazolin'),
         organism: new OrganismValue('Klebsiella'),
       });
       const data3 = new SensitivityData({
         value: new SensitivityValue('30'),
-        antibiotic: new AntibioticValue('Cefazolin'),
+        antibiotic: new SingleAntibioticValue('Cefazolin'),
         organism: new OrganismValue('Klebsiella'),
         sampleInfo: new SampleInfo([new Source(Sources.URINE)]),
       });

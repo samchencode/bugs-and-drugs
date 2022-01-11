@@ -1,7 +1,7 @@
 import type { AntibiogramRepository } from '@/domain/ports/AntibiogramRepository';
 import Antibiogram, {
   OrganismValue,
-  AntibioticValue,
+  SingleAntibioticValue as AntibioticValue,
   SensitivityData,
   SensitivityValue,
   AntibiogramId,

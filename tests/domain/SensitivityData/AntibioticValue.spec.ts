@@ -1,5 +1,5 @@
 import {
-  AntibioticValue,
+  SingleAntibioticValue,
   SynergisticAntibioticValue,
 } from '@/domain/Antibiogram';
 import Route from '@/domain/Antibiogram/AntibioticValue/Route';
@@ -7,13 +7,13 @@ import Route from '@/domain/Antibiogram/AntibioticValue/Route';
 describe('antibiotic value', () => {
   describe('antibiotic route', () => {
     it('should have unknown route by default', () => {
-      const abx1 = new AntibioticValue('Vancomycin');
+      const abx1 = new SingleAntibioticValue('Vancomycin');
       expect(abx1.getRoute().is(Route.UNKNOWN));
       expect(abx1.getRoute().toString()).toBe('unknown');
     });
 
     it('should store route of antibiotic', () => {
-      const abx1 = new AntibioticValue('Vancomycin', Route.IV);
+      const abx1 = new SingleAntibioticValue('Vancomycin', Route.IV);
       expect(abx1.getRoute().is(Route.IV)).toBe(true);
       expect(abx1.getRoute().toString()).toBe('IV');
     });
@@ -21,8 +21,8 @@ describe('antibiotic value', () => {
 
   describe('antibiotic synergy', () => {
     it('should create new antibiotic value that holds two synergystic antibiotics', () => {
-      const abx1 = new AntibioticValue('Neomycin');
-      const abx2 = new AntibioticValue('Polymixin B');
+      const abx1 = new SingleAntibioticValue('Neomycin');
+      const abx2 = new SingleAntibioticValue('Polymixin B');
       const synergisticAbx = new SynergisticAntibioticValue([abx1, abx2]);
 
       expect(synergisticAbx).toBeDefined();
@@ -31,9 +31,9 @@ describe('antibiotic value', () => {
     });
 
     it('should equate synergistic antibiotics holding same antibiotic values', () => {
-      const abx1 = new AntibioticValue('Neomycin');
-      const abx2 = new AntibioticValue('Polymixin B');
-      const abx3 = new AntibioticValue('Penicillin V');
+      const abx1 = new SingleAntibioticValue('Neomycin');
+      const abx2 = new SingleAntibioticValue('Polymixin B');
+      const abx3 = new SingleAntibioticValue('Penicillin V');
       const synergisticAbx = new SynergisticAntibioticValue([abx1, abx2]);
 
       expect(
@@ -48,8 +48,8 @@ describe('antibiotic value', () => {
     });
 
     it('should combine the names of synergistic abx to one', () => {
-      const abx1 = new AntibioticValue('Neomycin');
-      const abx2 = new AntibioticValue('Polymixin B');
+      const abx1 = new SingleAntibioticValue('Neomycin');
+      const abx2 = new SingleAntibioticValue('Polymixin B');
       const syn = new SynergisticAntibioticValue([abx1, abx2]);
       expect(syn.getName()).toBe('Neomycin + Polymixin B');
     });

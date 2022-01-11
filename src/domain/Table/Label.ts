@@ -10,7 +10,7 @@ class Label extends Cell {
   #title: string;
   #tooltip: Tooltip;
 
-  constructor(title: string, params?: LabelParams) {
+  constructor(title: string, params?: Partial<LabelParams>) {
     super();
     this.#title = title;
     this.#tooltip = params?.tooltip ?? new EmptyTooltip();
