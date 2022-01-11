@@ -428,7 +428,6 @@ describe('Table', () => {
       const revertedExpandedRanges = revertedTable
         .getRowGroups()
         .map((x) => x.getExpandedRange());
-      console.log(revertedRanges, revertedExpandedRanges);
       expect(revertedRanges).toEqual(
         expect.arrayContaining([
           [0, 2],
