@@ -4,9 +4,7 @@ import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 import type { AntibioticValue } from '@/domain/Antibiogram/AntibioticValue';
 import type OrganismValue from '@/domain/Antibiogram/OrganismValue';
 import type AntibiogramId from '@/domain/Antibiogram/AntibiogramId';
-import SampleInfo, {
-  type SampleInfoItem,
-} from '@/domain/Antibiogram/SampleInfo';
+import SampleInfo from '@/domain/Antibiogram/SampleInfo';
 
 interface AntibiogramParams {
   info: SampleInfo;
