@@ -52,6 +52,17 @@ describe('make table using antibiogram', () => {
   describe('behavior', () => {
     let table: Table;
 
+    // +-----------------------------------------------------------------------------+
+    // |                            Inpatient Antibiogram                            |
+    // +------------------------+--------------------+---------------+---------------+
+    // |           .            | Azithromycin IV/PO | Ampicillin PO | Ampicillin IV |
+    // +------------------------+--------------------+---------------+---------------+
+    // | Klebsiella (30 iso)    | 100                |           100 | NA            |
+    // | Pseudomonas (30 iso)   | R                  |            81 | R             |
+    // | Staph aureus (500 iso) | 90                 |            90 | NA            |
+    // | - Non-urine (450 iso)  | 86                 |            92 | 96            |
+    // +------------------------+--------------------+---------------+---------------+
+
     beforeEach(() => {
       return new FakeAntibiogramRepository().getAll().then((abgs) => {
         table = build(abgs[2]);
