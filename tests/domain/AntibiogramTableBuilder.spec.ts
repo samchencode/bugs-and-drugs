@@ -1,11 +1,11 @@
 import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
-import makeAntibiogramTable from '@/domain/makeAntibiogramTable';
+import buildAntibiogramTable from '@/domain/AntibiogramTableBuilder';
 import Antibiogram, { AntibiogramId } from '@/domain/Antibiogram';
 
 describe('make table using antibiogram', () => {
   it('creates table using empty antibiogram', () => {
     const abg = new Antibiogram(new AntibiogramId('0'), []);
-    const table = makeAntibiogramTable(abg);
+    const table = buildAntibiogramTable(abg);
     expect(table.getCells()).toEqual([]);
   });
 
@@ -19,7 +19,7 @@ describe('make table using antibiogram', () => {
     });
 
     it('creates table using antibiogram', () => {
-      const table = makeAntibiogramTable(abg);
+      const table = buildAntibiogramTable(abg);
       const rLabels = table.getRowLabels();
       const cLabels = table.getColumnLabels();
       expect(rLabels.map((x) => x.toString())).toEqual(
