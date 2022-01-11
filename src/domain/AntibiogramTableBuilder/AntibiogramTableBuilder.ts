@@ -11,10 +11,10 @@ class AntibiogramTableBuilder {
   #matrix: Cell[][] = [];
   #factory: TableElementFactory = new TableElementFactory();
 
-  makeLabels({ antibiotics, organisms }: Antibiogram) {
+  makeLabels(abg: Antibiogram) {
     this.#labels = {
-      rows: organisms.map((o) => this.#factory.makeOrganismLabel(o)),
-      columns: antibiotics.map((a) => this.#factory.makeAntibioticLabel(a)),
+      rows: this.#makeRowLabels(abg),
+      columns: this.#makeColumnLabels(abg),
     };
   }
 
@@ -35,6 +35,14 @@ class AntibiogramTableBuilder {
   reset() {
     this.#labels = undefined;
     this.#matrix = [];
+  }
+
+  #makeRowLabels({ organisms }: Antibiogram) {
+    return organisms.map((o) => this.#factory.makeOrganismLabel(o));
+  }
+
+  #makeColumnLabels({ antibiotics }: Antibiogram) {
+    return antibiotics.map((a) => this.#factory.makeAntibioticLabel(a));
   }
 
   #fillMatrix(abg: Antibiogram) {
