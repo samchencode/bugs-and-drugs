@@ -1,75 +1,71 @@
-import { Cell, Tooltip, makeTable } from '@/domain/Table';
+import { Cell, EmptyCell, FilledCell, makeTable } from '@/domain/Table';
 import type { Table } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 
-class EmptyAntibiogramTableCell extends Cell {
-  #value = 'NA';
-
-  getValue(): string {
-    return this.#value;
-  }
-
-  toString(): string {
-    return this.#value;
-  }
-
-  getTooltip(): Tooltip {
-    throw new Error('Method not implemented.');
-  }
-}
-
-class FilledAntibiogramTableCell extends Cell {
-  #value: string;
-
-  constructor(data: SensitivityData) {
-    super();
-    this.#value = data.getValue().toString();
-  }
-
-  getValue(): string {
-    return this.#value;
-  }
-
-  toString(): string {
-    return this.#value;
-  }
-  getTooltip(): Tooltip {
-    throw new Error('Method not implemented.');
-  }
-}
-
-function makeEmptyMatrix(
-  nRows: number,
-  nColumns: number
-): EmptyAntibiogramTableCell[][] {
-  return new Array(nRows)
-    .fill(undefined)
-    .map(() =>
-      new Array(nColumns)
-        .fill(undefined)
-        .map(() => new EmptyAntibiogramTableCell())
-    );
-}
-
-function makeAntibiogramTable(antibiogram: Antibiogram): Table {
-  if (antibiogram.isEmpty()) return makeTable([]);
-  const { antibiotics, organisms } = antibiogram;
-  const labels = {
-    rows: organisms.map((o) => o.getName()),
-    columns: antibiotics.map((a) => a.getName()),
+class AntibiogramTableBuilder {
+  #labels?: {
+    rows: string[];
+    columns: string[];
   };
-  const nRows = labels.rows.length;
-  const nColumns = labels.columns.length;
-  const cells: Cell[][] = makeEmptyMatrix(nRows, nColumns);
+  #matrix: Cell[][] = [];
 
-  for (const d of antibiogram.getSensitivities()) {
-    const row = labels.rows.indexOf(d.getOrganism().getName());
-    const column = labels.columns.indexOf(d.getAntibiotic().getName());
-    cells[row][column] = new FilledAntibiogramTableCell(d);
+  makeLabels({ antibiotics, organisms }: Antibiogram) {
+    this.#labels = {
+      rows: organisms.map((o) => o.getName()),
+      columns: antibiotics.map((a) => a.getName()),
+    };
   }
 
-  return makeTable(cells, { labels });
+  makeMatrix(abg: Antibiogram) {
+    if (abg.isEmpty()) return;
+    const { antibiotics, organisms } = abg;
+    const nRow = organisms.length;
+    const nCol = antibiotics.length;
+    this.#matrix = makeEmptyMatrix(nRow, nCol);
+    this.#fillMatrix(abg);
+  }
+
+  build(): Table {
+    if (this.#matrix.length === 0) return makeTable([]);
+    return makeTable(this.#matrix, { labels: this.#labels });
+  }
+
+  reset() {
+    this.#labels = undefined;
+    this.#matrix = [];
+  }
+
+  #fillMatrix(abg: Antibiogram) {
+    for (const d of abg.getSensitivities()) {
+      const row = abg.organisms.findIndex((o) => o.is(d.getOrganism()));
+      const column = abg.antibiotics.findIndex((a) => a.is(d.getAntibiotic()));
+      this.#matrix[row][column] = makeCell(d);
+    }
+  }
 }
 
-export default makeAntibiogramTable;
+function makeCell(data: SensitivityData) {
+  const value = data.getValue().toString();
+  return new FilledCell(value);
+}
+
+function makeEmptyRow(size: number): EmptyCell[] {
+  return new Array(size).fill(undefined).map(() => new EmptyCell());
+}
+
+function makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {
+  return new Array(nRow).fill(undefined).map(() => makeEmptyRow(nCol));
+}
+
+function makeAntibiogramTable(
+  builder: AntibiogramTableBuilder,
+  abg: Antibiogram
+) {
+  builder.reset();
+  builder.makeLabels(abg);
+  builder.makeMatrix(abg);
+  return builder.build();
+}
+
+export default makeAntibiogramTable.bind(null, new AntibiogramTableBuilder());

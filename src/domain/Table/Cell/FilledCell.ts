@@ -1,0 +1,24 @@
+import Cell from '@/domain/Table/Cell/Cell';
+import Tooltip, { EmptyTooltip } from '@/domain/Table/Tooltip';
+import type { CellParams } from '@/domain/Table/Cell/CellParams';
+
+class FilledCell extends Cell {
+  #value: string;
+  #tooltip: Tooltip;
+
+  constructor(value: string, params?: Partial<CellParams>) {
+    super();
+    this.#value = value;
+    this.#tooltip = params?.tooltip ?? new EmptyTooltip();
+  }
+
+  getValue(): string {
+    return this.#value;
+  }
+
+  getTooltip(): Tooltip {
+    return this.#tooltip;
+  }
+}
+
+export default FilledCell;
