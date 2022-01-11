@@ -1,19 +1,25 @@
-import { type Cell, EmptyCell, FilledCell, makeTable } from '@/domain/Table';
+import {
+  type Cell,
+  Label,
+  EmptyCell,
+  FilledCell,
+  makeTable,
+} from '@/domain/Table';
 import type { Table } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 
 class AntibiogramTableBuilder {
   #labels?: {
-    rows: string[];
-    columns: string[];
+    rows: Label[];
+    columns: Label[];
   };
   #matrix: Cell[][] = [];
 
   makeLabels({ antibiotics, organisms }: Antibiogram) {
     this.#labels = {
-      rows: organisms.map((o) => o.getName()),
-      columns: antibiotics.map((a) => a.getName()),
+      rows: organisms.map((o) => o.getName()).map((s) => new Label(s)),
+      columns: antibiotics.map((a) => a.getName()).map((s) => new Label(s)),
     };
   }
 

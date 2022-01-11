@@ -12,3 +12,4 @@ export {
   CollapsedGroup,
   type Group,
 } from '@/domain/Table/Group';
+export { default as Label } from '@/domain/Table/Label';
