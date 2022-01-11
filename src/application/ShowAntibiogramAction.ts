@@ -1,11 +1,10 @@
 import type { AntibiogramRepository } from '@/domain/ports/AntibiogramRepository';
 import buildAntibiogramTable from '@/domain/AntibiogramTableBuilder';
+import type { Table } from '@/domain/Table';
 
 interface ShowAntibiogramActionParams {
   id: number;
 }
-
-type Table = ReturnType<typeof buildAntibiogramTable>;
 
 class ShowAntibiogramAction {
   antibiogramRepository: AntibiogramRepository;
