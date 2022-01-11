@@ -3,8 +3,8 @@ import { Sources } from '@/domain/Antibiogram';
 describe('infectious source -- a type of sample info', () => {
   it('should hold a source value', () => {
     const source = Sources.URINE;
-    expect(source.getValue().is(Sources.URINE)).toBe(true);
-    expect(source.getValue().is(Sources.NONURINE)).toBe(false);
+    expect(source.is(Sources.URINE)).toBe(true);
+    expect(source.is(Sources.NONURINE)).toBe(false);
   });
 
   it('should convert value to string', () => {

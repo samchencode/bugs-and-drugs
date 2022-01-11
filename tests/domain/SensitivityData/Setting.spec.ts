@@ -3,8 +3,8 @@ import { Settings } from '@/domain/Antibiogram';
 describe('setting -- a type of sample info', () => {
   it('should hold a setting value', () => {
     const setting = Settings.INPATIENT;
-    expect(setting.getValue().is(Settings.INPATIENT)).toBe(true);
-    expect(setting.getValue().is(Settings.OUTPATIENT)).toBe(false);
+    expect(setting.is(Settings.INPATIENT)).toBe(true);
+    expect(setting.is(Settings.OUTPATIENT)).toBe(false);
   });
 
   it('should convert value to string', () => {
