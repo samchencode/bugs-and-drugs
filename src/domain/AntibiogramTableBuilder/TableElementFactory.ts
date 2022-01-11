@@ -3,7 +3,13 @@ import type {
   OrganismValue,
   SensitivityData,
 } from '@/domain/Antibiogram';
-import { FilledCell, Label, Tooltip, EmptyCell } from '@/domain/Table';
+import {
+  FilledCell,
+  Label,
+  Tooltip,
+  EmptyCell,
+  type LabelParams,
+} from '@/domain/Table';
 
 class TableElementFactory {
   makeCell(data: SensitivityData) {
@@ -12,9 +18,9 @@ class TableElementFactory {
   }
 
   makeLabel(text: string, tooltipText?: string) {
-    return new Label(text, {
-      tooltip: tooltipText ? new Tooltip(tooltipText) : undefined,
-    });
+    const params: Partial<LabelParams> = {};
+    if (tooltipText) params.tooltip = new Tooltip(tooltipText);
+    return new Label(text, params);
   }
 
   makeOrganismLabel(o: OrganismValue) {

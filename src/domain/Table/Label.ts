@@ -41,3 +41,4 @@ class EmptyLabel extends Label {
 
 export default Label;
 export { EmptyLabel };
+export type { LabelParams };
