@@ -59,10 +59,16 @@ describe('SampleInfo', () => {
     expect(info.getItem(infoItem2.type)?.is(new DemoInfo2('2'))).toBe(true);
   });
 
-  it('should equate two info objects with identical items', () => {
+  it('should equate two info objects only if they have identical items', () => {
     const info = new SampleInfo([new DemoInfo('1'), new DemoInfo2('2')]);
     const info2 = new SampleInfo([new DemoInfo('1'), new DemoInfo2('2')]);
     expect(info.is(info2)).toBe(true);
+  });
+
+  it('should not equate two info objects if they do not have identical items', () => {
+    const info = new SampleInfo([new DemoInfo('1'), new DemoInfo2('2')]);
+    const info3 = new SampleInfo([new DemoInfo('1')]);
+    expect(info.is(info3)).toBe(false);
   });
 
   it('should check whether it has a certain item-value combo', () => {
