@@ -1,15 +1,25 @@
 <script lang="ts">
   import Table from './table/Table.svelte';
-  import GramPositiveTable from './table/GramPositiveTable.svelte';
+  import GramTableSelector from './table/GramTableSelector.svelte';
   import Topbar from './common/TopBar.svelte';
   import './index.css';
+  import AntibiogramCard from './common/AntibiogramCard.svelte';
 </script>
 
 <main>
   <Topbar />
-  <GramPositiveTable />
-
-  <details class="gram-negatives">
+  <GramTableSelector />
+  <!-- <AntibiogramCard /> -->
+  <div class="table-window">
     <Table />
-  </details>
+  </div>
 </main>
+
+<style>
+  .table-window {
+    display: block;
+    height: 80vh;
+    width: 100%;
+    overflow: scroll;
+  }
+</style>

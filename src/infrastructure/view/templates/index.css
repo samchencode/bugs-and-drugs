@@ -16,3 +16,38 @@ tbody,
 tfoot {
   font-weight: normal;
 }
+:root {
+  --main-bg-color: #d9d9d9;
+  --main-primary-color: #4a4a4a;
+  --main-on-surface-emphasis-color: lightgrey;
+  --main-light-primary-color: darkgrey;
+  --table-padding: 15px;
+  --table-font-size: 15px;
+  --table-heading-size: 140px;
+  --card-font-size: 27px;
+}
+
+@media screen and (max-width: 1200px) and (max-height: 1200px) {
+  :root {
+    --table-padding: 14px;
+    --table-font-size: 14px;
+    --table-heading-size: 130px;
+    --card-font-size: 25px;
+  }
+}
+@media screen and (max-width: 1000px) and (max-height: 1000px) {
+  :root {
+    --table-padding: 12px;
+    --table-font-size: 12px;
+    --table-heading-size: 110px;
+    --card-font-size: 22px;
+  }
+}
+@media screen and (max-width: 850px) and (max-height: 850px) {
+  :root {
+    --table-padding: 10px;
+    --table-font-size: 10px;
+    --table-heading-size: 100px;
+    --card-font-size: 20px;
+  }
+}
