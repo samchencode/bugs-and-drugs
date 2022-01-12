@@ -492,6 +492,61 @@ describe('Table', () => {
       ]);
       expect(values).toEqual(expectedValues);
     });
+
+    it('should be the same after expand then collapse with two collapsed ranges', () => {
+      const data = [
+        [new D(10), new D(20), new D(30)],
+        [new D(40), new D(50), new D(60)],
+        [new D(70), new D(80), new D(90)],
+        [new D(100), new D(110), new D(120)],
+        [new D(130), new D(140), new D(150)],
+        [new D(160), new D(170), new D(180)],
+      ];
+
+      const table = makeTable(data, {
+        groups: {
+          rows: [
+            new CollapsedGroup({ range: [0, 2] }),
+            new ExpandedGroup({ range: [2, 4] }),
+            new CollapsedGroup({ range: [4, 6] }),
+          ],
+        },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const expandedTable = table.getRowGroupByRange([0, 1])!.expand();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const revertedTable = expandedTable
+        .getRowGroupByRange([0, 2])!
+        .collapse();
+      const revertedRanges = revertedTable
+        .getRowGroups()
+        .map((x) => x.getRange());
+      const revertedExpandedRanges = revertedTable
+        .getRowGroups()
+        .map((x) => x.getExpandedRange());
+      expect(revertedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 1],
+          [1, 3],
+          [3, 4],
+        ])
+      );
+      expect(revertedExpandedRanges).toEqual(
+        expect.arrayContaining([
+          [0, 2],
+          [1, 3],
+          [3, 5],
+        ])
+      );
+      const values = cellMatrixToStringMatrix(revertedTable.getCells());
+      const expectedValues = cellMatrixToStringMatrix([
+        data[0],
+        data[2],
+        data[3],
+        data[4],
+      ]);
+      expect(values).toEqual(expectedValues);
+    });
   });
 });
 
