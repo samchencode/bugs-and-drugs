@@ -42,7 +42,7 @@ class SampleInfo extends ValueObject {
   }
 
   protected isIdentical(v: SampleInfo): boolean {
-    this.#hasSameKeys(v.getItems());
+    if (!this.#hasSameKeys(v.getItems())) return false;
     for (const [key, value] of v.getItems()) {
       const valueIsSame = this.#itemsByType.get(key)?.is(value);
       if (!valueIsSame) return false;
