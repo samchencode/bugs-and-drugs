@@ -43,6 +43,16 @@ class Antibiogram extends Entity {
   getValues() {
     return this.sensitivities.map((s) => s.getValue());
   }
+
+  findUniqueOrganismAndSampleInfo() {
+    return this.sensitivities
+      .map<[OrganismValue, SampleInfo][]>((d) => [
+        [d.getOrganism(), d.getSampleInfo()],
+      ])
+      .reduce((ag, [d]) =>
+        ag.find(([o, i]) => d[0].is(o) && d[1].is(i)) ? ag : ag.concat([d])
+      );
+  }
 }
 
 export default Antibiogram;

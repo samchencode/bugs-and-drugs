@@ -10,7 +10,7 @@ import Antibiogram, {
 } from '@/domain/Antibiogram';
 
 describe('Antibiogram', () => {
-  const [data] = FakeAntibiogramRepository.data;
+  const [data, , data2] = FakeAntibiogramRepository.data;
   const id = new AntibiogramId('0');
 
   describe('instantiation', () => {
@@ -75,6 +75,26 @@ describe('Antibiogram', () => {
         expect.any(SensitivityValue),
         expect.any(SensitivityValue),
       ]);
+    });
+
+    it.only('should find all unique organism-sensitivity-info pairs', () => {
+      const antibiogram = new Antibiogram(new AntibiogramId('2'), data2);
+
+      const uniqueCombinations = antibiogram.findUniqueOrganismAndSampleInfo();
+      const values = uniqueCombinations.map(([o, si]) => {
+        return [
+          o.getName(),
+          Array.from(si.getItems().values()).map((x) => '' + x),
+        ];
+      });
+      expect(values).toEqual(
+        expect.arrayContaining([
+          ['Klebsiella', ['Inpatient Setting']],
+          ['Pseudomonas', ['Inpatient Setting']],
+          ['Staph aureus', ['Inpatient Setting']],
+          ['Staph aureus', ['Inpatient Setting', 'Non-Urine']],
+        ])
+      );
     });
   });
 });
