@@ -14,6 +14,7 @@ class SynergisticAntibioticValue
   }
 
   protected isIdentical(v: SynergisticAntibioticValue): boolean {
+    if (v.getAntibiotics().length !== this.#antibiotics.length) return false;
     for (const antibiotic of this.#antibiotics) {
       const match = v.getAntibiotics().find((abx) => abx.is(antibiotic));
       if (!match) return false;
