@@ -1,9 +1,10 @@
 import type { Group } from '@/domain/Table/Group';
+import type Label from '@/domain/Table/Label';
 
 interface TableParams {
   labels: {
-    rows: string[];
-    columns: string[];
+    rows: Label[];
+    columns: Label[];
   };
   groups: {
     rows: Group[];

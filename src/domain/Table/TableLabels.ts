@@ -17,10 +17,10 @@ class FilledTableLabels extends TableLabels {
   protected rows: Label[];
   protected columns: Label[];
 
-  constructor(rows: string[], columns: string[]) {
+  constructor(rows: Label[], columns: Label[]) {
     super();
-    this.rows = rows.map((l) => new Label(l));
-    this.columns = columns.map((l) => new Label(l));
+    this.rows = rows;
+    this.columns = columns;
   }
 }
 

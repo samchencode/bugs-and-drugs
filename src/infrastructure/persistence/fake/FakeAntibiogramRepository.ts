@@ -1,11 +1,16 @@
 import type { AntibiogramRepository } from '@/domain/ports/AntibiogramRepository';
 import Antibiogram, {
   OrganismValue,
-  AntibioticValue,
+  SingleAntibioticValue as AntibioticValue,
   SensitivityData,
   SensitivityValue,
   AntibiogramId,
   NullAntibiogram,
+  IntegerNumberOfIsolates,
+  Routes,
+  SampleInfo,
+  Settings,
+  Sources,
 } from '@/domain/Antibiogram';
 
 const fakeData: SensitivityData[][] = [
@@ -543,11 +548,86 @@ const fakeData: SensitivityData[][] = [
       value: new SensitivityValue('47.354'),
     }),
   ],
+  [
+    new SensitivityData({
+      organism: new OrganismValue('Klebsiella'),
+      antibiotic: new AntibioticValue('Azithromycin', Routes.IV_PO),
+      value: new SensitivityValue('100'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([Settings.INPATIENT]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Pseudomonas'),
+      antibiotic: new AntibioticValue('Azithromycin', Routes.IV_PO),
+      value: new SensitivityValue('R'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([Settings.INPATIENT]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Azithromycin', Routes.IV_PO),
+      value: new SensitivityValue('90'),
+      isolates: new IntegerNumberOfIsolates(500),
+      sampleInfo: new SampleInfo([Settings.INPATIENT]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Azithromycin', Routes.IV_PO),
+      value: new SensitivityValue('86'),
+      isolates: new IntegerNumberOfIsolates(450),
+      sampleInfo: new SampleInfo([Settings.INPATIENT, Sources.NONURINE]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.PO),
+      value: new SensitivityValue('90'),
+      isolates: new IntegerNumberOfIsolates(500),
+      sampleInfo: new SampleInfo([Settings.INPATIENT]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.PO),
+      value: new SensitivityValue('92'),
+      isolates: new IntegerNumberOfIsolates(450),
+      sampleInfo: new SampleInfo([Settings.INPATIENT, Sources.NONURINE]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Staph aureus'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.IV),
+      value: new SensitivityValue('96'),
+      isolates: new IntegerNumberOfIsolates(450),
+      sampleInfo: new SampleInfo([Settings.INPATIENT, Sources.NONURINE]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Pseudomonas'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.PO),
+      value: new SensitivityValue('81'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([Settings.INPATIENT]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Pseudomonas'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.IV),
+      value: new SensitivityValue('R'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([Settings.INPATIENT]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Klebsiella'),
+      antibiotic: new AntibioticValue('Ampicillin', Routes.PO),
+      value: new SensitivityValue('100'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([Settings.INPATIENT]),
+    }),
+  ],
 ];
 
 const fakeAntibiograms = [
   new Antibiogram(new AntibiogramId('0'), fakeData[0]),
   new Antibiogram(new AntibiogramId('1'), fakeData[1]),
+  new Antibiogram(new AntibiogramId('2'), fakeData[2], {
+    info: new SampleInfo([Settings.INPATIENT]),
+  }),
 ];
 
 class FakeAntibiogramRepository implements AntibiogramRepository {
