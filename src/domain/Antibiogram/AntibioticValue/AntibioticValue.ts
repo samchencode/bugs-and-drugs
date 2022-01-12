@@ -4,6 +4,7 @@ import type SingleAntibioticValue from '@/domain/Antibiogram/AntibioticValue/Sin
 interface AntibioticValue extends ValueObject {
   getName(): string;
   getAntibiotics(): SingleAntibioticValue[];
+  isSameAntibiotic(v: AntibioticValue): boolean;
 }
 
 export type { AntibioticValue };

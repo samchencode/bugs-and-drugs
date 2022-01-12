@@ -25,8 +25,15 @@ class SingleAntibioticValue extends ValueObject implements AntibioticValue {
     return this.#name;
   }
 
-  isIdentical(organismValue: SingleAntibioticValue) {
-    return this.#name === organismValue.getName();
+  isSameAntibiotic(v: AntibioticValue): boolean {
+    if (!(v instanceof SingleAntibioticValue)) return false;
+    return this.#name === v.getName();
+  }
+
+  protected isIdentical(antibioticValue: SingleAntibioticValue) {
+    if (this.#name !== antibioticValue.getName()) return false;
+    if (this.#route !== antibioticValue.getRoute()) return false;
+    return true;
   }
 }
 

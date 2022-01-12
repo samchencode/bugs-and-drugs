@@ -13,15 +13,6 @@ class SynergisticAntibioticValue
     this.#antibiotics = antibiotics;
   }
 
-  protected isIdentical(v: SynergisticAntibioticValue): boolean {
-    if (v.getAntibiotics().length !== this.#antibiotics.length) return false;
-    for (const antibiotic of this.#antibiotics) {
-      const match = v.getAntibiotics().find((abx) => abx.is(antibiotic));
-      if (!match) return false;
-    }
-    return true;
-  }
-
   getAntibiotics() {
     return this.#antibiotics;
   }
@@ -29,6 +20,33 @@ class SynergisticAntibioticValue
   getName(): string {
     const names = this.#antibiotics.map((abx) => abx.getName());
     return names.join(' + ');
+  }
+
+  isSameAntibiotic(v: AntibioticValue): boolean {
+    if (!(v instanceof SynergisticAntibioticValue)) return false;
+    return this.#compare((a1, a2) => a1.isSameAntibiotic(a2), v);
+  }
+
+  protected isIdentical(v: SynergisticAntibioticValue): boolean {
+    return this.#compare((a1, a2) => a1.is(a2), v);
+  }
+
+  #compare(
+    comparator: (
+      abx1: SingleAntibioticValue,
+      abx2: SingleAntibioticValue
+    ) => boolean,
+    value: SynergisticAntibioticValue
+  ) {
+    if (value.getAntibiotics().length !== this.#antibiotics.length)
+      return false;
+    for (const antibiotic of this.#antibiotics) {
+      const match = value
+        .getAntibiotics()
+        .find((abx) => comparator(abx, antibiotic));
+      if (!match) return false;
+    }
+    return true;
   }
 }
 
