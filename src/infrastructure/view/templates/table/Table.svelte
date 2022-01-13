@@ -5,39 +5,42 @@
 
   const tableController: TableController = getContext('tableController');
   let table: Awaited<ReturnType<TableController['showTable']>> | undefined;
+  tableController.showTable(1).then((t) => (table = t));
 
-  tableController.showTable(1).then((t) => {
-    table = t;
-    let elementsArray = document.getElementsByTagName('TD');
-    console.log(elementsArray);
-    console.log(table);
+  function highlightCells(event, row, column) {
+    let highlightColor = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue('--main-on-surface-emphasis-color');
+    if (row != undefined) {
+      let rowClassName = 'row' + row.toString();
+      highlightAllOfClass(rowClassName, highlightColor);
+    }
+    if (column != undefined) {
+      let columnClassName = 'column' + column.toString();
+      highlightAllOfClass(columnClassName, highlightColor);
+    }
+  }
+  function unhighlightCells(event, row, column) {
+    console.log(row, column);
 
-    ['onmouseover', ' onmouseout', 'focus'].forEach((evt) =>
-      elementsArray.forEach.addEventListener(evt, function (e) {
-        console.log(evt);
-        console.log(e.target.id);
-        let row = e.target.id.charAt(0);
-        let column = e.target.id.charAt(2);
-        console.log(row + column);
-        var all = document.getElementsByClassName(row);
-        for (var i = 0; i < all.length; i++) {
-          if (evt == 'onmouseout') {
-            all[i].style.backgroundcolor = 'none';
-          } else {
-            all[i].style.backgroundcolor = 'lightgrey';
-          }
-        }
-        var all = document.getElementsByClassName(column);
-        for (var i = 0; i < all.length; i++) {
-          if (evt == 'onmouseout') {
-            all[i].style.backgroundcolor = 'none';
-          } else {
-            all[i].style.backgroundcolor = 'lightgrey';
-          }
-        }
-      })
-    );
-  });
+    let backgroundColor = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue('--main-bg-color');
+    if (row != undefined) {
+      let rowClassName = 'row' + row.toString();
+      highlightAllOfClass(rowClassName, backgroundColor);
+    }
+    if (column != undefined) {
+      let columnClassName = 'column' + column.toString();
+      highlightAllOfClass(columnClassName, backgroundColor);
+    }
+  }
+  function highlightAllOfClass(className, color) {
+    var elementsInRow = document.getElementsByClassName(className);
+    for (var i = 0; i < elementsInRow.length; i++) {
+      elementsInRow[i].style.backgroundColor = color;
+    }
+  }
 </script>
 
 <div id="container">
@@ -49,8 +52,16 @@
         <tr>
           <!-- empty cell -->
           <th class="topLeftBlock" />
-          {#each table?.getColumnLabels() ?? [] as columnHeader, i}
-            <th scope="col" class="antibiotic-name {i}">
+          {#each table?.getColumnLabels() ?? [] as columnHeader, j}
+            <th
+              scope="col"
+              class="antibiotic-name column{j}"
+              id="ColumnHeader{j}"
+              on:focus={(event) => highlightCells(event, undefined, j)}
+              on:mouseover={(event) => highlightCells(event, undefined, j)}
+              on:blur={(event) => unhighlightCells(event, undefined, j)}
+              on:mouseout={(event) => unhighlightCells(event, undefined, j)}
+            >
               <span>{columnHeader}</span>
             </th>
           {/each}
@@ -59,12 +70,25 @@
       <tbody>
         {#each table?.getCells() ?? [] as row, i}
           <tr>
-            <th scope="row" class="organism-name {i}"
+            <th
+              scope="row"
+              class="organism-name row{i}"
+              id="RowHeader{i}"
+              on:focus={(event) => highlightCells(event, i, undefined)}
+              on:mouseover={(event) => highlightCells(event, i, undefined)}
+              on:blur={(event) => unhighlightCells(event, i, undefined)}
+              on:mouseout={(event) => unhighlightCells(event, i, undefined)}
               >{table?.getRowLabels()[i]}</th
             >
             {#each row ?? [] as cell, j}
-              <td class="sensitivity-data tooltip {i} {j}" id="{i}+{j}">
-                {cell}
+              <td
+                class="sensitivity-data has-tooltip row{i} column{j}"
+                id="{i}+{j}"
+                on:focus={(event) => highlightCells(event, i, j)}
+                on:mouseover={(event) => highlightCells(event, i, j)}
+                on:blur={(event) => unhighlightCells(event, i, j)}
+                on:mouseout={(event) => unhighlightCells(event, i, j)}
+                >{cell}
                 <span class="tooltip-text">tooltip text</span>
               </td>
             {/each}
@@ -130,42 +154,17 @@
     border-bottom: 1px solid black;
     border-right: 1px solid black;
   }
-
-  /* .organism-name:hover,
-  .antibiotic-name:hover,
-  .antibiogram-table tbody td:hover,
-  .antibiogram-table tbody tr th:focus,
-  .antibiotic-name:focus,
-  .antibiogram-table tbody td:focus {
-    background-color: var(--main-on-surface-emphasis-color);
-  }
-
-  body:not(.nohover) tbody tr:hover {
-    background-color: var(--main-on-surface-emphasis-color);
-  }
-  td:hover::after,
-  thead th:not(:empty):hover::after,
-  td:focus::after,
-  thead th:not(:empty):focus::after {
-    background-color: var(--main-on-surface-emphasis-color);
-    content: '';
-    height: 10000px;
-    left: 0;
-    position: absolute;
-    top: -5000px;
-    width: 100%;
-    z-index: -1;
-  } */
   .antibiogram-table td,
   .antibiogram-table {
     position: relative;
   }
-
-  .tooltip {
+  .has-tooltip {
     position: relative;
   }
 
-  .tooltip .tooltip-text {
+  .has-tooltip .tooltip-text {
+    left: 100%;
+    top: 100%;
     visibility: hidden;
     background-color: black;
     color: #fff;
@@ -176,7 +175,7 @@
     z-index: 1;
   }
 
-  .tooltip:hover .tooltip-text {
+  .has-tooltip:hover .tooltip-text {
     visibility: visible;
   }
 </style>
