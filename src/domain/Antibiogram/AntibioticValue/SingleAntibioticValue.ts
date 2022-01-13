@@ -32,7 +32,7 @@ class SingleAntibioticValue extends ValueObject implements AntibioticValue {
 
   protected isIdentical(antibioticValue: SingleAntibioticValue) {
     if (this.#name !== antibioticValue.getName()) return false;
-    if (this.#route !== antibioticValue.getRoute()) return false;
+    if (!this.#route.is(antibioticValue.getRoute())) return false;
     return true;
   }
 }

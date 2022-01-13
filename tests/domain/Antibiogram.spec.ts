@@ -77,7 +77,7 @@ describe('Antibiogram', () => {
       ]);
     });
 
-    it.only('should find all unique organism-sensitivity-info pairs', () => {
+    it('should find all unique organism-sensitivity-info pairs', () => {
       const antibiogram = new Antibiogram(new AntibiogramId('2'), data2);
 
       const uniqueCombinations = antibiogram.findUniqueOrganismAndSampleInfo();
