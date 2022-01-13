@@ -32,11 +32,7 @@ class AntibiogramTableBuilder {
   makeRowGroups(abg: Antibiogram) {
     const rows = this.#getRows(abg);
     const ranges = Array.from(rows.entries())
-      .filter(([i, [thisOrg]], _, arr) => {
-        if (i === 0) return true;
-        const [, [prevOrg]] = arr[i - 1];
-        return !thisOrg.is(prevOrg);
-      })
+      .filter(([i, [thisOrg]]) => i === 0 || !thisOrg.is(rows[i - 1][0]))
       .map<Range>(([i], _, arr) => [i, arr[i + 1]?.[0] ?? rows.length])
       .filter(([start, end]) => end - start > 1);
 
