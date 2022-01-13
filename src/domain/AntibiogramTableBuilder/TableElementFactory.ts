@@ -1,6 +1,7 @@
 import type {
   AntibioticValue,
   OrganismValue,
+  SampleInfo,
   SensitivityData,
 } from '@/domain/Antibiogram';
 import {
@@ -23,12 +24,18 @@ class TableElementFactory {
     return new Label(text, params);
   }
 
-  makeOrganismLabel(o: OrganismValue) {
-    return this.makeLabel(o.getName());
+  makeOrganismLabel(o: OrganismValue, sampleInfo: SampleInfo) {
+    return this.makeLabel(o.getName(), sampleInfo.toString());
   }
 
   makeAntibioticLabel(a: AntibioticValue) {
-    return this.makeLabel(a.getName());
+    return this.makeLabel(
+      a.getName(),
+      a
+        .getAntibiotics()
+        .map((abx) => abx.getRoute().toString())
+        .join(', ')
+    );
   }
 
   makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {

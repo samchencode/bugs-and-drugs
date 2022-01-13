@@ -35,6 +35,12 @@ class SampleInfo extends ValueObject {
     return ourValue.is(value);
   }
 
+  toString() {
+    return Array.from(this.#itemsByType.values())
+      .map((x) => x.toString())
+      .join('\n');
+  }
+
   #hasSameKeys(facts: Map<string, SampleInfoItem>): boolean {
     const theirKeys = Array.from(facts.keys());
     const ourKeys = Array.from(this.#itemsByType.keys());

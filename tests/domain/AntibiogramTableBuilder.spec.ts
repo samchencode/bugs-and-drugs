@@ -54,14 +54,14 @@ describe('make table using antibiogram', () => {
 
     // +-----------------------------------------------------------------------------+
     // |                            Inpatient Antibiogram                            |
-    // +------------------------+--------------------+---------------+---------------+
-    // |           .            | Azithromycin IV/PO | Ampicillin PO | Ampicillin IV |
-    // +------------------------+--------------------+---------------+---------------+
-    // | Klebsiella (30 iso)    | 100                |           100 | NA            |
-    // | Pseudomonas (30 iso)   | R                  |            81 | R             |
-    // | Staph aureus (500 iso) | 90                 |            90 | NA            |
-    // | - Non-urine (450 iso)  | 86                 |            92 | 96            |
-    // +------------------------+--------------------+---------------+---------------+
+    // +------------------------+---------------+---------------+--------------------+
+    // |                        | Ampicillin PO | Ampicillin IV | Azithromycin IV/PO |
+    // +------------------------+---------------+---------------+--------------------+
+    // | Klebsiella (30 iso)    |           100 | NA            | 100                |
+    // | Pseudomonas (30 iso)   |            81 | R             | R                  |
+    // | Staph aureus (500 iso) |            90 | NA            | 90                 |
+    // | - Non-urine (450 iso)  |            92 | 96            | 86                 |
+    // +------------------------+---------------+---------------+--------------------+
 
     beforeEach(() => {
       return new FakeAntibiogramRepository().getAll().then((abgs) => {
@@ -69,7 +69,30 @@ describe('make table using antibiogram', () => {
       });
     });
 
-    it.todo('should make rows for each unique organism-sampleinfo pair');
-    it.todo('should make columns for each unique antibiotic value');
+    it('should make rows for each unique organism-sampleinfo pair', () => {
+      const [nRow] = table.getShape();
+      expect(nRow).toBe(4);
+      const rows = table.getRows();
+      expect(rows[0].getLabel().toString()).toMatch('Klebsiella');
+      expect(rows[1].getLabel().toString()).toMatch('Pseudomonas');
+      expect(rows[2].getLabel().toString()).toMatch('Staph aureus');
+      expect(rows[3].getLabel().toString()).toMatch('Staph aureus');
+    });
+
+    it('should make columns for each unique antibiotic value', () => {
+      const [, nCol] = table.getShape();
+      expect(nCol).toBe(3);
+      const cols = table.getColumns();
+      expect(cols[0].getLabel().toString()).toMatch('Ampicillin');
+      expect(cols[1].getLabel().toString()).toMatch('Ampicillin');
+      expect(cols[2].getLabel().toString()).toMatch('Azithromycin');
+      expect(cols[2].getLabel().getTooltip().toString()).toMatch('IV/PO');
+    });
+
+    it('should group rows for each organism w/ base sampleinfo at top', () => {
+      const groups = table.getRowGroups();
+      expect(groups.length).toBe(1);
+      expect(groups[0].getRange()).toEqual([2, 4]);
+    });
   });
 });

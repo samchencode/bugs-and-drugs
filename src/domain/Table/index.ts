@@ -11,5 +11,6 @@ export {
   ExpandedGroup,
   CollapsedGroup,
   type Group,
+  type Range,
 } from '@/domain/Table/Group';
 export { default as Label, type LabelParams } from '@/domain/Table/Label';

@@ -5,6 +5,7 @@ function buildAntibiogramTable(abg: Antibiogram) {
   const builder = new AntibiogramTableBuilder();
   builder.makeLabels(abg);
   builder.makeMatrix(abg);
+  builder.makeRowGroups(abg);
   return builder.build();
 }
 
