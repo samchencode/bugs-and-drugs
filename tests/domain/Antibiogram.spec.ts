@@ -81,10 +81,10 @@ describe('Antibiogram', () => {
       const antibiogram = new Antibiogram(new AntibiogramId('2'), data2);
 
       const uniqueCombinations = antibiogram.findUniqueOrganismAndSampleInfo();
-      const values = uniqueCombinations.map(([o, si]) => {
+      const values = uniqueCombinations.map(({ org, info }) => {
         return [
-          o.getName(),
-          Array.from(si.getItems().values()).map((x) => '' + x),
+          org.getName(),
+          Array.from(info.getItems().values()).map((x) => '' + x),
         ];
       });
       expect(values).toEqual(
