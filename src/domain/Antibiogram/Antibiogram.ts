@@ -44,7 +44,7 @@ class Antibiogram extends Entity {
     return this.sensitivities.map((s) => s.getValue());
   }
 
-  findUniqueOrganismAndSampleInfo(): [OrganismValue, SampleInfo][] {
+  findUniqueOrganismAndSampleInfo() {
     return this.sensitivities
       .reduce(
         (ag, data) =>
@@ -53,7 +53,11 @@ class Antibiogram extends Entity {
             : ag.concat(data),
         [] as SensitivityData[]
       )
-      .map((data) => [data.getOrganism(), data.getSampleInfo()]);
+      .map((data) => ({
+        org: data.getOrganism(),
+        info: data.getSampleInfo(),
+        iso: data.getIsolates(),
+      }));
   }
 }
 

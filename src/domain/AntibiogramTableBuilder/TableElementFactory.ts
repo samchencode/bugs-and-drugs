@@ -1,9 +1,4 @@
-import type {
-  AntibioticValue,
-  OrganismValue,
-  SampleInfo,
-  SensitivityData,
-} from '@/domain/Antibiogram';
+import type { AntibioticValue, SensitivityData } from '@/domain/Antibiogram';
 import {
   FilledCell,
   Label,
@@ -11,6 +6,7 @@ import {
   EmptyCell,
   type LabelParams,
 } from '@/domain/Table';
+import type RowInfo from '@/domain/AntibiogramTableBuilder/RowInfo';
 
 class TableElementFactory {
   makeCell(data: SensitivityData) {
@@ -24,8 +20,9 @@ class TableElementFactory {
     return new Label(text, params);
   }
 
-  makeOrganismLabel(o: OrganismValue, sampleInfo: SampleInfo) {
-    return this.makeLabel(o.getName(), sampleInfo.toString());
+  makeOrganismLabel(r: RowInfo) {
+    const tooltip = r.info.toString() + '\n' + r.iso.toString();
+    return this.makeLabel(r.org.getName(), tooltip);
   }
 
   makeAntibioticLabel(a: AntibioticValue) {

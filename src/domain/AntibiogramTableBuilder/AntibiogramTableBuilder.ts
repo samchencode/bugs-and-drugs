@@ -4,19 +4,14 @@ import {
   makeTable,
   type Group,
   ExpandedGroup,
-  type Range,
 } from '@/domain/Table';
 import type { Table } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
 import TableElementFactory from '@/domain/AntibiogramTableBuilder/TableElementFactory';
-import type {
-  AntibioticValue,
-  OrganismValue,
-  SampleInfo,
-} from '@/domain/Antibiogram';
+import type { AntibioticValue } from '@/domain/Antibiogram';
+import RowInfo from '@/domain/AntibiogramTableBuilder/RowInfo';
 
-type RowInfo = [OrganismValue, SampleInfo][];
-type ColumnInfo = AntibioticValue[];
+type ColumnInfo = AntibioticValue;
 
 class AntibiogramTableBuilder {
   #labels?: {
@@ -25,21 +20,15 @@ class AntibiogramTableBuilder {
   };
   #matrix: Cell[][] = [];
   #factory: TableElementFactory = new TableElementFactory();
-  #rows?: RowInfo;
-  #columns?: ColumnInfo;
+  #rows?: RowInfo[];
+  #columns?: ColumnInfo[];
   #rowGroups?: Group[];
 
   makeRowGroups(abg: Antibiogram) {
     const rows = this.#getRows(abg);
-    const ranges = Array.from(rows.entries())
-      .filter(([i, [thisOrg]], _, arr) => {
-        if (i === 0) return true;
-        const [, [prevOrg]] = arr[i - 1];
-        return !thisOrg.is(prevOrg);
-      })
-      .map<Range>(([i], _, arr) => [i, arr[i + 1]?.[0] ?? rows.length])
-      .filter(([start, end]) => end - start > 1);
-
+    const ranges = RowInfo.findGroupBoundariesByOrganism(rows).filter(
+      ([start, end]) => end - start > 1
+    );
     this.#rowGroups = ranges.map((r) => new ExpandedGroup({ range: r }));
   }
 
@@ -75,59 +64,42 @@ class AntibiogramTableBuilder {
     this.#columns = undefined;
   }
 
-  #getRows(abg: Antibiogram): RowInfo {
+  #getRows(abg: Antibiogram): RowInfo[] {
     if (typeof this.#rows !== 'undefined') return this.#rows;
-    const rows = abg.findUniqueOrganismAndSampleInfo();
-    const baseSampleInfo = abg.info;
-    const missingData = abg.organisms
-      .filter(
-        (org) => !rows.find(([o, si]) => o.is(org) && si.is(baseSampleInfo))
-      )
-      .map<RowInfo[number]>((org) => [org, baseSampleInfo]);
-    this.#rows = this.#sortRows(baseSampleInfo, rows.concat(missingData));
+    const rows = abg
+      .findUniqueOrganismAndSampleInfo()
+      .map((v) => new RowInfo(v.org, v.info, v.iso));
+    const missingData = RowInfo.makeUnknowns(abg.info, abg.organisms, rows);
+    this.#rows = RowInfo.sortRows(abg.info, rows.concat(missingData));
     return this.#rows;
   }
 
-  #getColumns(abg: Antibiogram): ColumnInfo {
+  #getColumns(abg: Antibiogram): ColumnInfo[] {
     if (typeof this.#columns !== 'undefined') return this.#columns;
     this.#columns = this.#sortColumns(abg.antibiotics);
     return this.#columns;
   }
 
-  #sortColumns(abx: ColumnInfo): ColumnInfo {
-    return abx.sort((a, b) => {
+  #sortColumns(cols: ColumnInfo[]): ColumnInfo[] {
+    return cols.sort((a, b) => {
       if (a.getName() < b.getName()) return -1;
       if (a.getName() > b.getName()) return 1;
       return 0;
     });
   }
 
-  #sortRows(baseSi: SampleInfo, data: RowInfo) {
-    return data
-      .sort(([, s1], [, s2]) => {
-        if (s1.is(baseSi)) return -1;
-        if (s2.is(baseSi)) return 1;
-        return 0;
-      })
-      .sort(([o1], [o2]) => {
-        if (o1.getName() < o2.getName()) return -1;
-        if (o1.getName() > o2.getName()) return 1;
-        return 0;
-      });
+  #makeRowLabels(rows: RowInfo[]) {
+    return rows.map((r) => this.#factory.makeOrganismLabel(r));
   }
 
-  #makeRowLabels(rows: RowInfo) {
-    return rows.map(([o, si]) => this.#factory.makeOrganismLabel(o, si));
-  }
-
-  #makeColumnLabels(abx: ColumnInfo) {
+  #makeColumnLabels(abx: ColumnInfo[]) {
     return abx.map((a) => this.#factory.makeAntibioticLabel(a));
   }
 
   #fillMatrix(abg: Antibiogram) {
     for (const d of abg.getSensitivities()) {
-      const row = this.#getRows(abg).findIndex(
-        ([o, si]) => o.is(d.getOrganism()) && si.is(d.getSampleInfo())
+      const row = this.#getRows(abg).findIndex((r) =>
+        r.describes(d.getOrganism(), d.getSampleInfo())
       );
       const column = this.#getColumns(abg).findIndex((a) =>
         a.is(d.getAntibiotic())
