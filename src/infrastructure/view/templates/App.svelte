@@ -4,15 +4,19 @@
   import Topbar from './common/TopBar.svelte';
   import './index.css';
   import AntibiogramCard from './common/AntibiogramCard.svelte';
+  import BottomBar from './common/BottomBar.svelte';
+  import AppTitle from './common/AppTitle.svelte';
 </script>
 
 <main>
-  <Topbar />
-  <GramTableSelector />
-  <!-- <AntibiogramCard /> -->
-  <div class="table-window">
+  <!-- <Topbar /> -->
+  <!-- <GramTableSelector /> -->
+  <AppTitle />
+  <AntibiogramCard />
+  <!-- <div class="table-window">
     <Table />
-  </div>
+  </div> -->
+  <BottomBar />
 </main>
 
 <style>
@@ -21,5 +25,10 @@
     height: 80vh;
     width: 100%;
     overflow: scroll;
+  }
+  main {
+    position: relative;
+    height: 100%;
+    width: 100%;
   }
 </style>

@@ -2,31 +2,34 @@
   import Table from './Table.svelte';
 </script>
 
-<div class="tool-bar">
-  <ion-icon class="center-vertically" name="chevron-back-outline" />
-  <button class="gram-selector center-vertically">
-    <span>Gram</span> <ion-icon class="center-vertically" name="add-outline" />
-  </button>
-  <ion-icon class="center-vertically" name="chevron-forward-outline" />
+<div class="tool-bar-container">
+  <div class="bar-positioner tool-bar">
+    <ion-icon class="vertically-center clickable" name="chevron-back-outline" />
+    <button class="gram-selector vertically-center">
+      <span>Gram</span>
+      <ion-icon class="vertically-center" name="add-outline" />
+    </button>
+    <ion-icon
+      class="vertically-center clickable"
+      name="chevron-forward-outline"
+    />
+  </div>
 </div>
 
 <style>
-  .tool-bar {
-    position: relative;
-    font-size: 20px;
+  .tool-bar-container {
+    width: 100%;
     background-color: var(--main-bg-color);
-    padding-left: 20px;
+    position: relative;
     height: 8vh;
     max-height: 60px;
     min-height: 45px;
-    width: 100%;
+  }
+  .tool-bar {
+    position: relative;
+    font-size: 20px;
     display: flex;
     justify-content: space-around;
-  }
-  .center-vertically {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
   }
   .gram-selector {
     font-size: 20px;

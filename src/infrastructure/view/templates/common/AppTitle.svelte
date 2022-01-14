@@ -1,7 +1,6 @@
 <div class="top-bar">
   <div class="antibiogram-title">
-    <ion-icon class="arrow clickable" name="arrow-back-outline" />
-    <span>Inpatient 2019-2020</span>
+    <span>Bugs'n Drugs</span>
   </div>
 </div>
 
@@ -17,10 +16,8 @@
   }
   .top-bar {
     height: 60px;
+    width: 100%;
     background-color: var(--main-primary-color);
     position: relative;
-  }
-  .arrow {
-    margin-right: 10px;
   }
 </style>

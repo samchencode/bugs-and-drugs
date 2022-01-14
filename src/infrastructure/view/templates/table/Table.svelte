@@ -21,8 +21,6 @@
     }
   }
   function unhighlightCells(event, row, column) {
-    console.log(row, column);
-
     let backgroundColor = getComputedStyle(
       document.documentElement
     ).getPropertyValue('--main-bg-color');
@@ -78,7 +76,7 @@
               on:mouseover={(event) => highlightCells(event, i, undefined)}
               on:blur={(event) => unhighlightCells(event, i, undefined)}
               on:mouseout={(event) => unhighlightCells(event, i, undefined)}
-              >{table?.getRowLabels()[i]}</th
+              >{table?.getRowLabels()[i]} (10 isolates)</th
             >
             {#each row ?? [] as cell, j}
               <td

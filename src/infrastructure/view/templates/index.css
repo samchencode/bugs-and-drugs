@@ -1,6 +1,28 @@
 * {
   box-sizing: border-box;
 }
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  color: var(--main-on-surface-emphasis-color);
+}
+
+.vertically-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bar-positioner {
+  position: relative;
+  width: 80%;
+  max-width: 550px;
+  min-width: 100px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 body {
   padding: 0;
