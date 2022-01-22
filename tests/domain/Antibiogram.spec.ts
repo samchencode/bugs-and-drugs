@@ -9,6 +9,7 @@ import Antibiogram, {
   Settings,
   GramValues as G,
 } from '@/domain/Antibiogram';
+import Place from '@/domain/Antibiogram/Place';
 
 describe('Antibiogram', () => {
   const [data, , data2] = FakeAntibiogramRepository.data;
@@ -100,8 +101,8 @@ describe('Antibiogram', () => {
         expect.arrayContaining([
           ['Klebsiella', ['Inpatient Setting']],
           ['Pseudomonas', ['Inpatient Setting']],
-          ['Staph aureus', ['Inpatient Setting']],
-          ['Staph aureus', ['Inpatient Setting', 'Non-Urine']],
+          ['Haemophilus influenza', ['Inpatient Setting']],
+          ['Haemophilus influenza', ['Inpatient Setting', 'Non-Urine']],
         ])
       );
     });
