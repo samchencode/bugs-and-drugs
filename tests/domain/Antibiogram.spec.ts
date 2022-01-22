@@ -7,6 +7,7 @@ import Antibiogram, {
   SampleInfo,
   Setting,
   Settings,
+  GramValues as G,
 } from '@/domain/Antibiogram';
 
 describe('Antibiogram', () => {
@@ -35,6 +36,14 @@ describe('Antibiogram', () => {
       expect(antibiogram.info.getItem(Setting)?.is(Settings.INPATIENT)).toBe(
         true
       );
+    });
+
+    it('should create antibiogram with common gram value', () => {
+      const antibiogram = new Antibiogram(id, data, {
+        gram: G.POSITIVE,
+      });
+
+      expect(antibiogram.gram.is(G.POSITIVE)).toBe(true);
     });
   });
 

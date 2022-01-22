@@ -4,10 +4,12 @@ import type SensitivityData from '@/domain/Antibiogram/SensitivityData';
 import type { AntibioticValue } from '@/domain/Antibiogram/AntibioticValue';
 import type OrganismValue from '@/domain/Antibiogram/OrganismValue';
 import type AntibiogramId from '@/domain/Antibiogram/AntibiogramId';
+import { type GramValue, GramValues } from '@/domain/Antibiogram/GramValue';
 import SampleInfo from '@/domain/Antibiogram/SampleInfo';
 
 interface AntibiogramParams {
   info: SampleInfo;
+  gram: GramValue;
 }
 
 class Antibiogram extends Entity {
@@ -15,11 +17,12 @@ class Antibiogram extends Entity {
   antibiotics: AntibioticValue[];
   sensitivities: SensitivityData[];
   info: SampleInfo;
+  gram: GramValue;
 
   constructor(
     id: AntibiogramId,
     data: SensitivityData[],
-    params?: AntibiogramParams
+    params?: Partial<AntibiogramParams>
   ) {
     super(id);
     this.sensitivities = data;
@@ -30,6 +33,7 @@ class Antibiogram extends Entity {
       data.map((d) => d.getOrganism())
     );
     this.info = params?.info ?? new SampleInfo([]);
+    this.gram = params?.gram ?? GramValues.UNSPECIFIED;
   }
 
   isEmpty() {
