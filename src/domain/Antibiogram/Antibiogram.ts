@@ -6,10 +6,15 @@ import type OrganismValue from '@/domain/Antibiogram/OrganismValue';
 import type AntibiogramId from '@/domain/Antibiogram/AntibiogramId';
 import { type GramValue, GramValues } from '@/domain/Antibiogram/GramValue';
 import SampleInfo from '@/domain/Antibiogram/SampleInfo';
+import {
+  type default as Place,
+  UnknownPlace,
+} from '@/domain/Antibiogram/Place';
 
 interface AntibiogramParams {
   info: SampleInfo;
   gram: GramValue;
+  place: Place;
 }
 
 class Antibiogram extends Entity {
@@ -18,6 +23,7 @@ class Antibiogram extends Entity {
   sensitivities: SensitivityData[];
   info: SampleInfo;
   gram: GramValue;
+  place: Place;
 
   constructor(
     id: AntibiogramId,
@@ -34,6 +40,7 @@ class Antibiogram extends Entity {
     );
     this.info = params?.info ?? new SampleInfo([]);
     this.gram = params?.gram ?? GramValues.UNSPECIFIED;
+    this.place = params?.place ?? new UnknownPlace();
   }
 
   isEmpty() {

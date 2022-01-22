@@ -46,6 +46,17 @@ describe('Antibiogram', () => {
 
       expect(antibiogram.gram.is(G.POSITIVE)).toBe(true);
     });
+
+    it('should create antibiogram with place', () => {
+      const antibiogram = new Antibiogram(id, data, {
+        place: new Place('NY', 'Memorial Sloan Kettering'),
+      });
+
+      expect(antibiogram.place.getInstitution()).toBe(
+        'Memorial Sloan Kettering'
+      );
+      expect(antibiogram.place.getState()).toBe('NY');
+    });
   });
 
   describe('behavior', () => {
