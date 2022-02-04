@@ -1,4 +1,4 @@
-import type Cell from '@/domain/Table/Cell';
+import Cell from '@/domain/Table/Cell';
 import type Tooltip from '@/domain/Table/Tooltip';
 import type TableRow from '@/domain/Table/Facade/TableRow';
 import type TableColumn from '@/domain/Table/Facade/TableColumn';
@@ -10,13 +10,14 @@ interface AccessorParams {
   rowGroup: TableGroup | null;
 }
 
-class TableCell {
+class TableCell extends Cell {
   #cell: Cell;
   #row: TableRow;
   #column: TableColumn;
   #rowGroup: TableGroup | null;
 
   constructor(cell: Cell, params: AccessorParams) {
+    super();
     const { row, column, rowGroup } = params;
     this.#cell = cell;
     this.#row = row;
