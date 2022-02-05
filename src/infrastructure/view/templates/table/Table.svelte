@@ -8,7 +8,7 @@
   import { state } from './tableStore';
 
   (getContext('tableController') as TableController)
-    .showTable(2)
+    .showTable(1)
     .then((table) => state.loadTable(table));
 </script>
 

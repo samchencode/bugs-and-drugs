@@ -13,8 +13,8 @@
 <style>
   .table-window {
     display: block;
-    height: 80vh;
     width: 100%;
     overflow: scroll;
+    flex: 1;
   }
 </style>
