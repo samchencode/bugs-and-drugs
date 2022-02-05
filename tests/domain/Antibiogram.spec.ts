@@ -7,7 +7,9 @@ import Antibiogram, {
   SampleInfo,
   Setting,
   Settings,
+  GramValues as G,
 } from '@/domain/Antibiogram';
+import Place from '@/domain/Antibiogram/Place';
 
 describe('Antibiogram', () => {
   const [data, , data2] = FakeAntibiogramRepository.data;
@@ -35,6 +37,25 @@ describe('Antibiogram', () => {
       expect(antibiogram.info.getItem(Setting)?.is(Settings.INPATIENT)).toBe(
         true
       );
+    });
+
+    it('should create antibiogram with common gram value', () => {
+      const antibiogram = new Antibiogram(id, data, {
+        gram: G.POSITIVE,
+      });
+
+      expect(antibiogram.gram.is(G.POSITIVE)).toBe(true);
+    });
+
+    it('should create antibiogram with place', () => {
+      const antibiogram = new Antibiogram(id, data, {
+        place: new Place('NY', 'Memorial Sloan Kettering'),
+      });
+
+      expect(antibiogram.place.getInstitution()).toBe(
+        'Memorial Sloan Kettering'
+      );
+      expect(antibiogram.place.getState()).toBe('NY');
     });
   });
 
@@ -91,8 +112,8 @@ describe('Antibiogram', () => {
         expect.arrayContaining([
           ['Klebsiella', ['Inpatient Setting']],
           ['Pseudomonas', ['Inpatient Setting']],
-          ['Staph aureus', ['Inpatient Setting']],
-          ['Staph aureus', ['Inpatient Setting', 'Non-Urine']],
+          ['Haemophilus influenza', ['Inpatient Setting']],
+          ['Haemophilus influenza', ['Inpatient Setting', 'Non-Urine']],
         ])
       );
     });

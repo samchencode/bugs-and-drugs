@@ -23,3 +23,4 @@ export {
   Sources,
   Settings,
 } from '@/domain/Antibiogram/SampleInfo';
+export { GramValues } from '@/domain/Antibiogram/GramValue';
