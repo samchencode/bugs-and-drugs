@@ -8,39 +8,37 @@
   import { state } from './tableStore';
 
   (getContext('tableController') as TableController)
-    .showTable(1)
+    .showTable(2)
     .then((table) => state.loadTable(table));
 </script>
 
-<div id="container">
-  {#if !$state.grid}
-    <NoTable />
-  {:else}
-    <table class="antibiogram-table">
-      <thead>
-        <tr>
-          <EmptyCorner />
-          {#each $state.columnHeaders ?? [] as columnHeader, j (columnHeader.id)}
-            <ColumnHeader
-              {columnHeader}
-              toggleHighlight={() => state.toggleHighlightColumn(j)}
-            />
-          {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each $state.rowHeaders ?? [] as rowHeader, i (rowHeader.id)}
-          <TableRow
-            rowOfCells={$state.grid[i]}
-            {rowHeader}
-            toggleHighlightCells={(j) => state.toggleHighlightCell(i, j)}
-            toggleHighlight={() => state.toggleHighlightRow(i)}
+{#if !$state.grid}
+  <NoTable />
+{:else}
+  <table class="antibiogram-table">
+    <thead>
+      <tr>
+        <EmptyCorner />
+        {#each $state.columnHeaders as columnHeader, j (columnHeader.id)}
+          <ColumnHeader
+            {columnHeader}
+            toggleHighlight={() => state.toggleHighlightColumn(j)}
           />
         {/each}
-      </tbody>
-    </table>
-  {/if}
-</div>
+      </tr>
+    </thead>
+    <tbody>
+      {#each $state.rowHeaders as rowHeader, i (rowHeader.id)}
+        <TableRow
+          {rowHeader}
+          rowOfCells={$state.grid[i]}
+          toggleHighlightCells={(j) => state.toggleHighlightCell(i, j)}
+          toggleHighlight={() => state.toggleHighlightRow(i)}
+        />
+      {/each}
+    </tbody>
+  </table>
+{/if}
 
 <style>
   .antibiogram-table {

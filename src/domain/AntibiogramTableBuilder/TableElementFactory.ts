@@ -21,7 +21,7 @@ class TableElementFactory {
   }
 
   makeOrganismLabel(r: RowInfo) {
-    const tooltip = r.info.toString() + '\n' + r.iso.toString();
+    const tooltip = r.info.toString() + '\n' + r.iso.toString() + ' Isolates';
     return this.makeLabel(r.org.getName(), tooltip);
   }
 

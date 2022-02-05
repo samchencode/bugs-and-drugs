@@ -6,7 +6,7 @@
 
 <th
   scope="col"
-  class="antibiotic-name has-tooltip"
+  class="column-header has-tooltip"
   class:active={columnHeader.getActive()}
   class:highlighted={columnHeader.getHighlighted()}
   on:focus={() => toggleHighlight()}
@@ -14,28 +14,34 @@
   on:blur={() => toggleHighlight()}
   on:mouseout={() => toggleHighlight()}
 >
-  <span>{columnHeader.getValue()}</span>
+  <span class="antibiotic-name">{columnHeader.getValue()}</span>
   <ToolTip tooltip={columnHeader.getTooltip()} />
 </th>
 
 <style>
-  .antibiotic-name {
+  .column-header {
     position: sticky;
     top: 0;
-    writing-mode: vertical-rl;
     max-height: var(--table-heading-size);
+    z-index: 1;
+    padding-top: var(--table-padding);
+    border-bottom: 1px solid black;
+    background-color: var(--main-bg-color);
+    vertical-align: bottom;
+  }
+
+  .antibiotic-name {
+    writing-mode: vertical-rl;
     text-align: left;
     transform: rotate(180deg);
-    z-index: 0;
-    z-index: 2;
-    padding-top: var(--table-padding);
-    border-top: 1px solid black;
-    background-color: var(--main-bg-color);
   }
+
   .highlighted {
     background-color: var(--main-on-emphasis-color);
   }
+
   .active {
     background-color: var(--main-on-active-color);
+    z-index: 2;
   }
 </style>
