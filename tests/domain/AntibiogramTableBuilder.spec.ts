@@ -57,10 +57,10 @@ describe('make table using antibiogram', () => {
     // +------------------------+---------------+---------------+--------------------+
     // |                        | Ampicillin PO | Ampicillin IV | Azithromycin IV/PO |
     // +------------------------+---------------+---------------+--------------------+
+    // | Haemophilus (500 iso)  |            90 | NA            | 90                 |
+    // | - Non-urine (450 iso)  |            92 | 96            | 86                 |
     // | Klebsiella (30 iso)    |           100 | NA            | 100                |
     // | Pseudomonas (30 iso)   |            81 | R             | R                  |
-    // | Staph aureus (500 iso) |            90 | NA            | 90                 |
-    // | - Non-urine (450 iso)  |            92 | 96            | 86                 |
     // +------------------------+---------------+---------------+--------------------+
 
     beforeEach(() => {
@@ -73,10 +73,10 @@ describe('make table using antibiogram', () => {
       const [nRow] = table.getShape();
       expect(nRow).toBe(4);
       const rows = table.getRows();
-      expect(rows[0].getLabel().toString()).toMatch('Klebsiella');
-      expect(rows[1].getLabel().toString()).toMatch('Pseudomonas');
-      expect(rows[2].getLabel().toString()).toMatch('Staph aureus');
-      expect(rows[3].getLabel().toString()).toMatch('Staph aureus');
+      expect(rows[0].getLabel().toString()).toMatch('Haemophilus influenza');
+      expect(rows[1].getLabel().toString()).toMatch('Haemophilus influenza');
+      expect(rows[2].getLabel().toString()).toMatch('Klebsiella');
+      expect(rows[3].getLabel().toString()).toMatch('Pseudomonas');
     });
 
     it('should make columns for each unique antibiotic value', () => {
@@ -92,7 +92,7 @@ describe('make table using antibiogram', () => {
     it('should group rows for each organism w/ base sampleinfo at top', () => {
       const groups = table.getRowGroups();
       expect(groups.length).toBe(1);
-      expect(groups[0].getRange()).toEqual([2, 4]);
+      expect(groups[0].getRange()).toEqual([0, 2]);
     });
   });
 });

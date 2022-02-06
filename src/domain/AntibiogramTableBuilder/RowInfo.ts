@@ -47,7 +47,7 @@ class RowInfo {
   static findGroupBoundariesByOrganism(rows: RowInfo[]) {
     return Array.from(rows.entries())
       .filter(([i, { org }]) => i === 0 || !org.is(rows[i - 1].org))
-      .map<Range>(([i], _, arr) => [i, arr[i + 1]?.[0] ?? rows.length]);
+      .map<Range>(([i], k, arr) => [i, arr[k + 1]?.[0] ?? rows.length]);
   }
 }
 
