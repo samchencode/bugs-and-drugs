@@ -28,6 +28,7 @@
     align-items: center;
     position: relative;
     box-shadow: var(--bs);
+    z-index: 1000;
   }
 
   .title {
