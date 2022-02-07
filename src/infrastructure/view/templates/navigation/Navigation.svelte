@@ -1,5 +1,5 @@
 <script lang="ts">
-  let navMenuHidden = false;
+  let navMenuHidden = true;
 </script>
 
 <nav>
@@ -18,17 +18,18 @@
 
 <style>
   nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0 var(--space-md);
     height: 60px;
     width: 100%;
-    background-color: var(--main-primary-color);
-    padding: 0 var(--space-md);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    position: relative;
     box-shadow: var(--bs);
-    z-index: 1000;
+    background-color: var(--main-primary-color);
   }
 
   .title {
@@ -49,9 +50,6 @@
   }
 
   .nav-link-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
     background: var(--main-surface-color);
