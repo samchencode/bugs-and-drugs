@@ -4,6 +4,4 @@
   import BottomBar from '../common/BottomBar.svelte';
 </script>
 
-<AppTitle />
 <AntibiogramCard />
-<BottomBar />

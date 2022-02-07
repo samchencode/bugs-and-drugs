@@ -61,6 +61,15 @@ body {
   margin: 0;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  all: unset;
+}
+
 table,
 td,
 tr,
@@ -76,10 +85,28 @@ tfoot {
   --main-on-emphasis-color: lightgrey;
   --main-on-active-color: yellow;
   --main-light-primary-color: darkgrey;
+  --main-on-primary-color: white;
+  --main-surface-color: white;
+  --main-on-surface-color: black;
+  --main-surface-emphasis-color: #ccc;
   --table-padding: 15px;
   --table-font-size: 15px;
   --table-heading-size: 140px;
   --card-font-size: 27px;
+
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 32px;
+
+  --font-xs: 0.75rem;
+  --font-md: 1rem;
+  --font-lg: 1.25rem;
+  --font-xl: 1.5rem;
+  --fong-xxl: 2rem;
+
+  --bs: 0 0 5px rgba(0, 0, 0, 0.25);
 }
 
 @media screen and (max-width: 1200px) and (max-height: 1200px) {
