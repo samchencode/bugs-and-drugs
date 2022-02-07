@@ -8,8 +8,10 @@
   import { state } from './tableStore';
 
   (getContext('tableController') as TableController)
-    .showTable(1)
-    .then((table) => state.loadTable(table));
+    .showTable(2)
+    .then((table) => {
+      state.loadTable(table);
+    });
 </script>
 
 {#if !$state.grid}
