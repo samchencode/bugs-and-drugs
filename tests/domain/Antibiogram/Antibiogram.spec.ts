@@ -8,6 +8,7 @@ import Antibiogram, {
   Setting,
   Settings,
   GramValues as G,
+  Interval,
 } from '@/domain/Antibiogram';
 import Place from '@/domain/Antibiogram/Place';
 
@@ -56,6 +57,18 @@ describe('Antibiogram', () => {
         'Memorial Sloan Kettering'
       );
       expect(antibiogram.place.getState()).toBe('NY');
+    });
+
+    it('should create antibiogram with a time-range', () => {
+      const antibiogram = new Antibiogram(id, data, {
+        interval: new Interval(new Date(2020, 0), new Date(2021, 0)),
+      });
+
+      const publishedAt: Date = antibiogram.interval.getPublishedDate();
+      const expiresAt = antibiogram.interval.getExpiryDate();
+
+      expect(publishedAt.getFullYear()).toBe(2020);
+      expect(expiresAt.getFullYear()).toBe(2021);
     });
   });
 
