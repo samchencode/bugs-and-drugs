@@ -10,11 +10,13 @@ import {
   type default as Place,
   UnknownPlace,
 } from '@/domain/Antibiogram/Place';
+import Interval from '@/domain/Antibiogram/Interval';
 
 interface AntibiogramParams {
   info: SampleInfo;
   gram: GramValue;
   place: Place;
+  interval: Interval;
 }
 
 class Antibiogram extends Entity {
@@ -24,6 +26,7 @@ class Antibiogram extends Entity {
   info: SampleInfo;
   gram: GramValue;
   place: Place;
+  interval: Interval;
 
   constructor(
     id: AntibiogramId,
@@ -41,6 +44,7 @@ class Antibiogram extends Entity {
     this.info = params?.info ?? new SampleInfo([]);
     this.gram = params?.gram ?? GramValues.UNSPECIFIED;
     this.place = params?.place ?? new UnknownPlace();
+    this.interval = params?.interval ?? new Interval(new Date(), new Date());
   }
 
   isEmpty() {
