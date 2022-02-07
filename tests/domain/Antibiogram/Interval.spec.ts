@@ -1,4 +1,4 @@
-import Interval from '@/domain/Antibiogram/Interval';
+import Interval, { DefaultInterval } from '@/domain/Antibiogram/Interval';
 
 describe('Interval - a time interval during which the antibiogram is valid', () => {
   describe('instantiation', () => {
@@ -29,6 +29,16 @@ describe('Interval - a time interval during which the antibiogram is valid', () 
 
       expect(int.is(int2)).toBe(true);
       expect(int.is(diffInt)).toBe(false);
+    });
+
+    it('should create a human readable interval string', () => {
+      expect(int.toString()).toBe('Jan 2020 \u2212 Jan 2021');
+    });
+
+    it('should create defaultInterval with todays year', () => {
+      const def = new DefaultInterval();
+      const thisYear = new Date().getFullYear();
+      expect(def.toString()).toBe(`Jan ${thisYear} \u2212 Jan ${thisYear + 1}`);
     });
   });
 });

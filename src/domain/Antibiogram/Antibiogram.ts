@@ -10,7 +10,10 @@ import {
   type default as Place,
   UnknownPlace,
 } from '@/domain/Antibiogram/Place';
-import Interval from '@/domain/Antibiogram/Interval';
+import {
+  type default as Interval,
+  DefaultInterval,
+} from '@/domain/Antibiogram/Interval';
 
 interface AntibiogramParams {
   info: SampleInfo;
@@ -44,7 +47,7 @@ class Antibiogram extends Entity {
     this.info = params?.info ?? new SampleInfo([]);
     this.gram = params?.gram ?? GramValues.UNSPECIFIED;
     this.place = params?.place ?? new UnknownPlace();
-    this.interval = params?.interval ?? new Interval(new Date(), new Date());
+    this.interval = params?.interval ?? new DefaultInterval();
   }
 
   isEmpty() {

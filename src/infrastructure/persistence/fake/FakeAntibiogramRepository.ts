@@ -12,6 +12,8 @@ import Antibiogram, {
   Settings,
   Sources,
   GramValues as G,
+  Place,
+  Interval,
 } from '@/domain/Antibiogram';
 
 const fakeData: SensitivityData[][] = [
@@ -624,11 +626,19 @@ const fakeData: SensitivityData[][] = [
 ];
 
 const fakeAntibiograms = [
-  new Antibiogram(new AntibiogramId('0'), fakeData[0]),
-  new Antibiogram(new AntibiogramId('1'), fakeData[1]),
+  new Antibiogram(new AntibiogramId('0'), fakeData[0], {
+    interval: new Interval(new Date(2019, 2), new Date(2020, 1)),
+  }),
+  new Antibiogram(new AntibiogramId('1'), fakeData[1], {
+    gram: G.NEGATIVE,
+    place: new Place('NY', 'Gotham City'),
+    interval: new Interval(new Date(2020, 0), new Date(2021, 0)),
+  }),
   new Antibiogram(new AntibiogramId('2'), fakeData[2], {
     info: new SampleInfo([Settings.INPATIENT]),
     gram: G.POSITIVE,
+    place: new Place('NY', 'Gotham City'),
+    interval: new Interval(new Date(2020, 0), new Date(2021, 0)),
   }),
 ];
 
