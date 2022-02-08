@@ -1,26 +1,34 @@
 <script lang="ts">
+  import { getContext, onMount } from 'svelte';
+  import type AntibiogramGroupController from '@/infrastructure/view/controllers/AntibiogramGroupController';
+  import type { WebAntibiogramGroup } from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
   import Card from './Card.svelte';
 
-  let places = [
-    'UHS 2021-2022',
-    'Lourdes 2019-2020',
-    'Wilson 2019-2020',
-    'BGH 2019-2020',
-    'UHS 2021-2022',
-    'Lourdes 2019-2020',
-    'Wilson 2019-2020',
-    'BGH 2019-2020',
-  ];
+  const controller = getContext<AntibiogramGroupController>(
+    'antibiogramGroupController'
+  );
+  let vm: WebAntibiogramGroup[] | null = null;
+
+  onMount(async () => {
+    vm = await controller.index();
+  });
 </script>
 
 <main>
-  <ul class="list">
-    {#each places as place}
-      <li>
-        <Card title={place} subtitle="subtext" />
-      </li>
-    {/each}
-  </ul>
+  {#if vm === null}
+    <p>Sorry no results yet...</p>
+  {:else}
+    <ul class="list">
+      {#each vm as { state, institution, interval }}
+        <li>
+          <Card
+            title={institution + ', ' + state}
+            subtitle={interval.toString()}
+          />
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </main>
 
 <style>
