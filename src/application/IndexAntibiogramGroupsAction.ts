@@ -1,22 +1,34 @@
 import type { Interval, Place } from '@/domain/Antibiogram';
 import type { AntibiogramRepository } from '@/domain/ports/AntibiogramRepository';
+import type {
+  AntibiogramGroupPresenter,
+  AntibiogramGroup,
+} from '@/domain/ports/AntibiogramGroupPresenter';
 
 type PlaceAndInterval = [Place, Interval];
 
-class IndexPlacesAndIntervalsAction {
+class IndexAntibiogramGroupsAction {
   #repo: AntibiogramRepository;
 
   constructor(antibiogramRepository: AntibiogramRepository) {
     this.#repo = antibiogramRepository;
   }
 
-  async execute(): Promise<PlaceAndInterval[]> {
+  async execute(): Promise<AntibiogramGroup[]> {
     const abgs = await this.#repo.getAll();
     const placesAndIntervals = abgs.map<PlaceAndInterval>((v) => [
       v.place,
       v.interval,
     ]);
-    return this.#findUniquePlaceAndInterval(placesAndIntervals);
+    return this.#findUniquePlaceAndInterval(placesAndIntervals).map(
+      ([place, interval]) => ({ place, interval })
+    );
+  }
+
+  async present(p: AntibiogramGroupPresenter) {
+    const result = await this.execute();
+    p.setData(result);
+    return p;
   }
 
   #findUniquePlaceAndInterval(arr: PlaceAndInterval[]): PlaceAndInterval[] {
@@ -43,4 +55,4 @@ class IndexPlacesAndIntervalsAction {
   }
 }
 
-export default IndexPlacesAndIntervalsAction;
+export default IndexAntibiogramGroupsAction;
