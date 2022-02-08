@@ -1,6 +1,8 @@
 import { writable, type Writable } from 'svelte/store';
 import { TableElement } from '@/infrastructure/view/templates/table/TableElement';
 import type { Cell, Label, Table } from '@/domain/Table';
+import { RowHeader } from '@/infrastructure/view/templates/table/RowHeader';
+import type TableGroup from '@/domain/Table/Facade/TableGroup';
 
 interface TableState {
   rowHeaders: TableElement[];
@@ -17,7 +19,7 @@ const { subscribe, update, set }: Writable<TableState> = writable({
 function _toggleHighlightRow(
   row: number,
   grid: TableElement[][],
-  header: TableElement[]
+  header: RowHeader[] | TableElement[]
 ) {
   grid[row].forEach((cell) => {
     cell.toggleHighlighted();
@@ -67,6 +69,7 @@ const toggleHighlightCell = (i: number, j: number) => {
       newGrid,
       newRowHeaders
     ));
+
     ({ grid: newGrid, header: newColumnHeaders } = _toggleHighlightColumn(
       j,
       newGrid,
@@ -80,8 +83,16 @@ const toggleHighlightCell = (i: number, j: number) => {
     };
   });
 };
-
-function loadTable(table: Table) {
+const expandGroup = (group: TableGroup) => {
+  loadTable(group.expand());
+};
+const collapseGroup = (group: TableGroup) => {
+  loadTable(group.collapse());
+};
+const loadTable = (table: Table) => {
+  table.getRows().forEach((row) => {
+    row.getGroup();
+  });
   set({
     grid: table
       ?.getCells()
@@ -89,13 +100,15 @@ function loadTable(table: Table) {
         row.map((cell: Cell, index) => new TableElement(index, cell))
       ),
     rowHeaders: table
-      ?.getRowLabels()
-      .map((label: Label, index) => new TableElement(index, label)),
+      ?.getRows()
+      .map(
+        (row, index) => new RowHeader(index, row.getLabel(), row.getGroup())
+      ),
     columnHeaders: table
       ?.getColumnLabels()
       .map((label: Label, index) => new TableElement(index, label)),
   });
-}
+};
 
 export const state = {
   subscribe,
@@ -103,4 +116,6 @@ export const state = {
   toggleHighlightCell,
   toggleHighlightColumn,
   toggleHighlightRow,
+  expandGroup,
+  collapseGroup,
 };
