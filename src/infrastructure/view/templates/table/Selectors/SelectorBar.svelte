@@ -1,14 +1,15 @@
 <script lang="ts">
-  import Table from './Table.svelte';
+  import CollapseGroups from './CollapseGroups.svelte';
+  import ExpandGroups from './ExpandGroups.svelte';
+  import GramSelector from '@/infrastructure/view/templates/table/Selectors/GramSelector.svelte';
 </script>
 
 <div class="tool-bar-container">
   <div class="bar-positioner tool-bar">
     <ion-icon class="vertically-center clickable" name="chevron-back-outline" />
-    <button class="gram-selector vertically-center">
-      <span>Gram</span>
-      <ion-icon class="vertically-center" name="add-outline" />
-    </button>
+    <GramSelector />
+    <ExpandGroups />
+    <CollapseGroups />
     <ion-icon
       class="vertically-center clickable"
       name="chevron-forward-outline"
@@ -30,16 +31,5 @@
     font-size: 20px;
     display: flex;
     justify-content: space-around;
-  }
-  .gram-selector {
-    font-size: 20px;
-    text-align: center;
-    background-color: var(--main-light-primary-color);
-    height: 40px;
-    padding-right: 10px;
-    padding-left: 10px;
-    border-radius: 25px;
-    text-align: center;
-    position: relative;
   }
 </style>

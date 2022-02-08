@@ -14,8 +14,6 @@ class RowHeader extends TableElement {
     this.#inGroup = group !== null;
     this.#isCollapsed = group?.isCollapsed();
     this.#firstOfGroup = id === group?.getRange()[0];
-    console.log(group?.getRange());
-    console.log(id);
   }
 
   isCollapsed() {

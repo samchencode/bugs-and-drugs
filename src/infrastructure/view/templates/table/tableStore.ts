@@ -5,13 +5,13 @@ import { RowHeader } from '@/infrastructure/view/templates/table/RowHeader';
 import type TableGroup from '@/domain/Table/Facade/TableGroup';
 
 interface TableState {
-  rowHeaders: TableElement[];
+  rowHeaders: RowHeader[];
   columnHeaders: TableElement[];
   grid: TableElement[][];
 }
 
 const { subscribe, update, set }: Writable<TableState> = writable({
-  rowHeaders: [] as TableElement[],
+  rowHeaders: [] as RowHeader[],
   columnHeaders: [] as TableElement[],
   grid: [] as TableElement[][],
 });
@@ -19,7 +19,7 @@ const { subscribe, update, set }: Writable<TableState> = writable({
 function _toggleHighlightRow(
   row: number,
   grid: TableElement[][],
-  header: RowHeader[] | TableElement[]
+  header: RowHeader[]
 ) {
   grid[row].forEach((cell) => {
     cell.toggleHighlighted();
@@ -109,7 +109,44 @@ const loadTable = (table: Table) => {
       .map((label: Label, index) => new TableElement(index, label)),
   });
 };
-
+const expandAllGroups = (i: number) => {
+  update((s) => {
+    const length = s.rowHeaders.length;
+    console.log(i);
+    console.log(length);
+    if (i < length) {
+      if (s.rowHeaders[i].inGroup()) {
+        const newTable = s.rowHeaders[i].getGroup()?.expand();
+        if (newTable != null) loadTable(newTable);
+        i++;
+        expandAllGroups(i);
+        return s;
+      } else {
+        i++;
+        return s;
+      }
+    } else return s;
+  });
+};
+const collapseAllGroups = (i: number) => {
+  update((s) => {
+    const length = s.rowHeaders.length;
+    console.log(i);
+    console.log(length);
+    if (i < length) {
+      if (s.rowHeaders[i].inGroup()) {
+        const newTable = s.rowHeaders[i].getGroup()?.expand();
+        if (newTable != null) loadTable(newTable);
+        i++;
+        expandAllGroups(i);
+        return s;
+      } else {
+        i++;
+        return s;
+      }
+    } else return s;
+  });
+};
 export const state = {
   subscribe,
   loadTable,
@@ -118,4 +155,6 @@ export const state = {
   toggleHighlightRow,
   expandGroup,
   collapseGroup,
+  expandAllGroups,
+  collapseAllGroups,
 };

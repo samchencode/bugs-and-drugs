@@ -5,6 +5,6 @@
   import IndexScreen from './index-screen/IndexScreen.svelte';
 </script>
 
-<Navigation />
-<!-- <TableViewScreen /> -->
-<IndexScreen />
+<!-- <Navigation /> -->
+<TableViewScreen />
+<!-- <IndexScreen /> -->

@@ -1,11 +1,11 @@
 <script lang="ts">
   import TopBar from '../common/TopBar.svelte';
-  import GramTableSelector from '../table/GramTableSelector.svelte';
+  import SelectorBar from '../table/Selectors/SelectorBar.svelte';
   import Table from '../table/Table.svelte';
 </script>
 
 <TopBar />
-<GramTableSelector />
+<SelectorBar />
 <div class="table-window">
   <Table />
 </div>

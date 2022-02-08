@@ -36,7 +36,10 @@
           <ion-icon
             name="chevron-down-outline"
             class="clickable horizontally-center"
-            on:click={() => state.collapseGroup(rowHeader.getGroup())}
+            on:click={() => {
+              state.collapseGroup(rowHeader.getGroup());
+              console.log('collapsed');
+            }}
           />
         {/if}
       </div>
