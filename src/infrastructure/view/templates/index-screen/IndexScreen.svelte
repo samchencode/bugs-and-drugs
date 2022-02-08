@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext, onMount } from 'svelte';
-  import type AntibiogramGroupController from '../../controllers/AntibiogramGroupController';
-  import type { WebAntibiogramGroup } from '../../presenters/WebAntibiogramGroupPresenter';
+  import type AntibiogramGroupController from '@/infrastructure/view/controllers/AntibiogramGroupController';
+  import type { WebAntibiogramGroup } from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
   import Card from './Card.svelte';
 
   const controller = getContext<AntibiogramGroupController>(
