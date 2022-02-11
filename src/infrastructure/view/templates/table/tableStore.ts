@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
 import { TableElement } from '@/infrastructure/view/templates/table/TableElement';
-import type { Cell, Label, Table } from '@/domain/Table';
+import type { Cell, Group, Label, Table } from '@/domain/Table';
 import { RowHeader } from '@/infrastructure/view/templates/table/RowHeader';
 import type TableGroup from '@/domain/Table/Facade/TableGroup';
 
@@ -8,12 +8,14 @@ interface TableState {
   rowHeaders: RowHeader[];
   columnHeaders: TableElement[];
   grid: TableElement[][];
+  groups: TableGroup[];
 }
 
 const { subscribe, update, set }: Writable<TableState> = writable({
   rowHeaders: [] as RowHeader[],
   columnHeaders: [] as TableElement[],
   grid: [] as TableElement[][],
+  groups: [] as TableGroup[],
 });
 
 function _toggleHighlightRow(
@@ -80,18 +82,31 @@ const toggleHighlightCell = (i: number, j: number) => {
       grid: newGrid,
       rowHeaders: newRowHeaders,
       columnHeaders: newColumnHeaders,
+      groups: s.groups,
     };
   });
 };
 const expandGroup = (group: TableGroup) => {
   loadTable(group.expand());
+  console.log('expanded one');
 };
 const collapseGroup = (group: TableGroup) => {
   loadTable(group.collapse());
+  console.log('collapsed one');
 };
 const loadTable = (table: Table) => {
+  const groupArray: TableGroup[] = [];
   table.getRows().forEach((row) => {
-    row.getGroup();
+    const group = row.getGroup();
+    if (group) {
+      let unique = true;
+      groupArray.forEach((g) => {
+        if (g == group) {
+          unique = false;
+        }
+      });
+      if (unique) groupArray.push(group);
+    }
   });
   set({
     grid: table
@@ -107,45 +122,55 @@ const loadTable = (table: Table) => {
     columnHeaders: table
       ?.getColumnLabels()
       .map((label: Label, index) => new TableElement(index, label)),
+    groups: groupArray,
   });
+  console.log('table loaded');
 };
-const expandAllGroups = (i: number) => {
+const expandAllGroups = () => {
   update((s) => {
-    const length = s.rowHeaders.length;
-    console.log(i);
-    console.log(length);
-    if (i < length) {
-      if (s.rowHeaders[i].inGroup()) {
-        const newTable = s.rowHeaders[i].getGroup()?.expand();
-        if (newTable != null) loadTable(newTable);
-        i++;
-        expandAllGroups(i);
-        return s;
-      } else {
-        i++;
-        return s;
-      }
-    } else return s;
+    s.groups.forEach((group) => group.expand());
+    return s;
   });
+  // update((s) => {
+  //   const length = s.rowHeaders.length;
+  //   console.log(i + ' : ' + length);
+  //   if (i < length) {
+  //     if (s.rowHeaders[i].inGroup()) {
+  //       const newTable = s.rowHeaders[i].getGroup()?.expand();
+  //       if (newTable != null) loadTable(newTable);
+  //       i++;
+  //       expandAllGroups(i);
+  //       return s;
+  //     } else {
+  //       i++;
+  //       return s;
+  //     }
+  //   } else return s;
+  // });
+  console.log('expanded all');
 };
-const collapseAllGroups = (i: number) => {
+const collapseAllGroups = () => {
   update((s) => {
-    const length = s.rowHeaders.length;
-    console.log(i);
-    console.log(length);
-    if (i < length) {
-      if (s.rowHeaders[i].inGroup()) {
-        const newTable = s.rowHeaders[i].getGroup()?.expand();
-        if (newTable != null) loadTable(newTable);
-        i++;
-        expandAllGroups(i);
-        return s;
-      } else {
-        i++;
-        return s;
-      }
-    } else return s;
+    s.groups.forEach((group) => group.expand());
+    return s;
   });
+  // update((s) => {
+  //   const length = s.rowHeaders.length;
+  //   console.log(i + ' : ' + length);
+  //   if (i < length) {
+  //     if (s.rowHeaders[i].inGroup()) {
+  //       const newTable = s.rowHeaders[i].getGroup()?.collapse();
+  //       if (newTable != null) loadTable(newTable);
+  //       i++;
+  //       collapseAllGroups(i);
+  //       return s;
+  //     } else {
+  //       i++;
+  //       return s;
+  //     }
+  //   } else return s;
+  // });
+  console.log('collapsed all');
 };
 export const state = {
   subscribe,

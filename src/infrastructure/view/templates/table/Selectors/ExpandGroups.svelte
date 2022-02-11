@@ -4,7 +4,7 @@
 
 <button
   class="tool-bar-button vertically-center"
-  on:click={() => state.expandAllGroups(0)}
+  on:click={() => state.expandAllGroups()}
 >
   <span>Expand Groups</span>
 </button>

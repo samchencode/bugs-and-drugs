@@ -4,7 +4,7 @@
 
 <button
   class="tool-bar-button vertically-center"
-  on:click={() => state.collapseAllGroups(0)}
+  on:click={() => state.collapseAllGroups()}
 >
   <span>Collapse Groups</span>
 </button>

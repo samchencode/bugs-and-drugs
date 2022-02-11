@@ -3,6 +3,7 @@
   import { NoIntersectingGroupRanges } from '@/domain/Table/Validator';
   import ToolTip from '@/infrastructure/view/templates/table/Tooltip.svelte';
   import { state } from './tableStore';
+  $: console.log(rowHeader?.getGroup()?.isCollapsed());
 </script>
 
 <th
@@ -19,30 +20,40 @@
     class="organism-name"
     class:indented={rowHeader.inGroup() === true &&
       rowHeader.isFirstOfGroup() === false}
+    on:click={() => state.expandGroup(rowHeader.getGroup())}
   >
     {rowHeader.getValue()}
   </div>
 
   {#if rowHeader.inGroup() === true}
     {#if rowHeader.isFirstOfGroup() === true}
-      <div class="groupIcon">
-        {#if rowHeader.isCollapsed() === true}
+      {#if rowHeader.isCollapsed() === true}
+        <div
+          class="groupIcon clickable"
+          on:click={() => {
+            state.expandGroup(rowHeader.getGroup());
+            console.log('expanded');
+          }}
+        >
           <ion-icon
             name="chevron-forward-outline"
             class="clickable horizontally-center"
-            on:click={() => state.expandGroup(rowHeader.getGroup())}
           />
-        {:else if rowHeader.isCollapsed() === false}
+        </div>
+      {:else if rowHeader.isCollapsed() === false}
+        <div
+          class="groupIcon clickable"
+          on:click={() => {
+            state.collapseGroup(rowHeader.getGroup());
+            console.log('collapsed');
+          }}
+        >
           <ion-icon
             name="chevron-down-outline"
             class="clickable horizontally-center"
-            on:click={() => {
-              state.collapseGroup(rowHeader.getGroup());
-              console.log('collapsed');
-            }}
           />
-        {/if}
-      </div>
+        </div>
+      {/if}
     {/if}
   {/if}
   <ToolTip tooltip={rowHeader.getTooltip()} />
@@ -68,6 +79,11 @@
     display: inline-block;
     position: relative;
   }
+  .groupIcon {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+  }
 
   .highlighted {
     background-color: var(--main-on-emphasis-color);
@@ -79,10 +95,5 @@
   .indented {
     position: relative;
     text-indent: 50px;
-  }
-  .groupIcon {
-    position: relative;
-    display: inline-block;
-    width: 50px;
   }
 </style>
