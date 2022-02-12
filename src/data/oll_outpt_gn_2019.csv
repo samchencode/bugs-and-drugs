@@ -1,46 +1,46 @@
-organism_name,antibiotic_name,antibiotic_route,isolates,value,source
-E. COLI,Nitrofurantoin--Urine only,#N/A,2288,96,"inpatient, urine"
-KLEB.PNEUMO.,Nitrofurantoin--Urine only,#N/A,417,30,"inpatient, urine"
-E. COLI,Levofloxacin,#N/A,2288,85,inpatient
-PSEUDOMONAS AERUGINOSA,Levofloxacin,#N/A,199,79,inpatient
-KLEB.PNEUMO.,Levofloxacin,#N/A,417,98,inpatient
-PROTEUS MIRABILIS,Levofloxacin,#N/A,149,85,inpatient
-ACINETOBACTER BAUMANNII,Levofloxacin,#N/A,6,67,inpatient
-STENO. MALTOPHILIA (All),Levofloxacin,#N/A,37,81,inpatient
-E. COLI,Ceftriaxone,#N/A,2288,96,inpatient
-KLEB.PNEUMO.,Ceftriaxone,#N/A,417,96,inpatient
-PROTEUS MIRABILIS,Ceftriaxone,#N/A,149,95,inpatient
-ACINETOBACTER BAUMANNII,Ceftriaxone,#N/A,6,0,inpatient
-PSEUDOMONAS AERUGINOSA,Ciprofloxacin,#N/A,199,85,inpatient
-ACINETOBACTER BAUMANNII,Ciprofloxacin,#N/A,6,0,inpatient
-E. COLI,Gentamicin,#N/A,2288,95,inpatient
-PSEUDOMONAS AERUGINOSA,Gentamicin,#N/A,199,92,inpatient
-KLEB.PNEUMO.,Gentamicin,#N/A,417,98,inpatient
-PROTEUS MIRABILIS,Gentamicin,#N/A,149,95,inpatient
-ACINETOBACTER BAUMANNII,Gentamicin,#N/A,6,100,inpatient
-E. COLI,Cefazolin,#N/A,2288,91,inpatient
-KLEB.PNEUMO.,Cefazolin,#N/A,417,94,inpatient
-PROTEUS MIRABILIS,Cefazolin,#N/A,149,89,inpatient
-E. COLI,Cefepime,#N/A,2288,97,inpatient
-PSEUDOMONAS AERUGINOSA,Cefepime,#N/A,199,95,inpatient
-KLEB.PNEUMO.,Cefepime,#N/A,417,96,inpatient
-PROTEUS MIRABILIS,Cefepime,#N/A,149,95,inpatient
-ACINETOBACTER BAUMANNII,Cefepime,#N/A,6,50,inpatient
-E. COLI,Piperacillin/tazobactam,#N/A,2288,98,inpatient
-PSEUDOMONAS AERUGINOSA,Piperacillin/tazobactam,#N/A,199,94,inpatient
-ACINETOBACTER BAUMANNII,Piperacillin/tazobactam,#N/A,6,67,inpatient
-E. COLI,Meropenem,#N/A,2288,100,inpatient
-PSEUDOMONAS AERUGINOSA,Meropenem,#N/A,199,92,inpatient
-KLEB.PNEUMO.,Meropenem,#N/A,417,99,inpatient
-PROTEUS MIRABILIS,Meropenem,#N/A,149,100,inpatient
-ACINETOBACTER BAUMANNII,Meropenem,#N/A,6,67,inpatient
-E. COLI,Trimethroprim/sulfamethoxazole,#N/A,2288,82,inpatient
-KLEB.PNEUMO.,Trimethroprim/sulfamethoxazole,#N/A,417,90,inpatient
-PROTEUS MIRABILIS,Trimethroprim/sulfamethoxazole,#N/A,149,86,inpatient
-STENO. MALTOPHILIA (All),Trimethroprim/sulfamethoxazole,#N/A,37,78,inpatient
-E. COLI,Ampicillin,#N/A,2288,58,inpatient
-PROTEUS MIRABILIS,Ampicillin,#N/A,149,83,inpatient
-H. INFLUENZAE (All),Ampicillin,#N/A,254,81,inpatient
-E. COLI,AMPICILLIN SULBACTAM,#N/A,2288,67,inpatient
-KLEB.PNEUMO.,AMPICILLIN SULBACTAM,#N/A,417,86,inpatient
-PROTEUS MIRABILIS,AMPICILLIN SULBACTAM,#N/A,149,92,inpatient
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info
+E. COLI,Nitrofurantoin--Urine only,#N/A,2288,96,"outpatient, urine"
+KLEB.PNEUMO.,Nitrofurantoin--Urine only,#N/A,417,30,"outpatient, urine"
+E. COLI,Levofloxacin,#N/A,2288,85,outpatient
+PSEUDOMONAS AERUGINOSA,Levofloxacin,#N/A,199,79,outpatient
+KLEB.PNEUMO.,Levofloxacin,#N/A,417,98,outpatient
+PROTEUS MIRABILIS,Levofloxacin,#N/A,149,85,outpatient
+ACINETOBACTER BAUMANNII,Levofloxacin,#N/A,6,67,outpatient
+STENO. MALTOPHILIA (All),Levofloxacin,#N/A,37,81,outpatient
+E. COLI,Ceftriaxone,#N/A,2288,96,outpatient
+KLEB.PNEUMO.,Ceftriaxone,#N/A,417,96,outpatient
+PROTEUS MIRABILIS,Ceftriaxone,#N/A,149,95,outpatient
+ACINETOBACTER BAUMANNII,Ceftriaxone,#N/A,6,0,outpatient
+PSEUDOMONAS AERUGINOSA,Ciprofloxacin,#N/A,199,85,outpatient
+ACINETOBACTER BAUMANNII,Ciprofloxacin,#N/A,6,0,outpatient
+E. COLI,Gentamicin,#N/A,2288,95,outpatient
+PSEUDOMONAS AERUGINOSA,Gentamicin,#N/A,199,92,outpatient
+KLEB.PNEUMO.,Gentamicin,#N/A,417,98,outpatient
+PROTEUS MIRABILIS,Gentamicin,#N/A,149,95,outpatient
+ACINETOBACTER BAUMANNII,Gentamicin,#N/A,6,100,outpatient
+E. COLI,Cefazolin,#N/A,2288,91,outpatient
+KLEB.PNEUMO.,Cefazolin,#N/A,417,94,outpatient
+PROTEUS MIRABILIS,Cefazolin,#N/A,149,89,outpatient
+E. COLI,Cefepime,#N/A,2288,97,outpatient
+PSEUDOMONAS AERUGINOSA,Cefepime,#N/A,199,95,outpatient
+KLEB.PNEUMO.,Cefepime,#N/A,417,96,outpatient
+PROTEUS MIRABILIS,Cefepime,#N/A,149,95,outpatient
+ACINETOBACTER BAUMANNII,Cefepime,#N/A,6,50,outpatient
+E. COLI,Piperacillin/tazobactam,#N/A,2288,98,outpatient
+PSEUDOMONAS AERUGINOSA,Piperacillin/tazobactam,#N/A,199,94,outpatient
+ACINETOBACTER BAUMANNII,Piperacillin/tazobactam,#N/A,6,67,outpatient
+E. COLI,Meropenem,#N/A,2288,100,outpatient
+PSEUDOMONAS AERUGINOSA,Meropenem,#N/A,199,92,outpatient
+KLEB.PNEUMO.,Meropenem,#N/A,417,99,outpatient
+PROTEUS MIRABILIS,Meropenem,#N/A,149,100,outpatient
+ACINETOBACTER BAUMANNII,Meropenem,#N/A,6,67,outpatient
+E. COLI,Trimethroprim/sulfamethoxazole,#N/A,2288,82,outpatient
+KLEB.PNEUMO.,Trimethroprim/sulfamethoxazole,#N/A,417,90,outpatient
+PROTEUS MIRABILIS,Trimethroprim/sulfamethoxazole,#N/A,149,86,outpatient
+STENO. MALTOPHILIA (All),Trimethroprim/sulfamethoxazole,#N/A,37,78,outpatient
+E. COLI,Ampicillin,#N/A,2288,58,outpatient
+PROTEUS MIRABILIS,Ampicillin,#N/A,149,83,outpatient
+H. INFLUENZAE (All),Ampicillin,#N/A,254,81,outpatient
+E. COLI,AMPICILLIN SULBACTAM,#N/A,2288,67,outpatient
+KLEB.PNEUMO.,AMPICILLIN SULBACTAM,#N/A,417,86,outpatient
+PROTEUS MIRABILIS,AMPICILLIN SULBACTAM,#N/A,149,92,outpatient
