@@ -7,9 +7,16 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>/',
-  }),
+  moduleNameMapper: Object.assign(
+    pathsToModuleNameMapper(compilerOptions.paths, {
+      prefix: '<rootDir>/',
+    }),
+    {
+      // to fix d3-dsv import error
+      // https://github.com/facebook/jest/issues/12036
+      'd3-dsv': '<rootDir>/node_modules/d3-dsv/dist/d3-dsv.min.js',
+    }
+  ),
   modulePathIgnorePatterns: ['<rootDir>/dist'],
   preset: 'ts-jest',
   testEnvironment: 'node',

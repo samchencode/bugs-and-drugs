@@ -7,6 +7,8 @@ import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
+import url from '@rollup/plugin-url';
+import copy from 'rollup-plugin-copy';
 import path from 'path';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -57,6 +59,17 @@ export default {
     // a separate file - better for performance
     css({ output: 'bundle.css' }),
 
+    url({
+      limit: 0,
+      include: ['**/*.csv'],
+      fileName: '/data/[name][extname]',
+      emitFiles: false,
+    }),
+
+    copy({
+      targets: [{ src: 'src/data/**/*', dest: 'public/data' }],
+    }),
+
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
     // some cases you'll need additional configuration -
@@ -72,7 +85,7 @@ export default {
       inlineSources: !production,
     }),
     alias({
-      resolve: ['.js', '.jsx', '.ts', '.tsx', '.svelte'],
+      resolve: ['.js', '.jsx', '.ts', '.tsx', '.svelte', '.csv'],
       entries: [{ find: /@/, replacement: path.resolve(__dirname, './src') }],
     }),
 
