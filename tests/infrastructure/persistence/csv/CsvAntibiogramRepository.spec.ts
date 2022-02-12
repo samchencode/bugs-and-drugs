@@ -31,7 +31,7 @@ describe('CsvAntibiogramRepository', () => {
   });
 
   describe('instantiation', () => {
-    it('should be created with atlas data', (done) => {
+    it('should be created with atlas data', () => {
       const fs = fakeFileSystem(
         fakeFileFactory({
           'atlas.csv':
@@ -40,10 +40,8 @@ describe('CsvAntibiogramRepository', () => {
         })
       );
 
-      CsvAntibiogramRepository.create(fs).then((repo) => {
-        expect(repo).toBeDefined();
-        done();
-      });
+      const repo = new CsvAntibiogramRepository(fs);
+      expect(repo).toBeDefined();
     });
   });
 
@@ -111,11 +109,7 @@ describe('CsvAntibiogramRepository', () => {
       return await Promise.all([getId('1'), getId('2')]);
     }
 
-    beforeEach(() =>
-      CsvAntibiogramRepository.create(fs).then((r) => {
-        repo = r;
-      })
-    );
+    beforeEach(() => (repo = new CsvAntibiogramRepository(fs)));
 
     it('should parse csv and create antibiogram with proper data', () =>
       getBoth().then(([abg1, abg2]) => {
@@ -177,6 +171,12 @@ describe('CsvAntibiogramRepository', () => {
         expect(
           interval2.is(new Interval(new Date(2020, 0), new Date(2021, 0)))
         ).toBe(true);
+      }));
+
+    it('should load all antibiograms', () =>
+      repo.getAll().then((abgs) => {
+        expect(abgs[0].id.is(new AntibiogramId('1'))).toBe(true);
+        expect(abgs[1].id.is(new AntibiogramId('2'))).toBe(true);
       }));
   });
 });

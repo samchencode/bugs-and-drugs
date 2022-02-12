@@ -20,17 +20,13 @@ class CsvAntibiogramRepository implements AntibiogramRepository {
     this.#fs = filesystem;
   }
 
-  async init() {
-    await this.#loadAtlas();
-  }
-
   async #loadAtlas() {
     const csv = await this.#fs.getDataFile('atlas.csv').getContents();
-    this.#atlas = new AtlasCsv(csv).parse();
+    return await new AtlasCsv(csv).parse();
   }
 
   async getById(id: AntibiogramId): Promise<Antibiogram> {
-    if (!this.#atlas) throw new Error('CSV repository not initialized yet');
+    if (!this.#atlas) this.#atlas = await this.#loadAtlas();
     const meta = this.#atlas.find((row) => {
       const abgId = f.id(row['antibiogram_id']);
       return id.is(abgId);
@@ -40,8 +36,9 @@ class CsvAntibiogramRepository implements AntibiogramRepository {
     return this.#getByMeta(meta);
   }
 
-  getAll(): Promise<Antibiogram[]> {
-    throw new Error();
+  async getAll(): Promise<Antibiogram[]> {
+    if (!this.#atlas) this.#atlas = await this.#loadAtlas();
+    return Promise.all(this.#atlas.map((meta) => this.#getByMeta(meta)));
   }
 
   async #getByMeta(meta: AtlasRow) {
@@ -73,12 +70,6 @@ class CsvAntibiogramRepository implements AntibiogramRepository {
           ? f.interval(meta['year_month_start'], meta['year_month_end'])
           : undefined,
     });
-  }
-
-  static async create(fs: FileSystem) {
-    const instance = new CsvAntibiogramRepository(fs);
-    await instance.init();
-    return instance;
   }
 }
 
