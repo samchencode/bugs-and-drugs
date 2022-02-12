@@ -14,6 +14,9 @@ import {
   type Route,
 } from '@/domain/Antibiogram';
 
+// IDEA: make this into an abstract factory specific to the shape of the data csv
+// IDEA: or atlas csv in case I change csv shape / columns later
+
 export const org = (name: string) => new OrganismValue(name);
 
 export const abx = (name: string, route?: Route) =>
@@ -48,7 +51,7 @@ export const info = (listStr: string) => {
 export const gram = (value: string) => {
   if (value === 'positive') return GramValues.POSITIVE;
   if (value === 'negative') return GramValues.NEGATIVE;
-  if (value === 'unspecific') return GramValues.UNSPECIFIED;
+  if (value === 'unspecified') return GramValues.UNSPECIFIED;
   throw new Error('Unknown Gram Value ' + value);
 };
 
