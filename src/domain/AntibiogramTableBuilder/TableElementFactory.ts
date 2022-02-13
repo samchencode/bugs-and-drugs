@@ -21,8 +21,10 @@ class TableElementFactory {
   }
 
   makeOrganismLabel(r: RowInfo) {
-    const tooltip = r.info.toString() + '\n' + r.iso.toString() + ' Isolates';
-    return this.makeLabel(r.org.getName(), tooltip);
+    const isolates = r.iso.toString();
+    const tooltip = r.info.toString();
+    const labelText = r.org.getName() + ' (' + isolates + ')';
+    return this.makeLabel(labelText, tooltip);
   }
 
   makeAntibioticLabel(a: AntibioticValue) {

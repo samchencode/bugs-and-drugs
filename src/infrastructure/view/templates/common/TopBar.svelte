@@ -18,9 +18,13 @@
     display: inline-block;
   }
   .top-bar {
+    z-index: 5;
     height: 60px;
     background-color: var(--main-primary-color);
-    position: relative;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    left: 0px;
   }
   .arrow {
     display: inline-block;

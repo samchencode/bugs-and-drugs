@@ -11,42 +11,71 @@
     .showTable(2)
     .then((table) => {
       state.loadTable(table);
+      tableSize();
     });
+
+  let smallTable = true;
+
+  const tableSize = () => {
+    const table = document.getElementById('table');
+    if (table && window.visualViewport.width < table.offsetWidth) {
+      smallTable = false;
+    } else smallTable = true;
+    console.log(smallTable);
+    console.log(window.visualViewport.width);
+    console.log(table?.offsetWidth);
+  };
+
+  window.addEventListener('resize', tableSize);
+  tableSize();
 </script>
 
-{#if !$state.grid}
-  <NoTable />
-{:else}
-  <table class="antibiogram-table">
-    <thead>
-      <tr>
-        <EmptyCorner />
-        {#each $state.columnHeaders as columnHeader, j (columnHeader.id)}
-          <ColumnHeader
-            {columnHeader}
-            toggleHighlight={() => state.toggleHighlightColumn(j)}
+<div class="table-window" class:small-table={smallTable} id="table-container">
+  {#if !$state.grid}
+    <NoTable />
+  {:else}
+    <table class="antibiogram-table" id="table">
+      <thead>
+        <tr>
+          <EmptyCorner />
+          {#each $state.columnHeaders as columnHeader, j (columnHeader.id)}
+            <ColumnHeader
+              {columnHeader}
+              toggleHighlight={() => state.toggleHighlightColumn(j)}
+            />
+          {/each}
+        </tr>
+      </thead>
+      <tbody>
+        {#each $state.rowHeaders as rowHeader, i (rowHeader.id)}
+          <TableRow
+            {rowHeader}
+            rowOfCells={$state.grid[i]}
+            toggleHighlightCells={(j) => state.toggleHighlightCell(i, j)}
+            toggleHighlight={() => state.toggleHighlightRow(i)}
           />
         {/each}
-      </tr>
-    </thead>
-    <tbody>
-      {#each $state.rowHeaders as rowHeader, i (rowHeader.id)}
-        <TableRow
-          {rowHeader}
-          rowOfCells={$state.grid[i]}
-          toggleHighlightCells={(j) => state.toggleHighlightCell(i, j)}
-          toggleHighlight={() => state.toggleHighlightRow(i)}
-        />
-      {/each}
-    </tbody>
-  </table>
-{/if}
+      </tbody>
+    </table>
+  {/if}
+</div>
 
 <style>
+  .table-window {
+    position: relative;
+    top: 60px;
+  }
+
+  .small-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .antibiogram-table {
+    position: relative;
     font-size: var(--table-font-size);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    flex: 1;
   }
 
   .antibiogram-table tbody tr {

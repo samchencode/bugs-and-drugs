@@ -21,7 +21,7 @@
 <style>
   .column-header {
     position: sticky;
-    top: 0;
+    top: 60px;
     max-height: var(--table-heading-size);
     z-index: 1;
     padding-top: var(--table-padding);

@@ -6,15 +6,4 @@
 
 <TopBar />
 <!-- <SelectorBar /> -->
-<div class="table-window">
-  <Table />
-</div>
-
-<style>
-  .table-window {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-</style>
+<Table />
