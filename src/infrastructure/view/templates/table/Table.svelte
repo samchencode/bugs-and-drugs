@@ -45,8 +45,8 @@
 <style>
   .antibiogram-table {
     font-size: var(--table-font-size);
-    width: auto;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    flex: 1;
   }
 
   .antibiogram-table tbody tr {

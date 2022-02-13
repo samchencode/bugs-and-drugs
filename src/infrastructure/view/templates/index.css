@@ -120,6 +120,7 @@ tfoot {
   position: absolute;
   z-index: 1;
 }
+.has-tooltip:focus .tooltip-text,
 .has-tooltip:hover .tooltip-text {
   visibility: visible;
 }

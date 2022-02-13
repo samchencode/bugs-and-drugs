@@ -1,6 +1,8 @@
 <div class="top-bar">
   <div class="antibiogram-title">
-    <ion-icon class="arrow clickable" name="arrow-back-outline" />
+    <div class="arrow clickable">
+      <ion-icon name="arrow-back-outline" />
+    </div>
     <span>Inpatient 2019-2020</span>
   </div>
 </div>
@@ -21,6 +23,6 @@
     position: relative;
   }
   .arrow {
-    margin-right: 10px;
+    display: inline-block;
   }
 </style>

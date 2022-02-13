@@ -3,7 +3,6 @@
   import { NoIntersectingGroupRanges } from '@/domain/Table/Validator';
   import ToolTip from '@/infrastructure/view/templates/table/Tooltip.svelte';
   import { state } from './tableStore';
-  $: console.log(rowHeader?.getGroup()?.isCollapsed());
 </script>
 
 <th

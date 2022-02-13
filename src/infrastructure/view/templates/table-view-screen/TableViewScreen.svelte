@@ -5,16 +5,16 @@
 </script>
 
 <TopBar />
-<SelectorBar />
+<!-- <SelectorBar /> -->
 <div class="table-window">
   <Table />
 </div>
 
 <style>
   .table-window {
-    display: block;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
     width: 100%;
-    overflow: scroll;
-    flex: 1;
   }
 </style>
