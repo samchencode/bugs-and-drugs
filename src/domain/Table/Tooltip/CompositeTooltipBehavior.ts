@@ -1,3 +1,4 @@
+import { AlertLevels, type AlertLevel } from '@/domain/Table/AlertLevel';
 import BaseTooltipBehavior from '@/domain/Table/Tooltip/BaseTooltipBehavior';
 
 class CompositeTooltipBehavior extends BaseTooltipBehavior {
@@ -14,6 +15,18 @@ class CompositeTooltipBehavior extends BaseTooltipBehavior {
 
   getChildren(): BaseTooltipBehavior[] {
     return this.#children;
+  }
+
+  getAlertLevel(): AlertLevel {
+    let max = AlertLevels.NONE;
+    for (const child of this.#children) {
+      const level = child.getAlertLevel();
+      if (level > max) {
+        max = level;
+      }
+    }
+
+    return max;
   }
 
   protected isIdentical(t: CompositeTooltipBehavior): boolean {
