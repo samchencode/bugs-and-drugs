@@ -28,7 +28,11 @@ describe('make table using antibiogram', () => {
       const rLabels = table.getRowLabels();
       const cLabels = table.getColumnLabels();
       expect(rLabels.map((x) => x.toString())).toEqual(
-        expect.arrayContaining(['Klebsiella', 'Pseudomonas', 'Staph aureus'])
+        expect.arrayContaining([
+          'Klebsiella (unknown)',
+          'Pseudomonas (unknown)',
+          'Staph aureus (unknown)',
+        ])
       );
       expect(cLabels.map((x) => x.toString())).toEqual(
         expect.arrayContaining(['Azithromycin', 'Ampicillin'])
@@ -73,10 +77,14 @@ describe('make table using antibiogram', () => {
       const [nRow] = table.getShape();
       expect(nRow).toBe(4);
       const rows = table.getRows();
-      expect(rows[0].getLabel().toString()).toMatch('Haemophilus influenza');
-      expect(rows[1].getLabel().toString()).toMatch('Haemophilus influenza');
-      expect(rows[2].getLabel().toString()).toMatch('Klebsiella');
-      expect(rows[3].getLabel().toString()).toMatch('Pseudomonas');
+      expect(rows[0].getLabel().toString()).toMatch(
+        'Haemophilus influenza (500)'
+      );
+      expect(rows[1].getLabel().toString()).toMatch(
+        'Haemophilus influenza (450)'
+      );
+      expect(rows[2].getLabel().toString()).toMatch('Klebsiella (30)');
+      expect(rows[3].getLabel().toString()).toMatch('Pseudomonas (30)');
     });
 
     it('should make columns for each unique antibiotic value', () => {

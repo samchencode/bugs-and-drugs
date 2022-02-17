@@ -21,11 +21,4 @@ class Tooltip extends ValueObject {
   }
 }
 
-class EmptyTooltip extends Tooltip {
-  constructor() {
-    super('');
-  }
-}
-
 export default Tooltip;
-export { EmptyTooltip };
