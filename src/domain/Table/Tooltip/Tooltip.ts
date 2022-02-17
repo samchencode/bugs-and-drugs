@@ -1,23 +1,32 @@
-import ValueObject from '@/domain/base/ValueObject';
+import BaseTooltipBehavior from '@/domain/Table/Tooltip/BaseTooltipBehavior';
+import CompositeTooltipBehavior from '@/domain/Table/Tooltip/CompositeTooltipBehavior';
+import SingleTooltipBehavior from '@/domain/Table/Tooltip/SingleTooltipBehavior';
+import EmptyTooltipBehavior from '@/domain/Table/Tooltip/EmptyTooltipBehavior';
 
-class Tooltip extends ValueObject {
-  #content: string;
+class Tooltip extends BaseTooltipBehavior {
+  #tooltip: BaseTooltipBehavior;
 
-  constructor(content: string) {
+  constructor(tooltips: BaseTooltipBehavior[]);
+  constructor(content: string);
+  constructor();
+  constructor(arg?: BaseTooltipBehavior[] | string) {
     super();
-    this.#content = content;
+
+    if (typeof arg === 'string') {
+      this.#tooltip = new SingleTooltipBehavior(arg);
+    } else if (typeof arg === 'undefined') {
+      this.#tooltip = new EmptyTooltipBehavior();
+    } else {
+      this.#tooltip = new CompositeTooltipBehavior(arg);
+    }
   }
 
   toString(): string {
-    return this.#content;
-  }
-
-  getContent(): string {
-    return this.#content;
+    return this.#tooltip.toString();
   }
 
   protected isIdentical(t: Tooltip): boolean {
-    return this.#content === t.getContent();
+    return this.#tooltip.is(t);
   }
 }
 

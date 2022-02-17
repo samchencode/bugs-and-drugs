@@ -1,7 +1,6 @@
 import {
   Cell,
   Tooltip,
-  EmptyTooltip,
   makeTable,
   ExpandedGroup,
   CollapsedGroup,
@@ -20,7 +19,7 @@ describe('Table', () => {
       return '' + this.value;
     }
     getTooltip(): Tooltip {
-      return new EmptyTooltip();
+      return new Tooltip();
     }
   }
 

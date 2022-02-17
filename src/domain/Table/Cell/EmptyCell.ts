@@ -1,4 +1,4 @@
-import Tooltip, { EmptyTooltip } from '@/domain/Table/Tooltip';
+import Tooltip from '@/domain/Table/Tooltip';
 import Cell from '@/domain/Table/Cell/Cell';
 
 class EmptyCell extends Cell {
@@ -7,7 +7,7 @@ class EmptyCell extends Cell {
   }
 
   getTooltip(): Tooltip {
-    return new EmptyTooltip();
+    return new Tooltip();
   }
 }
 

@@ -1,5 +1,5 @@
 import Cell from '@/domain/Table/Cell/Cell';
-import Tooltip, { EmptyTooltip } from '@/domain/Table/Tooltip';
+import Tooltip from '@/domain/Table/Tooltip';
 import type { CellParams } from '@/domain/Table/Cell/CellParams';
 
 class FilledCell extends Cell {
@@ -9,7 +9,7 @@ class FilledCell extends Cell {
   constructor(value: string, params?: Partial<CellParams>) {
     super();
     this.#value = value;
-    this.#tooltip = params?.tooltip ?? new EmptyTooltip();
+    this.#tooltip = params?.tooltip ?? new Tooltip();
   }
 
   getValue(): string {

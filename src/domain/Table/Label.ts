@@ -1,6 +1,5 @@
 import Cell from '@/domain/Table/Cell';
-import { EmptyTooltip } from '@/domain/Table/Tooltip';
-import type Tooltip from '@/domain/Table/Tooltip';
+import Tooltip from '@/domain/Table/Tooltip';
 
 interface LabelParams {
   tooltip: Tooltip;
@@ -13,7 +12,7 @@ class Label extends Cell {
   constructor(title: string, params?: Partial<LabelParams>) {
     super();
     this.#title = title;
-    this.#tooltip = params?.tooltip ?? new EmptyTooltip();
+    this.#tooltip = params?.tooltip ?? new Tooltip();
   }
 
   toString(): string {
