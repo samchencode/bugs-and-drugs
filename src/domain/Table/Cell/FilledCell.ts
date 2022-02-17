@@ -1,7 +1,7 @@
 import Cell from '@/domain/Table/Cell/Cell';
 import Tooltip from '@/domain/Table/Tooltip';
 import type { CellParams } from '@/domain/Table/Cell/CellParams';
-import { AlertLevels, type AlertLevel } from '@/domain/Table/AlertLevel';
+import type { AlertLevel } from '@/domain/Table/AlertLevel';
 
 class FilledCell extends Cell {
   #value: string;
@@ -12,7 +12,7 @@ class FilledCell extends Cell {
     super();
     this.#value = value;
     this.#tooltip = params?.tooltip ?? new Tooltip();
-    this.#alert = params?.alert ?? AlertLevels.NONE;
+    this.#alert = params?.alert ?? this.#tooltip.getAlertLevel();
   }
 
   getValue(): string {

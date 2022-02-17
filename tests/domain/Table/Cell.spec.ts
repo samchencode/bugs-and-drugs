@@ -1,4 +1,4 @@
-import { FilledCell } from '@/domain/Table';
+import { FilledCell, Tooltip } from '@/domain/Table';
 import { AlertLevels } from '@/domain/Table/AlertLevel';
 
 describe('Cell', () => {
@@ -18,6 +18,14 @@ describe('Cell', () => {
       });
 
       expect(cell.getAlertLevel().is(AlertLevels.INFO)).toBe(true);
+    });
+
+    it('should use alert level of the tooltip if none was provided', () => {
+      const cell = new FilledCell('Hello World', {
+        tooltip: new Tooltip('tip', AlertLevels.WARN),
+      });
+
+      expect(cell.getAlertLevel().is(AlertLevels.WARN)).toBe(true);
     });
   });
 });
