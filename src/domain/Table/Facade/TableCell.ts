@@ -3,6 +3,7 @@ import type Tooltip from '@/domain/Table/Tooltip';
 import type TableRow from '@/domain/Table/Facade/TableRow';
 import type TableColumn from '@/domain/Table/Facade/TableColumn';
 import type TableGroup from '@/domain/Table/Facade/TableGroup';
+import type { AlertLevel } from '@/domain/Table/AlertLevel';
 
 interface AccessorParams {
   row: TableRow;
@@ -43,6 +44,10 @@ class TableCell extends Cell {
 
   getTooltip(): Tooltip {
     return this.#cell.getTooltip();
+  }
+
+  getAlertLevel(): AlertLevel {
+    return this.#cell.getAlertLevel();
   }
 
   toString(): string {

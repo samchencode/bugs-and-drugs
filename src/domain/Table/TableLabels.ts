@@ -1,4 +1,4 @@
-import Label, { EmptyLabel } from '@/domain/Table/Label';
+import Label from '@/domain/Table/Label';
 
 abstract class TableLabels {
   protected abstract rows: Label[];
@@ -30,8 +30,8 @@ class EmptyTableLabels extends TableLabels {
 
   constructor(nRow: number, nCol: number) {
     super();
-    this.rows = new Array(nRow).fill(undefined).map(() => new EmptyLabel());
-    this.columns = new Array(nCol).fill(undefined).map(() => new EmptyLabel());
+    this.rows = new Array(nRow).fill(undefined).map(() => new Label());
+    this.columns = new Array(nCol).fill(undefined).map(() => new Label());
   }
 }
 

@@ -1,9 +1,9 @@
 import type { AlertLevel } from '@/domain/Table/AlertLevel';
 import type Tooltip from '@/domain/Table/Tooltip';
 
-interface CellParams {
+interface LabelParams {
   tooltip: Tooltip;
   alert: AlertLevel;
 }
 
-export type { CellParams };
+export type { LabelParams };

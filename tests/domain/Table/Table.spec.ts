@@ -7,6 +7,7 @@ import {
   Label as L,
 } from '@/domain/Table';
 import type { Table } from '@/domain/Table';
+import type { AlertLevel } from '@/domain/Table/AlertLevel';
 
 describe('Table', () => {
   class D extends Cell {
@@ -20,6 +21,9 @@ describe('Table', () => {
     }
     getTooltip(): Tooltip {
       return new Tooltip();
+    }
+    getAlertLevel(): AlertLevel {
+      throw new Error('Method not implemented.');
     }
   }
 
@@ -108,10 +112,10 @@ describe('Table', () => {
     it('should make empty row and column labels if none are provided', () => {
       const table = makeTable(data);
       expect(table.getColumnLabels().map((x) => x.toString())).toEqual(
-        expect.arrayContaining([''])
+        expect.arrayContaining(['NA'])
       );
       expect(table.getRowLabels().map((x) => x.toString())).toEqual(
-        expect.arrayContaining([''])
+        expect.arrayContaining(['NA'])
       );
     });
 
