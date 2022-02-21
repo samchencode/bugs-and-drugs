@@ -14,3 +14,4 @@ export {
   type Range,
 } from '@/domain/Table/Group';
 export { default as Label, type LabelParams } from '@/domain/Table/Label';
+export { AlertLevels, type AlertLevel } from '@/domain/Table/AlertLevel';
