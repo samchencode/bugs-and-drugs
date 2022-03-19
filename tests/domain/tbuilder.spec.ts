@@ -16,7 +16,7 @@ describe('testing the builder...', () => {
     const result = algo(abg);
 
     const printed = result
-      .map(([, , data]) => data)
+      .map(({ data }) => data)
       .map((arr) => arr.map((d) => d.getValue().toString()));
 
     const expected = [

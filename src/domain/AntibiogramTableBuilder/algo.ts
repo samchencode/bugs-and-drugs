@@ -1,6 +1,7 @@
 import {
   OrganismValue,
   SampleInfo,
+  type AntibioticValue,
   type SensitivityData,
 } from '@/domain/Antibiogram';
 import type Antibiogram from '@/domain/Antibiogram';
@@ -20,78 +21,111 @@ class RowInfo {
   }
 }
 
-function algo1(abg: Antibiogram) {
-  const data = abg.getSensitivities();
-  type __RowInfo = [OrganismValue, SampleInfo, SensitivityData[]];
-  const rows: __RowInfo[] = [];
-  const didntMeetThreshold: __RowInfo[] = [];
+type ByOrganismDatum = [OrganismValue, SensitivityData[], SampleInfo[]];
 
-  const getDataForOrganism = (org: OrganismValue) =>
-    data.filter((d) => d.getOrganism().is(org));
-  const getUniqueSisForData = (data: SensitivityData[]) =>
-    data
+class RowAssembler {
+  readonly SPLIT_THRESHOLD = 0.3;
+  data: SensitivityData[];
+  dataByOrganism: [OrganismValue, SensitivityData[], SampleInfo[]][];
+
+  antibiotics: AntibioticValue[];
+
+  constructor(
+    data: SensitivityData[],
+    org: OrganismValue[],
+    abx: AntibioticValue[]
+  ) {
+    this.data = data;
+    this.antibiotics = abx;
+    this.dataByOrganism = org.map((o) => this.#buildDatumForOrganism(o));
+  }
+
+  assembleRows() {
+    const rows: RowInfo[] = [];
+    const belowThreshold: RowInfo[] = [];
+
+    for (const [org, dataForOrganism, uniqueSis] of this.dataByOrganism) {
+      for (const si of uniqueSis) {
+        const dataForOrganismAndSi = dataForOrganism.filter((d) =>
+          d.getSampleInfo().is(si)
+        );
+
+        const minNCol = this.antibiotics.length;
+        const nRowIsAboveThreshold =
+          dataForOrganismAndSi.length / minNCol > SPLIT_THRESHOLD;
+        const row = new RowInfo(org, si, dataForOrganismAndSi);
+        // Case 1 & 2
+        if (nRowIsAboveThreshold) {
+          rows.push(row);
+        } else {
+          belowThreshold.push(row);
+        }
+      }
+    }
+
+    for (const [org, , uniqueSis] of this.dataByOrganism) {
+      const belowThresholdForOrg = belowThreshold.filter(({ organism }) =>
+        org.is(organism)
+      );
+      for (const { info: thisSi, data } of belowThresholdForOrg) {
+        // Case 3
+        const [bestMatch] = this.#findBestSiMatch(thisSi, uniqueSis);
+
+        let row: RowInfo | undefined = rows
+          .filter(({ organism }) => organism.is(org))
+          .find(({ data }) =>
+            data.find((d) => d.getSampleInfo().is(bestMatch))
+          );
+
+        if (!row) {
+          row = new RowInfo(org, new SampleInfo([]), data);
+          rows.push(row);
+        } else {
+          row.data.push(...data);
+        }
+      }
+    }
+    return rows;
+  }
+
+  #getSensitivitiyDataForOrganism(org: OrganismValue) {
+    return this.data.filter((d) => d.getOrganism().is(org));
+  }
+
+  #getUniqueSisForData(data: SensitivityData[]) {
+    return data
       .map((d) => d.getSampleInfo())
       .reduce<SampleInfo[]>(
         (ag, v) => (ag.find((si) => si.is(v)) ? ag : [...ag, v]),
         []
       );
-  const dataByOrganism = abg.organisms
-    .map<[OrganismValue, SensitivityData[]]>((o) => [o, getDataForOrganism(o)])
-    .map<[OrganismValue, SensitivityData[], SampleInfo[]]>(([o, d]) => [
-      o,
-      d,
-      getUniqueSisForData(d),
-    ]);
-
-  for (const [org, dataForOrganism, uniqueSis] of dataByOrganism) {
-    for (const si of uniqueSis) {
-      const dataForOrganismAndSi = dataForOrganism.filter((d) =>
-        d.getSampleInfo().is(si)
-      );
-
-      const minNCol = abg.antibiotics.length;
-      const nRowIsAboveThreshold =
-        dataForOrganismAndSi.length / minNCol > SPLIT_THRESHOLD;
-      // Case 1 & 2
-      if (nRowIsAboveThreshold) {
-        rows.push([org, si, dataForOrganismAndSi]);
-      } else {
-        didntMeetThreshold.push([org, si, dataForOrganismAndSi]);
-      }
-    }
   }
 
-  for (const [org, , uniqueSis] of dataByOrganism) {
-    for (const [orgA, thisSi, data] of didntMeetThreshold) {
-      if (!org.is(orgA)) continue;
-
-      // Case 3
-      const [bestMatch] = uniqueSis
-        .map((si) => [si, si.intersect(thisSi)])
-        .filter(([o]) => !o.is(thisSi))
-        .reduce(([agO, agIxt], [o, ixt]) => {
-          const numMatching = ixt.itemsToArray().length;
-          const numInBest = agIxt.itemsToArray().length;
-          return numMatching > numInBest ? [o, ixt] : [agO, agIxt];
-        });
-
-      let row: __RowInfo | undefined = rows
-        .filter(([, , d]) => d[0].getOrganism().is(org))
-        .find(([, , d]) => d.find((d) => d.getSampleInfo().is(bestMatch)));
-
-      if (!row) {
-        row = [org, new SampleInfo([]), data];
-        rows.push(row);
-      } else {
-        row[2].push(...data);
-      }
-    }
-
-    // TODO CASE 5:
-    // When we've merged all the similar misc si into a row and they still dont meet threhsold
+  #buildDatumForOrganism(org: OrganismValue): ByOrganismDatum {
+    const dataForOrg = this.#getSensitivitiyDataForOrganism(org);
+    const uniqueSis = this.#getUniqueSisForData(dataForOrg);
+    return [org, dataForOrg, uniqueSis];
   }
 
-  return rows;
+  #findBestSiMatch(thisSi: SampleInfo, allSis: SampleInfo[]) {
+    return allSis
+      .map((si) => [si, si.intersect(thisSi)])
+      .filter(([o]) => !o.is(thisSi))
+      .reduce(([agO, agIxt], [o, ixt]) => {
+        const numMatching = ixt.itemsToArray().length;
+        const numInBest = agIxt.itemsToArray().length;
+        return numMatching > numInBest ? [o, ixt] : [agO, agIxt];
+      });
+  }
+}
+
+function algo1(abg: Antibiogram) {
+  const assembler = new RowAssembler(
+    abg.getSensitivities(),
+    abg.organisms,
+    abg.antibiotics
+  );
+  return assembler.assembleRows();
 }
 
 function algo2(abg: Antibiogram) {
