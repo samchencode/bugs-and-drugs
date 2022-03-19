@@ -1,19 +1,15 @@
-import type {
-  AntibioticValue,
-  SampleInfo,
-  SensitivityData,
-} from '@/domain/Antibiogram';
+import type { SampleInfo, AntibioticValue } from '@/domain/Antibiogram';
 
 class ColumnInfo {
-  abx: AntibioticValue;
+  antibiotic: AntibioticValue;
   info: SampleInfo;
+  constructor(abx: AntibioticValue, commonInfo: SampleInfo) {
+    this.antibiotic = abx;
+    this.info = commonInfo;
+  }
 
-  constructor(data: SensitivityData[], abx: AntibioticValue) {
-    this.abx = abx;
-
-    this.info = data
-      .map((d) => d.getSampleInfo())
-      .reduce((ag, si) => ag.intersect(si));
+  describes(abx: AntibioticValue) {
+    return this.antibiotic.is(abx);
   }
 }
 

@@ -23,27 +23,26 @@ class TableElementFactory {
     return new Label(text, params);
   }
 
-  makeOrganismLabel(r: RowInfo) {
-    const isolates = r.iso.toString();
+  makeRowLabel(r: RowInfo) {
     const tooltips = r.info
       .itemsToArray()
       .map((si) => new Tooltip(si.toString()));
     const tooltip = new Tooltip(tooltips);
-    const labelText = r.org.getName() + ' (' + isolates + ')';
+    const labelText = `${r.organism.getName()} (${r.isolates})`;
     return this.makeLabel(labelText, tooltip.toString());
   }
 
-  makeAntibioticLabel(a: ColumnInfo) {
-    const route = a.abx
+  makeColumnLabel(c: ColumnInfo) {
+    const route = c.antibiotic
       .getAntibiotics()
       .map((abx) => abx.getRoute().toString())
       .join(', ');
 
-    const si = a.info.itemsToArray();
+    const si = c.info.itemsToArray();
     const tooltip = new Tooltip(
       [...si, route].map((si) => new Tooltip(si.toString()))
     );
-    return this.makeLabel(a.abx.getName(), tooltip.toString());
+    return this.makeLabel(c.antibiotic.getName(), tooltip.toString());
   }
 
   makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {

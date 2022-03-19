@@ -1,1 +1,1 @@
-export { default as default } from '@/domain/AntibiogramTableBuilder/buildAntibiogramTable';
+export { default as default } from '@/domain/AntibiogramTableBuilder/makeAntibiogramTable';

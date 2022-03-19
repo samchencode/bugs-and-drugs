@@ -12,7 +12,7 @@ describe('make table using antibiogram', () => {
     });
   });
 
-  describe.skip('with data', () => {
+  describe('with data', () => {
     let abg1: Antibiogram;
     let abg2: Antibiogram;
 
@@ -53,7 +53,7 @@ describe('make table using antibiogram', () => {
     });
   });
 
-  describe.skip('behavior', () => {
+  describe('behavior', () => {
     let table: Table;
 
     // +----------------------------------------------------------------------------------------------------+
@@ -76,80 +76,29 @@ describe('make table using antibiogram', () => {
     it('should make rows for each unique organism-sampleinfo pair', () => {
       const [nRow] = table.getShape();
       expect(nRow).toBe(4);
-      const rows = table.getRows();
-      expect(rows[0].getLabel().toString()).toMatch(
-        'Haemophilus influenza (500)'
+      const rows = table.getRows().map((r) => r.getLabel() + '');
+      expect(rows).toEqual(
+        expect.arrayContaining([
+          'Haemophilus influenza (500)',
+          'Haemophilus influenza (450)',
+          'Klebsiella (30)',
+          'Pseudomonas (30)',
+        ])
       );
-      expect(rows[1].getLabel().toString()).toMatch(
-        'Haemophilus influenza (450)'
-      );
-      expect(rows[2].getLabel().toString()).toMatch('Klebsiella (30)');
-      expect(rows[3].getLabel().toString()).toMatch('Pseudomonas (30)');
     });
 
     it('should make columns for each unique antibiotic value', () => {
       const [, nCol] = table.getShape();
-      expect(nCol).toBe(3);
-      const cols = table.getColumns();
-      expect(cols[0].getLabel().toString()).toMatch('Ampicillin');
-      expect(cols[1].getLabel().toString()).toMatch('Ampicillin');
-      expect(cols[2].getLabel().toString()).toMatch('Azithromycin');
-      expect(cols[2].getLabel().getTooltip().toString()).toMatch('IV/PO');
-    });
-
-    it('should group rows for each organism w/ base sampleinfo at top', () => {
-      const groups = table.getRowGroups();
-      expect(groups.length).toBe(1);
-      expect(groups[0].getRange()).toEqual([0, 2]);
-    });
-  });
-
-  describe('test new algo for rows', () => {
-    let table: Table;
-
-    beforeEach(() => {
-      return new FakeAntibiogramRepository().getAll().then((abgs) => {
-        table = build(abgs[2]);
-      });
-    });
-
-    it('should make new rows for each unique organism', () => {
-      const [nRow] = table.getShape();
-      expect(nRow).toBe(3);
-      const rows = table.getRows();
-      const labels = rows.map((r) => r.getLabel() + '');
-      expect(labels).toEqual([
-        'Haemophilus influenza (500)',
-        'Klebsiella (30)',
-        'Pseudomonas (30)',
-      ]);
-    });
-
-    it('should label rows with common sampleinfo', () => {
-      const rows = table.getRows();
-      const tooltip = rows[0].getLabel().getTooltip();
-      expect(tooltip.toString()).toMatch(/inpatient/i);
-    });
-
-    it('should make columns for each unique antibiotic', () => {
-      const [, nCol] = table.getShape();
       expect(nCol).toBe(4);
-      const labels = table.getColumnLabels().map((l) => l + '');
-
-      expect(labels).toEqual([
-        'Ampicillin',
-        'Ampicillin',
-        'Azithromycin',
-        'Nitrofurantoin',
-      ]);
-    });
-
-    it('should label columns with common sampleinfo', () => {
-      const cols = table.getColumns();
-      const tooltip0 = cols[0].getLabel().getTooltip();
-      expect(tooltip0.toString()).toMatch(/inpatient/i);
-      const tooltip3 = cols[3].getLabel().getTooltip();
-      expect(tooltip3.toString()).toMatch(/urine/i);
+      const cols = table.getColumns().map((c) => c.getLabel() + '');
+      expect(cols).toEqual(
+        expect.arrayContaining([
+          'Ampicillin',
+          'Ampicillin',
+          'Azithromycin',
+          'Nitrofurantoin',
+        ])
+      );
     });
   });
 });

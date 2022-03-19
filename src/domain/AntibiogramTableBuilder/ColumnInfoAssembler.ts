@@ -3,7 +3,7 @@ import type {
   AntibioticValue,
   SensitivityData,
 } from '@/domain/Antibiogram';
-import { ColumnInfo } from '@/domain/AntibiogramTableBuilder/ColumnInfo.1';
+import ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
 
 class ColumnInfoAssembler {
   info: SampleInfo;

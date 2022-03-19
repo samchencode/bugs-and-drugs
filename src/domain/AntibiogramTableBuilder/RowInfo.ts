@@ -1,57 +1,29 @@
 import {
-  SensitivityData,
   UnknownNumberOfIsolates,
   type NumberOfIsolates,
   type OrganismValue,
   type SampleInfo,
+  type SensitivityData,
 } from '@/domain/Antibiogram';
-import type { Range } from '@/domain/Table';
 
 class RowInfo {
-  org: OrganismValue;
-  data: SensitivityData[];
+  organism: OrganismValue;
   info: SampleInfo;
-  iso: NumberOfIsolates;
+  data: SensitivityData[];
+  isolates?: NumberOfIsolates;
 
-  constructor(data: SensitivityData[], org: OrganismValue) {
-    this.org = org;
+  constructor(org: OrganismValue, info: SampleInfo, data: SensitivityData[]) {
+    this.organism = org;
+    this.info = info;
     this.data = data;
-
-    this.info = data
-      .map((d) => d.getSampleInfo())
-      .reduce((ag, si) => ag.intersect(si));
-
-    const dataWithCommonDenominatorInfo = data.find((d) =>
-      d.getSampleInfo().is(this.info)
-    );
-
-    this.iso =
-      dataWithCommonDenominatorInfo?.getIsolates() ??
+    this.isolates =
+      data.find((d) => d.getSampleInfo().is(this.info))?.getIsolates() ??
       new UnknownNumberOfIsolates();
   }
 
   describes(org: OrganismValue, info?: SampleInfo): boolean {
-    if (!info) return this.org.is(org);
-    return this.org.is(org) && this.info.is(info);
-  }
-
-  static sortRows(baseSi: SampleInfo, data: RowInfo[]) {
-    const collator = Intl.Collator('en-US');
-    return data
-      .sort(({ info: s1 }, { info: s2 }) => {
-        if (s1.is(baseSi)) return -1;
-        if (s2.is(baseSi)) return 1;
-        return 0;
-      })
-      .sort(({ org: o1 }, { org: o2 }) => {
-        return collator.compare(o1.getName(), o2.getName());
-      });
-  }
-
-  static findGroupBoundariesByOrganism(rows: RowInfo[]) {
-    return Array.from(rows.entries())
-      .filter(([i, { org }]) => i === 0 || !org.is(rows[i - 1].org))
-      .map<Range>(([i], k, arr) => [i, arr[k + 1]?.[0] ?? rows.length]);
+    if (!info) return this.organism.is(org);
+    return this.organism.is(org) && this.info.is(info);
   }
 }
 

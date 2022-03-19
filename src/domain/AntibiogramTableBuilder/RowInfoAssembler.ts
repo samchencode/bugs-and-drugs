@@ -4,7 +4,7 @@ import {
   type AntibioticValue,
   type SensitivityData,
 } from '@/domain/Antibiogram';
-import { RowInfo } from '@/domain/AntibiogramTableBuilder/RowInfo.1';
+import RowInfo from '@/domain/AntibiogramTableBuilder/RowInfo';
 
 const SPLIT_THRESHOLD = 0.3;
 
