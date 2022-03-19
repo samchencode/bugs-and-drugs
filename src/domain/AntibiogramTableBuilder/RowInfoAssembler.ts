@@ -37,7 +37,8 @@ class RowInfoAssembler {
     return this.#addBelowThresholdRows(rows, belowThreshold);
   }
 
-  #isAboveThreshold(nCol: number) {
+  #isAboveThreshold(nCol: number, numUniqueSis: number) {
+    if (numUniqueSis < 2) return true;
     const minNCol = this.antibiotics.length;
     return nCol / minNCol > SPLIT_THRESHOLD;
   }
@@ -82,10 +83,10 @@ class RowInfoAssembler {
           ([si, data]) => new RowInfo(org, si, data)
         );
         const above = allInfo.filter(({ data }) =>
-          this.#isAboveThreshold(data.length)
+          this.#isAboveThreshold(data.length, dataBySi.length)
         );
         const below = allInfo.filter(
-          ({ data }) => !this.#isAboveThreshold(data.length)
+          ({ data }) => !this.#isAboveThreshold(data.length, dataBySi.length)
         );
         return [rows.concat(above), belowThreshold.concat(below)];
       },

@@ -4,13 +4,16 @@ import type { LabelParams } from '@/domain/Table/Label/LabelParams';
 import type BaseLabelBehavior from '@/domain/Table/Label/BaseLabelBehavior';
 import FilledLabelBehavior from '@/domain/Table/Label/FilledLabelBehavior';
 import EmptyLabelBehavior from '@/domain/Table/Label/EmptyLabelBehavior';
+import Cell from '@/domain/Table/Cell';
 
-class Label {
+class Label extends Cell {
   #label: BaseLabelBehavior;
 
   constructor();
   constructor(title: string, params?: Partial<LabelParams>);
   constructor(title?: string, params?: Partial<LabelParams>) {
+    super();
+
     if (title) {
       this.#label = new FilledLabelBehavior(title, params);
     } else this.#label = new EmptyLabelBehavior();

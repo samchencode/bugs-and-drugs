@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
 import { TableElement } from '@/infrastructure/view/templates/table/TableElement';
-import type { Cell, Group, Label, Table } from '@/domain/Table';
+import type { Cell, Label, Table } from '@/domain/Table';
 import { RowHeader } from '@/infrastructure/view/templates/table/RowHeader';
 import type TableGroup from '@/domain/Table/Facade/TableGroup';
 
