@@ -15,9 +15,9 @@ describe('testing the builder...', () => {
   test('idk', () => {
     const result = algo(abg);
 
-    const printed = result.map((arr) =>
-      arr.map((d) => d.getValue().toString())
-    );
+    const printed = result
+      .map(([, , data]) => data)
+      .map((arr) => arr.map((d) => d.getValue().toString()));
 
     const expected = [
       ['100%', '100%', 'R'],

@@ -7,11 +7,24 @@ import type Antibiogram from '@/domain/Antibiogram';
 
 const SPLIT_THRESHOLD = 0.3;
 
+class RowInfo {
+  organism: OrganismValue;
+  info: SampleInfo;
+  data: SensitivityData[];
+  isolates = null; // TODO
+
+  constructor(org: OrganismValue, info: SampleInfo, data: SensitivityData[]) {
+    this.organism = org;
+    this.info = info;
+    this.data = data;
+  }
+}
+
 function algo1(abg: Antibiogram) {
   const data = abg.getSensitivities();
-  const uniqueRows: SensitivityData[][] = [];
-  const didntMeetThreshold: [OrganismValue, SampleInfo, SensitivityData[]][] =
-    [];
+  type __RowInfo = [OrganismValue, SampleInfo, SensitivityData[]];
+  const rows: __RowInfo[] = [];
+  const didntMeetThreshold: __RowInfo[] = [];
 
   const getDataForOrganism = (org: OrganismValue) =>
     data.filter((d) => d.getOrganism().is(org));
@@ -41,7 +54,7 @@ function algo1(abg: Antibiogram) {
         dataForOrganismAndSi.length / minNCol > SPLIT_THRESHOLD;
       // Case 1 & 2
       if (nRowIsAboveThreshold) {
-        uniqueRows.push(dataForOrganismAndSi);
+        rows.push([org, si, dataForOrganismAndSi]);
       } else {
         didntMeetThreshold.push([org, si, dataForOrganismAndSi]);
       }
@@ -62,23 +75,23 @@ function algo1(abg: Antibiogram) {
           return numMatching > numInBest ? [o, ixt] : [agO, agIxt];
         });
 
-      let row: SensitivityData[] | undefined = uniqueRows
-        .filter((r) => r[0].getOrganism().is(org))
-        .find((r) => r.find((d) => d.getSampleInfo().is(bestMatch)));
+      let row: __RowInfo | undefined = rows
+        .filter(([, , d]) => d[0].getOrganism().is(org))
+        .find(([, , d]) => d.find((d) => d.getSampleInfo().is(bestMatch)));
 
       if (!row) {
-        row = [];
-        uniqueRows.push(row);
+        row = [org, new SampleInfo([]), data];
+        rows.push(row);
+      } else {
+        row[2].push(...data);
       }
-
-      row.push(...data);
     }
 
     // TODO CASE 5:
     // When we've merged all the similar misc si into a row and they still dont meet threhsold
   }
 
-  return uniqueRows;
+  return rows;
 }
 
 function algo2(abg: Antibiogram) {
