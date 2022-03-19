@@ -3,8 +3,6 @@ import type Antibiogram from '@/domain/Antibiogram';
 
 function algo1(abg: Antibiogram) {
   const data = abg.getSensitivities();
-  const abgSi = abg.info;
-
   const uniqueRows: SensitivityData[][] = [];
 
   for (const org of abg.organisms) {
@@ -16,13 +14,6 @@ function algo1(abg: Antibiogram) {
         []
       );
 
-    // Case 1
-    const firstSiMatchesAbg = uniqueSis[0].is(abgSi);
-    if (firstSiMatchesAbg && uniqueSis.length === 1) {
-      uniqueRows.push(dataForOrganism);
-      continue;
-    }
-
     const didntMeetThreshold: [SampleInfo, SensitivityData[]][] = [];
 
     for (const si of uniqueSis) {
@@ -33,7 +24,7 @@ function algo1(abg: Antibiogram) {
       const minNCol = abg.antibiotics.length;
       const nRowIsAboveThreshold =
         dataForOrganismAndSi.length / minNCol > SPLIT_THRESHOLD;
-      // Case 2
+      // Case 1 & 2
       if (nRowIsAboveThreshold) {
         uniqueRows.push(dataForOrganismAndSi);
       } else {
