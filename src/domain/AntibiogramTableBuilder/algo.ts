@@ -46,23 +46,7 @@ class RowAssembler {
   }
 
   assembleRows() {
-    const [rows, belowThreshold] = this.dataByOrganism.reduce<
-      [RowInfo[], RowInfo[]]
-    >(
-      ([rows, belowThreshold], { org, dataBySi }) => {
-        const allRowInfo = dataBySi.map(
-          ([si, data]) => new RowInfo(org, si, data)
-        );
-        const above = allRowInfo.filter(({ data }) =>
-          this.#isAboveThreshold(data.length)
-        );
-        const below = allRowInfo.filter(
-          ({ data }) => !this.#isAboveThreshold(data.length)
-        );
-        return [rows.concat(above), belowThreshold.concat(below)];
-      },
-      [[], []]
-    );
+    const [rows, belowThreshold] = this.#assembleAboveThresholdRows();
 
     for (const { org, sis } of this.dataByOrganism) {
       const belowThresholdForOrg = belowThreshold.filter(({ organism }) =>
@@ -125,6 +109,24 @@ class RowAssembler {
         const numInBest = agIxt.itemsToArray().length;
         return numMatching > numInBest ? [o, ixt] : [agO, agIxt];
       });
+  }
+
+  #assembleAboveThresholdRows() {
+    return this.dataByOrganism.reduce<[RowInfo[], RowInfo[]]>(
+      ([rows, belowThreshold], { org, dataBySi }) => {
+        const allInfo = dataBySi.map(
+          ([si, data]) => new RowInfo(org, si, data)
+        );
+        const above = allInfo.filter(({ data }) =>
+          this.#isAboveThreshold(data.length)
+        );
+        const below = allInfo.filter(
+          ({ data }) => !this.#isAboveThreshold(data.length)
+        );
+        return [rows.concat(above), belowThreshold.concat(below)];
+      },
+      [[], []]
+    );
   }
 }
 
