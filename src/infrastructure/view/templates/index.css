@@ -63,7 +63,9 @@ tfoot {
   --font-md: 1rem;
   --font-lg: 1.25rem;
   --font-xl: 1.5rem;
-  --fong-xxl: 2rem;
+  --font-xxl: 2rem;
+
+  --icon-md: 24px;
 
   --border: 1px solid var(--main-dark-primary-color);
   --bs: 0 0 5px rgba(0, 0, 0, 0.25);

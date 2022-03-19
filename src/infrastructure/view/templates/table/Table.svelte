@@ -7,8 +7,10 @@
   import EmptyCorner from './EmptyCorner.svelte';
   import { state } from './tableStore';
 
+  export let id: number;
+
   (getContext('tableController') as TableController)
-    .showTable(2)
+    .showTable(id)
     .then((table) => {
       state.loadTable(table);
       tableSize();
