@@ -1,4 +1,5 @@
 import {
+  SensitivityData,
   UnknownNumberOfIsolates,
   type NumberOfIsolates,
   type OrganismValue,
@@ -8,16 +9,29 @@ import type { Range } from '@/domain/Table';
 
 class RowInfo {
   org: OrganismValue;
+  data: SensitivityData[];
   info: SampleInfo;
   iso: NumberOfIsolates;
 
-  constructor(org: OrganismValue, info: SampleInfo, iso?: NumberOfIsolates) {
+  constructor(data: SensitivityData[], org: OrganismValue) {
     this.org = org;
-    this.info = info;
-    this.iso = iso ?? new UnknownNumberOfIsolates();
+    this.data = data;
+
+    this.info = data
+      .map((d) => d.getSampleInfo())
+      .reduce((ag, si) => ag.intersect(si));
+
+    const dataWithCommonDenominatorInfo = data.find((d) =>
+      d.getSampleInfo().is(this.info)
+    );
+
+    this.iso =
+      dataWithCommonDenominatorInfo?.getIsolates() ??
+      new UnknownNumberOfIsolates();
   }
 
-  describes(org: OrganismValue, info: SampleInfo): boolean {
+  describes(org: OrganismValue, info?: SampleInfo): boolean {
+    if (!info) return this.org.is(org);
     return this.org.is(org) && this.info.is(info);
   }
 
@@ -32,16 +46,6 @@ class RowInfo {
       .sort(({ org: o1 }, { org: o2 }) => {
         return collator.compare(o1.getName(), o2.getName());
       });
-  }
-
-  static makeUnknowns(
-    baseInfo: SampleInfo,
-    orgs: OrganismValue[],
-    rows: RowInfo[]
-  ) {
-    return orgs
-      .filter((o) => !rows.find((r) => r.describes(o, baseInfo)))
-      .map<RowInfo>((org) => new RowInfo(org, baseInfo));
   }
 
   static findGroupBoundariesByOrganism(rows: RowInfo[]) {

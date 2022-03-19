@@ -86,4 +86,26 @@ describe('SampleInfo', () => {
     expect(info.getItem(DemoInfo)?.is(new DemoInfo('1'))).toBe(true);
     expect(info.getItem(DemoInfo2)?.is(new DemoInfo2('2'))).toBe(true);
   });
+
+  it('should intersect items between two sampleInfo', () => {
+    const infoItem1 = new DemoInfo('1');
+    const infoItem2 = new DemoInfo2('2');
+    const infoItem3 = new DemoInfo2('3');
+    const info1 = new SampleInfo([infoItem1, infoItem2]);
+    const info2 = new SampleInfo([infoItem1, infoItem3]);
+
+    const result = info1.intersect(info2);
+    expect(result.is(new SampleInfo([infoItem1]))).toBe(true);
+  });
+
+  it.only('should subtract items between two sampleInfo', () => {
+    const infoItem1 = new DemoInfo('1');
+    const infoItem2 = new DemoInfo2('2');
+    const infoItem3 = new DemoInfo2('3');
+    const info1 = new SampleInfo([infoItem1, infoItem2]);
+    const info2 = new SampleInfo([infoItem1, infoItem3]);
+
+    const result = info1.subtract(info2);
+    expect(result.is(new SampleInfo([infoItem2]))).toBe(true);
+  });
 });

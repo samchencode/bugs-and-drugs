@@ -23,6 +23,10 @@ class SampleInfo extends ValueObject {
     return this.#itemsByType;
   }
 
+  itemsToArray(): SampleInfoItem[] {
+    return [...this.#itemsByType.values()];
+  }
+
   getItem(type: string | SampleInfoItemConstructor) {
     if (typeof type === 'string') return this.#itemsByType.get(type);
     return this.#itemsByConstructor.get(type);
@@ -33,6 +37,16 @@ class SampleInfo extends ValueObject {
     const ourValue = this.#itemsByType.get(type);
     if (!ourValue) return false;
     return ourValue.is(value);
+  }
+
+  intersect(info: SampleInfo): SampleInfo {
+    const common = info.itemsToArray().filter((item) => this.hasItem(item));
+    return new SampleInfo(common);
+  }
+
+  subtract(info: SampleInfo): SampleInfo {
+    const onlyOurs = this.itemsToArray().filter((item) => !info.hasItem(item));
+    return new SampleInfo(onlyOurs);
   }
 
   toString() {

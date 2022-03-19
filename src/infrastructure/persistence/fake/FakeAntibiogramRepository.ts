@@ -622,6 +622,27 @@ const fakeData: SensitivityData[][] = [
       isolates: new IntegerNumberOfIsolates(30),
       sampleInfo: new SampleInfo([Settings.INPATIENT]),
     }),
+    new SensitivityData({
+      organism: new OrganismValue('Haemophilus influenza'),
+      antibiotic: new AntibioticValue('Nitrofurantoin', Routes.IV),
+      value: new SensitivityValue('95'),
+      isolates: new IntegerNumberOfIsolates(500),
+      sampleInfo: new SampleInfo([Settings.INPATIENT, Sources.URINE]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Pseudomonas'),
+      antibiotic: new AntibioticValue('Nitrofurantoin', Routes.IV),
+      value: new SensitivityValue('4'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([Settings.INPATIENT, Sources.URINE]),
+    }),
+    new SensitivityData({
+      organism: new OrganismValue('Klebsiella'),
+      antibiotic: new AntibioticValue('Nitrofurantoin', Routes.IV),
+      value: new SensitivityValue('R'),
+      isolates: new IntegerNumberOfIsolates(30),
+      sampleInfo: new SampleInfo([Settings.INPATIENT, Sources.URINE]),
+    }),
   ],
 ];
 

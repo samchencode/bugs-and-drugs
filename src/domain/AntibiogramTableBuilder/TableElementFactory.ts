@@ -1,4 +1,3 @@
-import type { AntibioticValue, SensitivityData } from '@/domain/Antibiogram';
 import {
   FilledCell,
   Label,
@@ -7,10 +6,14 @@ import {
   type LabelParams,
 } from '@/domain/Table';
 import type RowInfo from '@/domain/AntibiogramTableBuilder/RowInfo';
+import type CellInfo from '@/domain/AntibiogramTableBuilder/CellInfo';
+import type ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
 
 class TableElementFactory {
-  makeCell(data: SensitivityData) {
-    const value = data.getValue().toString();
+  makeCell(c: CellInfo) {
+    const data = c.data;
+    const value = data.map((d) => d.getValue() + '').join('\n');
+    // TODO: handle multiple data vs one data w/ ?tooltip
     return new FilledCell(value);
   }
 
@@ -22,19 +25,25 @@ class TableElementFactory {
 
   makeOrganismLabel(r: RowInfo) {
     const isolates = r.iso.toString();
-    const tooltip = r.info.toString();
+    const tooltips = r.info
+      .itemsToArray()
+      .map((si) => new Tooltip(si.toString()));
+    const tooltip = new Tooltip(tooltips);
     const labelText = r.org.getName() + ' (' + isolates + ')';
-    return this.makeLabel(labelText, tooltip);
+    return this.makeLabel(labelText, tooltip.toString());
   }
 
-  makeAntibioticLabel(a: AntibioticValue) {
-    return this.makeLabel(
-      a.getName(),
-      a
-        .getAntibiotics()
-        .map((abx) => abx.getRoute().toString())
-        .join(', ')
+  makeAntibioticLabel(a: ColumnInfo) {
+    const route = a.abx
+      .getAntibiotics()
+      .map((abx) => abx.getRoute().toString())
+      .join(', ');
+
+    const si = a.info.itemsToArray();
+    const tooltip = new Tooltip(
+      [...si, route].map((si) => new Tooltip(si.toString()))
     );
+    return this.makeLabel(a.abx.getName(), tooltip.toString());
   }
 
   makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {
