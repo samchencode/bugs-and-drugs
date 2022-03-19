@@ -1,26 +1,41 @@
-import { SampleInfo, type SensitivityData } from '@/domain/Antibiogram';
+import {
+  OrganismValue,
+  SampleInfo,
+  type SensitivityData,
+} from '@/domain/Antibiogram';
 import type Antibiogram from '@/domain/Antibiogram';
+
+const SPLIT_THRESHOLD = 0.3;
 
 function algo1(abg: Antibiogram) {
   const data = abg.getSensitivities();
   const uniqueRows: SensitivityData[][] = [];
+  const didntMeetThreshold: [OrganismValue, SampleInfo, SensitivityData[]][] =
+    [];
 
-  for (const org of abg.organisms) {
-    const dataForOrganism = data.filter((d) => d.getOrganism().is(org));
-    const uniqueSis = dataForOrganism
+  const getDataForOrganism = (org: OrganismValue) =>
+    data.filter((d) => d.getOrganism().is(org));
+  const getUniqueSisForData = (data: SensitivityData[]) =>
+    data
       .map((d) => d.getSampleInfo())
       .reduce<SampleInfo[]>(
         (ag, v) => (ag.find((si) => si.is(v)) ? ag : [...ag, v]),
         []
       );
+  const dataByOrganism = abg.organisms
+    .map<[OrganismValue, SensitivityData[]]>((o) => [o, getDataForOrganism(o)])
+    .map<[OrganismValue, SensitivityData[], SampleInfo[]]>(([o, d]) => [
+      o,
+      d,
+      getUniqueSisForData(d),
+    ]);
 
-    const didntMeetThreshold: [SampleInfo, SensitivityData[]][] = [];
-
+  for (const [org, dataForOrganism, uniqueSis] of dataByOrganism) {
     for (const si of uniqueSis) {
       const dataForOrganismAndSi = dataForOrganism.filter((d) =>
         d.getSampleInfo().is(si)
       );
-      const SPLIT_THRESHOLD = 0.3;
+
       const minNCol = abg.antibiotics.length;
       const nRowIsAboveThreshold =
         dataForOrganismAndSi.length / minNCol > SPLIT_THRESHOLD;
@@ -28,11 +43,15 @@ function algo1(abg: Antibiogram) {
       if (nRowIsAboveThreshold) {
         uniqueRows.push(dataForOrganismAndSi);
       } else {
-        didntMeetThreshold.push([si, dataForOrganismAndSi]);
+        didntMeetThreshold.push([org, si, dataForOrganismAndSi]);
       }
     }
+  }
 
-    for (const [thisSi, data] of didntMeetThreshold) {
+  for (const [org, , uniqueSis] of dataByOrganism) {
+    for (const [orgA, thisSi, data] of didntMeetThreshold) {
+      if (!org.is(orgA)) continue;
+
       // Case 3
       const [bestMatch] = uniqueSis
         .map((si) => [si, si.intersect(thisSi)])
