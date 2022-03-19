@@ -15,10 +15,9 @@ class NoInconsistentRowColumnLabelNumber implements Rule {
     if (typeof this.labels === 'undefined') return;
 
     const numRows = this.input.length;
-    const numColumns = this.input[0]?.length;
+    const numColumns = this.input[0]?.length ?? 0;
     const unequalRows = numRows !== this.labels.rows.length;
     const unequalColumns = numColumns !== this.labels.columns.length;
-
     if (unequalRows) throw new InconsistentRowLabelsError();
     if (unequalColumns) throw new InconsistentColumnLabelsError();
   }

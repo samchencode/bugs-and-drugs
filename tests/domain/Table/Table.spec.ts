@@ -56,6 +56,12 @@ describe('Table', () => {
       expect(table.getCells()).toEqual([]);
     });
 
+    it('should create new empty table via factory method with labels', () => {
+      const table = makeTable([], { labels: { rows: [], columns: [] } });
+      expect(table).toBeDefined();
+      expect(table.getCells()).toEqual([]);
+    });
+
     it('should create new table with data', () => {
       const table = makeTable(data);
       expect(table).toBeDefined();
