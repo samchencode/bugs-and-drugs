@@ -37,7 +37,7 @@ function fillMatrix(
       const data = row.data.filter((d) => column.describes(d.getAntibiotic()));
       if (data.length < 1) continue;
       const cellInfo = new CellInfo(row.organism, column.antibiotic, data);
-      matrix[i][j] = makeCell(cellInfo);
+      result[i][j] = makeCell(cellInfo);
     }
   }
   return result;
@@ -54,7 +54,7 @@ function makeAntibiogramTable(abg: Antibiogram) {
   const rowLabels = rows.map((r) => factory.makeRowLabel(r));
   const columnLabels = columns.map((c) => factory.makeColumnLabel(c));
   const matrix = fillMatrix(
-    factory.makeCell,
+    (c) => factory.makeCell(c),
     rows,
     columns,
     factory.makeEmptyMatrix(nRow, nCol)
