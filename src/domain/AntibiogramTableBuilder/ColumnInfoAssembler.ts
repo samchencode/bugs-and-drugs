@@ -5,7 +5,7 @@ import type {
 } from '@/domain/Antibiogram';
 import { ColumnInfo } from '@/domain/AntibiogramTableBuilder/ColumnInfo.1';
 
-export class ColumnInfoAssembler {
+class ColumnInfoAssembler {
   info: SampleInfo;
   data: SensitivityData[];
   antibiotics: AntibioticValue[];
@@ -34,3 +34,5 @@ export class ColumnInfoAssembler {
     });
   }
 }
+
+export default ColumnInfoAssembler;

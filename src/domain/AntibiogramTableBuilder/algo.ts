@@ -1,9 +1,9 @@
 import type Antibiogram from '@/domain/Antibiogram';
-import { RowAssembler } from '@/domain/AntibiogramTableBuilder/RowAssembler';
-import { ColumnInfoAssembler } from '@/domain/AntibiogramTableBuilder/ColumnInfoAssembler';
+import RowInfoAssembler from '@/domain/AntibiogramTableBuilder/RowInfoAssembler';
+import ColumnInfoAssembler from '@/domain/AntibiogramTableBuilder/ColumnInfoAssembler';
 
 function algo1(abg: Antibiogram) {
-  const assembler = new RowAssembler(
+  const assembler = new RowInfoAssembler(
     abg.getSensitivities(),
     abg.organisms,
     abg.antibiotics

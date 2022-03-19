@@ -1,17 +1,21 @@
 import type { Table, Cell } from '@/domain/Table';
 import type Antibiogram from '@/domain/Antibiogram';
-import {
-  UnknownNumberOfIsolates,
-  type NumberOfIsolates,
-  type OrganismValue,
-  type SampleInfo,
-  type SensitivityData,
-} from '@/domain/Antibiogram';
+import type { SampleInfo, SensitivityData } from '@/domain/Antibiogram';
 import { Label, makeTable } from '@/domain/Table';
 import TableElementFactory from '@/domain/AntibiogramTableBuilder/TableElementFactory';
 import RowInfo from '@/domain/AntibiogramTableBuilder/RowInfo';
 import CellInfo from '@/domain/AntibiogramTableBuilder/CellInfo';
 import ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
+import RowInfoAssembler from '@/domain/AntibiogramTableBuilder/RowInfoAssembler';
+
+function makeAntibiogramTable(abg: Antibiogram) {
+  const assembler = new RowInfoAssembler(
+    abg.getSensitivities(),
+    abg.organisms,
+    abg.antibiotics
+  );
+  const rows = assembler.assembleRows();
+}
 
 class AntibiogramTableBuilder {
   #labels?: {

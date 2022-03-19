@@ -15,7 +15,7 @@ type ByOrganismDatum = {
   dataBySi: [SampleInfo, SensitivityData[]][];
 };
 
-export class RowAssembler {
+class RowInfoAssembler {
   readonly SPLIT_THRESHOLD = 0.3;
   data: SensitivityData[];
   dataByOrganism: ByOrganismDatum[];
@@ -123,3 +123,5 @@ export class RowAssembler {
     return rows;
   }
 }
+
+export default RowInfoAssembler;
