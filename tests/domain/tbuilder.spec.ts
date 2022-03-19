@@ -31,14 +31,14 @@ describe('testing the builder...', () => {
 
   test('idk2', () => {
     const result = algo2(abg);
-    const names = result.map((r) => r.abx.getName());
-    const commons = result.map((r) => '' + r.commonSi);
+    const names = result.map((r) => r.antibiotic.getName());
+    const commons = result.map((r) => '' + r.info);
     expect(names).toEqual([
       'Azithromycin',
       'Ampicillin',
       'Ampicillin',
       'Nitrofurantoin',
     ]);
-    expect(commons).toEqual(['undefined', 'undefined', 'undefined', 'Urine']);
+    expect(commons).toEqual(['', '', '', 'Urine']);
   });
 });
