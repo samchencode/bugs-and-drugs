@@ -41,12 +41,20 @@ function serve() {
 /** @type {import('rollup').RollupOptions} */
 export default {
   input: 'src/main.ts',
-  output: {
-    sourcemap: true,
-    format: 'iife',
-    name: 'app',
-    file: 'public/build/bundle.js',
-  },
+  output: [
+    {
+      sourcemap: true,
+      format: 'iife',
+      name: 'app',
+      file: 'public/build/bundle.js',
+    },
+    {
+      sourcemap: false,
+      format: 'iife',
+      name: 'app',
+      file: 'docs/build/bundle.js',
+    },
+  ],
   plugins: [
     svelte({
       preprocess: sveltePreprocess({ sourceMap: !production }),
@@ -67,8 +75,22 @@ export default {
     }),
 
     copy({
-      targets: [{ src: 'src/data/**/*', dest: 'public/data' }],
+      targets: [
+        { src: 'src/data/**/*', dest: ['public/data', 'docs/data'] },
+        {
+          src: ['public/index.html', 'public/global.css', 'public/favicon.png'],
+          dest: 'docs',
+        },
+        { src: 'public/build/bundle.css', dest: 'docs/build' },
+      ],
     }),
+
+    // copy({
+    //   targets: [
+    //     { src: 'src/index.html', dest: 'dist/public' },
+    //     { src: 'public/**/*', dest: 'docs' },
+    //   ],
+    // }),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In

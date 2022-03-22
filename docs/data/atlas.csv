@@ -1,0 +1,8 @@
+﻿region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gram,csv
+"Binghamton, NY",Lourdes,201906,202006,1,inpatient,positive,oll_inpt_gp_2019.csv
+"Binghamton, NY",Lourdes,201906,202006,2,inpatient,negative,oll_inpt_gn_2019.csv
+"Binghamton, NY",Lourdes,201906,202006,3,outpatient,positive,oll_outpt_gp_2019.csv
+"Binghamton, NY",Lourdes,201906,202006,4,outpatient,negative,oll_outpt_gn_2019.csv
+"Binghamton, NY",UHS,202001,202101,5,non-urine,negative,uhs_nonurine_gn_2020.csv
+"Binghamton, NY",UHS,202001,202101,6,non-urine,positive,uhs_nonurine_gp_2020.csv
+"Binghamton, NY",UHS,202001,202101,7,non-urine,unspecified,uhs_urine_2020.csv
