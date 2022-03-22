@@ -63,7 +63,7 @@
       state: 'Binghamton, NY',
       institution: 'UHS',
       interval: 'January 2020-January 2021',
-      details: 'non-urine',
+      details: 'urine',
       gramStain: 'unspecified',
       id: 7,
     },
