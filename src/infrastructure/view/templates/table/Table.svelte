@@ -23,9 +23,9 @@
     if (table && window.visualViewport.width < table.offsetWidth) {
       smallTable = false;
     } else smallTable = true;
-    console.log(smallTable);
-    console.log(window.visualViewport.width);
-    console.log(table?.offsetWidth);
+    // console.log(smallTable);
+    // console.log(window.visualViewport.width);
+    // console.log(table?.offsetWidth);
   };
 
   window.addEventListener('resize', tableSize);

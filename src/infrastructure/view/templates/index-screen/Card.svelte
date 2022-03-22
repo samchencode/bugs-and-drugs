@@ -1,12 +1,14 @@
 <script lang="ts">
   export let title: string;
   export let subtitle: string;
+  export let dates: string;
 </script>
 
 <div class="card">
   <div class="card-left">
     <h2 class="title">{title}</h2>
     <p class="subtitle">{subtitle}</p>
+    <p class="dates">{dates}</p>
   </div>
   <button class="fav-button button--unset clickable">
     <ion-icon name="star-outline" class="icon" />
@@ -34,6 +36,9 @@
   }
 
   .subtitle {
+    font-size: var(--font-sm);
+  }
+  .dates {
     font-size: var(--font-sm);
   }
 
