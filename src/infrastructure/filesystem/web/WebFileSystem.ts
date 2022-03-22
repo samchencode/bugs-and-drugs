@@ -21,7 +21,7 @@ class WebFileSystem implements FileSystem {
   }
 
   #resolve(baseUri: string, ...paths: string[]) {
-    const base = production ? GH_PAGES_URL_PREFIX + baseUri : baseUri;
+    const base = GH_PAGES_URL_PREFIX + baseUri;
     if (base === '') throw Error('Invalid uri: ');
 
     const exploded = paths.flatMap((p) => p.split('/')).filter((p) => p !== '');
