@@ -1,0 +1,55 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,source
+ENTEROCOCCUS FAECALIS,Nitrofurantoin--Urine use only,#N/A,73,100,"inpatient, urine"
+ENTEROCOCCUS FAECIUM,Nitrofurantoin--Urine use only,#N/A,35,11,"inpatient, urine"
+COAGULASE NEG. STAPH,Nitrofurantoin--Urine use only,#N/A,60,98,"inpatient, urine"
+MRSA,Nitrofurantoin--Urine use only,#N/A,107,99,"inpatient, urine"
+MSSA,Nitrofurantoin--Urine use only,#N/A,122,100,"inpatient, urine"
+ENTEROCOCCUS FAECALIS,Tetracycline,#N/A,73,21,inpatient
+ENTEROCOCCUS FAECIUM,Tetracycline,#N/A,35,11,inpatient
+COAGULASE NEG. STAPH,Tetracycline,#N/A,60,73,inpatient
+MRSA,Tetracycline,#N/A,107,93,inpatient
+MSSA,Tetracycline,#N/A,122,90,inpatient
+ENTEROCOCCUS FAECALIS,Levofloxacin,#N/A,73,71,inpatient
+ENTEROCOCCUS FAECIUM,Levofloxacin,#N/A,35,3,inpatient
+COAGULASE NEG. STAPH,Levofloxacin,#N/A,60,65,inpatient
+MRSA,Levofloxacin,#N/A,107,36,inpatient
+MSSA,Levofloxacin,#N/A,122,84,inpatient
+S. PNEUMONIAE (Inpt + outpt),Levofloxacin,#N/A,43,100,inpatient
+S. PNEUMONIAE (Inpt + outpt),Ceftriaxone,#N/A,43,100,inpatient
+ENTEROCOCCUS FAECALIS,Ciprofloxacin,#N/A,73,70,inpatient
+ENTEROCOCCUS FAECIUM,Ciprofloxacin,#N/A,35,3,inpatient
+COAGULASE NEG. STAPH,Ciprofloxacin,#N/A,60,65,inpatient
+MRSA,Ciprofloxacin,#N/A,107,36,inpatient
+MSSA,Ciprofloxacin,#N/A,122,83,inpatient
+ENTEROCOCCUS FAECALIS,Gentamicin,#N/A,73,60,inpatient
+ENTEROCOCCUS FAECIUM,Gentamicin,#N/A,35,94,inpatient
+COAGULASE NEG. STAPH,Gentamicin,#N/A,60,93,inpatient
+MRSA,Gentamicin,#N/A,107,99,inpatient
+MSSA,Gentamicin,#N/A,122,99,inpatient
+MRSA,Cefazolin,#N/A,107,0,inpatient
+MSSA,Cefazolin,#N/A,122,100,inpatient
+COAGULASE NEG. STAPH,Clindamycin,#N/A,60,51,inpatient
+MRSA,Clindamycin,#N/A,107,40,inpatient
+MSSA,Clindamycin,#N/A,122,75,inpatient
+ENTEROCOCCUS FAECALIS,Vancomycin,#N/A,73,99,inpatient
+ENTEROCOCCUS FAECIUM,Vancomycin,#N/A,35,20,inpatient
+COAGULASE NEG. STAPH,Vancomycin,#N/A,60,100,inpatient
+MRSA,Vancomycin,#N/A,107,100,inpatient
+MSSA,Vancomycin,#N/A,122,100,inpatient
+S. PNEUMONIAE (Inpt + outpt),Vancomycin,#N/A,43,100,inpatient
+ENTEROCOCCUS FAECALIS,Penicillin,#N/A,73,100,inpatient
+ENTEROCOCCUS FAECIUM,Penicillin,#N/A,35,3,inpatient
+S. PNEUMONIAE (Inpt + outpt),Penicillin,#N/A,43,100,inpatient
+COAGULASE NEG. STAPH,Oxacillin,#N/A,60,43,inpatient
+MRSA,Oxacillin,#N/A,107,0,inpatient
+MSSA,Oxacillin,#N/A,122,100,inpatient
+COAGULASE NEG. STAPH,Trimethroprim/sulfamethoxazole,#N/A,60,68,inpatient
+MRSA,Trimethroprim/sulfamethoxazole,#N/A,107,95,inpatient
+MSSA,Trimethroprim/sulfamethoxazole,#N/A,122,97,inpatient
+S. PNEUMONIAE (Inpt + outpt),Trimethroprim/sulfamethoxazole,#N/A,43,95,inpatient
+ENTEROCOCCUS FAECALIS,Ampicillin,#N/A,73,100,inpatient
+ENTEROCOCCUS FAECIUM,Ampicillin,#N/A,35,3,inpatient
+COAGULASE NEG. STAPH,Erythromycin,#N/A,60,37,inpatient
+MRSA,Erythromycin,#N/A,107,8,inpatient
+MSSA,Erythromycin,#N/A,122,61,inpatient
+S. PNEUMONIAE (Inpt + outpt),Erythromycin,#N/A,43,79,inpatient
