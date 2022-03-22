@@ -3,7 +3,7 @@ import type { Fetch } from '@/infrastructure/filesystem/web/Fetch';
 import WebFile from '@/infrastructure/filesystem/web/WebFile';
 import { GH_PAGES_URL_PREFIX } from '@/constants';
 
-const PUBLIC_DATA_DIR = '/data';
+const PUBLIC_DATA_DIR = 'data/';
 
 class WebFileSystem implements FileSystem {
   #fetch: Fetch;
@@ -17,11 +17,10 @@ class WebFileSystem implements FileSystem {
   }
 
   getFile(uri: string): WebFile {
-    return new WebFile(this.#fetch, this.#resolve('/', uri));
+    return new WebFile(this.#fetch, this.#resolve(GH_PAGES_URL_PREFIX, uri));
   }
 
-  #resolve(baseUri: string, ...paths: string[]) {
-    const base = GH_PAGES_URL_PREFIX + baseUri;
+  #resolve(base: string, ...paths: string[]) {
     if (base === '') throw Error('Invalid uri: ');
 
     const exploded = paths.flatMap((p) => p.split('/')).filter((p) => p !== '');
