@@ -49,7 +49,7 @@ export default {
       file: 'public/build/bundle.js',
     },
     {
-      sourcemap: false,
+      sourcemap: true,
       format: 'iife',
       name: 'app',
       file: 'docs/build/bundle.js',
