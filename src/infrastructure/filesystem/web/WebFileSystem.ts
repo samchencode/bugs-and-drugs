@@ -3,7 +3,6 @@ import type { Fetch } from '@/infrastructure/filesystem/web/Fetch';
 import WebFile from '@/infrastructure/filesystem/web/WebFile';
 import { GH_PAGES_URL_PREFIX } from '@/constants';
 
-const production = !process.env.ROLLUP_WATCH;
 const PUBLIC_DATA_DIR = '/data';
 
 class WebFileSystem implements FileSystem {

@@ -53,6 +53,9 @@ export default {
       format: 'iife',
       name: 'app',
       file: 'docs/build/bundle.js',
+      globals: {
+        production,
+      },
     },
   ],
   plugins: [
