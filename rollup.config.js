@@ -78,19 +78,12 @@ export default {
       targets: [
         { src: 'src/data/**/*', dest: ['public/data', 'docs/data'] },
         {
-          src: ['public/index.html', 'public/global.css', 'public/favicon.png'],
+          src: ['public/global.css', 'public/favicon.png'],
           dest: 'docs',
         },
         { src: 'public/build/bundle.css', dest: 'docs/build' },
       ],
     }),
-
-    // copy({
-    //   targets: [
-    //     { src: 'src/index.html', dest: 'dist/public' },
-    //     { src: 'public/**/*', dest: 'docs' },
-    //   ],
-    // }),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
