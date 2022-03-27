@@ -1,5 +1,6 @@
 <script lang="ts">
   import { link } from 'svelte-spa-router';
+  import { title } from '../index-screen/AntibiogramStore';
 
   let navMenuHidden = true;
 </script>
@@ -8,7 +9,7 @@
   <a class="back" href="/" use:link>
     <ion-icon name="arrow-back-outline" />
   </a>
-  <h1 class="title">Bugs 'n Drugs</h1>
+  <h1 class="title">{$title}</h1>
   <button
     class="nav-menu-toggle"
     on:click={() => (navMenuHidden = !navMenuHidden)}

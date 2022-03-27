@@ -43,7 +43,8 @@
           {#each $state.columnHeaders as columnHeader, j (columnHeader.id)}
             <ColumnHeader
               {columnHeader}
-              toggleHighlight={() => state.toggleHighlightColumn(j)}
+              highlight={() => state.highlightColumn(j)}
+              unhighlight={() => state.unhighlightColumn(j)}
             />
           {/each}
         </tr>
@@ -53,8 +54,10 @@
           <TableRow
             {rowHeader}
             rowOfCells={$state.grid[i]}
-            toggleHighlightCells={(j) => state.toggleHighlightCell(i, j)}
-            toggleHighlight={() => state.toggleHighlightRow(i)}
+            highlightCells={(j) => state.highlightCell(i, j)}
+            unhighlightCells={(j) => state.unhighlightCell(i, j)}
+            highlight={() => state.highlightRow(i)}
+            unhighlight={() => state.unhighlightRow(i)}
           />
         {/each}
       </tbody>

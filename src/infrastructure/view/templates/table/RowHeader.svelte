@@ -31,7 +31,6 @@
           class="groupIcon clickable"
           on:click={() => {
             state.expandGroup(rowHeader.getGroup());
-            console.log('expanded');
           }}
         >
           <ion-icon
@@ -44,7 +43,6 @@
           class="groupIcon clickable"
           on:click={() => {
             state.collapseGroup(rowHeader.getGroup());
-            console.log('collapsed');
           }}
         >
           <ion-icon

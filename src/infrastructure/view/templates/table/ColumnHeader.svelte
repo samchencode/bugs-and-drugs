@@ -1,7 +1,8 @@
 <script lang="ts">
   export let columnHeader: any;
   import ToolTip from '@/infrastructure/view/templates/table/Tooltip.svelte';
-  export let toggleHighlight: () => void;
+  export let highlight: () => void;
+  export let unhighlight: () => void;
 </script>
 
 <th
@@ -9,10 +10,10 @@
   class="column-header has-tooltip"
   class:active={columnHeader.getActive()}
   class:highlighted={columnHeader.getHighlighted()}
-  on:focus={() => toggleHighlight()}
-  on:mouseover={() => toggleHighlight()}
-  on:blur={() => toggleHighlight()}
-  on:mouseout={() => toggleHighlight()}
+  on:focus={() => highlight()}
+  on:mouseover={() => highlight()}
+  on:blur={() => unhighlight()}
+  on:mouseout={() => unhighlight()}
 >
   <span class="antibiotic-name">{columnHeader.getValue()}</span>
   <ToolTip tooltip={columnHeader.getTooltip()} />

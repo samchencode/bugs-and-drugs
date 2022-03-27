@@ -3,25 +3,27 @@
   import RowHeader from './RowHeader.svelte';
   export let rowOfCells: any;
   export let rowHeader: any;
-  export let toggleHighlightCells: (j: number) => void;
-  export let toggleHighlight: () => void;
+  export let highlightCells: (j: number) => void;
+  export let unhighlightCells: (j: number) => void;
+  export let highlight: () => void;
+  export let unhighlight: () => void;
 </script>
 
 <tr>
   <RowHeader
     {rowHeader}
-    on:focus={() => toggleHighlight()}
-    on:mouseover={() => toggleHighlight()}
-    on:blur={() => toggleHighlight()}
-    on:mouseout={() => toggleHighlight()}
+    on:focus={() => highlight()}
+    on:mouseover={() => highlight()}
+    on:blur={() => unhighlight()}
+    on:mouseout={() => unhighlight()}
   />
   {#each rowOfCells as cell, j (cell.id)}
     <Cell
       {cell}
-      on:focus={() => toggleHighlightCells(j)}
-      on:mouseover={() => toggleHighlightCells(j)}
-      on:blur={() => toggleHighlightCells(j)}
-      on:mouseout={() => toggleHighlightCells(j)}
+      on:focus={() => highlightCells(j)}
+      on:mouseover={() => highlightCells(j)}
+      on:blur={() => unhighlightCells(j)}
+      on:mouseout={() => unhighlightCells(j)}
     />
   {/each}
 </tr>

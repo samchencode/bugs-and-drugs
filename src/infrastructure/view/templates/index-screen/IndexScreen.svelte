@@ -5,6 +5,7 @@
   import type { WebAntibiogramGroup } from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
   import Card from './Card.svelte';
   import { GramStain } from '@/domain/Organism/Quality';
+  import { antibiogram } from './AntibiogramStore';
 
   const controller = getContext<AntibiogramGroupController>(
     'antibiogramGroupController'
@@ -63,16 +64,13 @@
       state: 'Binghamton, NY',
       institution: 'UHS',
       interval: 'January 2020-January 2021',
-      details: 'non-urine',
+      details: 'urine',
       gramStain: 'unspecified',
       id: 7,
     },
   ];
   onMount(async () => {
     vm = await controller.index();
-
-    console.log(vm);
-    console.log(testVm);
   });
 </script>
 
@@ -83,10 +81,23 @@
     <ul class="list">
       {#each testVm as { state, institution, interval, details, gramStain, id }}
         <li>
-          <a class="card-nav" href={'/antibiogram/' + id} use:link>
+          <a
+            class="card-nav"
+            href={'/antibiogram/' + id}
+            use:link
+            on:click={() =>
+              antibiogram.setAntibiogram(
+                state,
+                institution,
+                interval,
+                details,
+                gramStain,
+                id
+              )}
+          >
             <Card
               title={institution + ', ' + state}
-              subtitle={details + ', ' + gramStain}
+              subtitle={details + ', gram ' + gramStain}
               dates={interval.toString()}
             />
           </a>
