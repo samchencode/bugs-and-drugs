@@ -1,8 +1,29 @@
 <script lang="ts">
+  import type IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
+  import type AntibiogramTitleController from '@/infrastructure/view/controllers/AntibiogramTitleController';
+  import { getContext } from 'svelte';
+
   import { link } from 'svelte-spa-router';
-  import { title } from '../index-screen/AntibiogramStore';
+  import {
+    antibiogram,
+    title,
+  } from '../index-screen/AntibiogramNavigationStore';
 
   let navMenuHidden = true;
+
+  export let params: any;
+  const controller = getContext<AntibiogramTitleController>(
+    'antibiogramTitleController'
+  );
+
+  controller.index().then((titles) => {
+    if (titles !== null) {
+      titles.forEach((title) => {
+        if (title.id.toString() == window.location.href.split('/').pop())
+          antibiogram.setAntibiogram(title);
+      });
+    }
+  });
 </script>
 
 <nav>

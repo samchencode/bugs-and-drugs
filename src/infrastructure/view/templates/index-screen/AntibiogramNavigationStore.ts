@@ -1,6 +1,6 @@
 import { derived, writable, type Writable } from 'svelte/store';
 
-interface Antibiogram {
+interface AntibiogramTitle {
   state: string;
   institution: string;
   interval: string;
@@ -9,7 +9,7 @@ interface Antibiogram {
   id: number | null;
 }
 
-const antibiogramStore: Writable<Antibiogram> = writable({
+const antibiogramStore: Writable<AntibiogramTitle> = writable({
   state: '',
   institution: '',
   interval: '',
@@ -20,21 +20,14 @@ const antibiogramStore: Writable<Antibiogram> = writable({
 
 const { subscribe, set } = antibiogramStore;
 
-const setAntibiogram = (
-  state: string,
-  institution: string,
-  interval: string,
-  details: string,
-  gramStain: string,
-  id: number
-) => {
+const setAntibiogram = (abgT: AntibiogramTitle) => {
   set({
-    state: state,
-    institution: institution,
-    interval: interval,
-    details: details,
-    gramStain: gramStain,
-    id: id,
+    state: abgT.state,
+    institution: abgT.institution,
+    interval: abgT.interval,
+    details: abgT.details,
+    gramStain: abgT.gramStain,
+    id: abgT.id,
   });
 };
 
@@ -42,7 +35,7 @@ const title = derived(antibiogramStore, ($abg) => {
   if ($abg.id == null) {
     return 'No antibiogram data';
   } else
-    return `${$abg.institution}, ${$abg.state} : ${$abg.interval} ( ${$abg.details}, gram ${$abg.gramStain})`;
+    return `${$abg.institution}, ${$abg.state} : ${$abg.interval} (${$abg.details}, gram ${$abg.gramStain})`;
 });
 
 export const antibiogram = { subscribe, setAntibiogram };

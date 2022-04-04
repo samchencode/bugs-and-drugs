@@ -7,6 +7,9 @@ import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import IndexAntibiogramGroupsAction from '@/application/IndexAntibiogramGroupsAction';
 import WebAntibiogramGroupsPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 import WebFileSystem from '@/infrastructure/filesystem/web/WebFileSystem';
+import IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
+import AntibiogramTitleController from '@/infrastructure/view/controllers/AntibiogramTitleController';
+import WebAntibiogramTitlePresenter from '@/infrastructure/view/presenters/WebAntibiogramTitlePresenter';
 
 const dependencies = new Module();
 
@@ -14,6 +17,7 @@ const dependencies = new Module();
 // * - Actions
 dependencies.type('showAntibiogramAction', ShowAntibiogramAction);
 dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramGroupsAction);
+dependencies.type('indexAntibiogramTitleAction', IndexAntibiogramTitleAction);
 
 // * ADAPTERS
 // * - Repositories
@@ -22,11 +26,13 @@ dependencies.type('filesystem', WebFileSystem);
 // * - Controllers
 dependencies.type('tableController', TableController);
 dependencies.type('antibiogramGroupController', AntibiogramGroupController);
+dependencies.type('antibiogramTitleController', AntibiogramTitleController);
 // * - Presenter
 dependencies.type(
   'webAntibiogramGroupsPresenter',
   WebAntibiogramGroupsPresenter
 );
+dependencies.type('webAntibiogramTitlePresenter', WebAntibiogramTitlePresenter);
 
 // * INJECTED EXTERNAL DEPENDENCIES
 dependencies.value('fetch', fetch.bind(window));
