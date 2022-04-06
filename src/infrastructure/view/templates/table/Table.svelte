@@ -15,19 +15,14 @@
       state.loadTable(table);
       tableSize();
     });
-
+  //smallTable tracks the size of the of the table relative to the viewport to determine formatting.
   let smallTable = true;
-
   const tableSize = () => {
     const table = document.getElementById('table');
     if (table && window.visualViewport.width < table.offsetWidth) {
       smallTable = false;
     } else smallTable = true;
-    // console.log(smallTable);
-    // console.log(window.visualViewport.width);
-    // console.log(table?.offsetWidth);
   };
-
   window.addEventListener('resize', tableSize);
   tableSize();
 </script>

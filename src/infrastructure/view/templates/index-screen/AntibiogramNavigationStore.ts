@@ -34,9 +34,21 @@ const setAntibiogram = (abgT: AntibiogramTitle) => {
 const title = derived(antibiogramStore, ($abg) => {
   if ($abg.id == null) {
     return 'No antibiogram data';
-  } else
-    return `${$abg.institution}, ${$abg.state} : ${$abg.interval} (${$abg.details}, gram ${$abg.gramStain})`;
+  } else return `${$abg.institution}, ${$abg.state}`;
 });
-
+const interval = derived(antibiogramStore, ($abg) => {
+  if ($abg.id == null) {
+    return 'NA';
+  } else {
+    return `${$abg.interval}`;
+  }
+});
+const subtitle = derived(antibiogramStore, ($abg) => {
+  if ($abg.id == null) {
+    return 'NA';
+  } else {
+    return `${$abg.details}, gram ${$abg.gramStain}`;
+  }
+});
 export const antibiogram = { subscribe, setAntibiogram };
-export { title };
+export { title, interval, subtitle };

@@ -29,6 +29,7 @@
     border-bottom: 1px solid black;
     background-color: var(--main-bg-color);
     vertical-align: bottom;
+    font-size: var(--table-font-size);
   }
 
   .antibiotic-name {

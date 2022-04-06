@@ -31,6 +31,7 @@
     <ion-icon name="arrow-back-outline" />
   </a>
   <h1 class="title">{$title}</h1>
+
   <button
     class="nav-menu-toggle"
     on:click={() => (navMenuHidden = !navMenuHidden)}
@@ -47,6 +48,7 @@
   nav {
     position: sticky;
     top: 0;
+    left: 0;
     z-index: 1000;
     padding: 0 var(--space-md);
     height: 60px;
