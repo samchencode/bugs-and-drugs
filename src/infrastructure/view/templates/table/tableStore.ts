@@ -30,6 +30,29 @@ function _toggleHighlightRow(
   return { grid, header };
 }
 
+function _highlightRow(
+  row: number,
+  grid: TableElement[][],
+  header: RowHeader[]
+) {
+  grid[row].forEach((cell) => {
+    cell.highlight();
+  });
+  header[row].highlight();
+  return { grid, header };
+}
+function _unhighlightRow(
+  row: number,
+  grid: TableElement[][],
+  header: RowHeader[]
+) {
+  grid[row].forEach((cell) => {
+    cell.unHighlight();
+  });
+  header[row].unHighlight();
+  return { grid, header };
+}
+
 function _toggleHighlightColumn(
   column: number,
   grid: TableElement[][],
@@ -42,6 +65,30 @@ function _toggleHighlightColumn(
   return { grid, header };
 }
 
+function _highlightColumn(
+  column: number,
+  grid: TableElement[][],
+  header: TableElement[]
+) {
+  grid.forEach((row) => {
+    row[column].highlight();
+  });
+  header[column].highlight();
+  return { grid, header };
+}
+
+function _unhighlightColumn(
+  column: number,
+  grid: TableElement[][],
+  header: TableElement[]
+) {
+  grid.forEach((row) => {
+    row[column].unHighlight();
+  });
+  header[column].unHighlight();
+  return { grid, header };
+}
+
 const toggleHighlightRow = (i: number) => {
   update((s) => {
     s.rowHeaders[i].toggleActive();
@@ -50,10 +97,41 @@ const toggleHighlightRow = (i: number) => {
   });
 };
 
+const highlightRow = (i: number) => {
+  update((s) => {
+    s.rowHeaders[i].setActive();
+    const { grid, header } = _highlightRow(i, s.grid, s.rowHeaders);
+    return { ...s, grid, rowHeaders: header };
+  });
+};
+const unhighlightRow = (i: number) => {
+  update((s) => {
+    s.rowHeaders[i].unsetActive();
+    const { grid, header } = _unhighlightRow(i, s.grid, s.rowHeaders);
+    return { ...s, grid, rowHeaders: header };
+  });
+};
+
 const toggleHighlightColumn = (j: number) => {
   update((s) => {
     s.columnHeaders[j].toggleActive();
     const { grid, header } = _toggleHighlightColumn(j, s.grid, s.columnHeaders);
+    return { ...s, grid, columnHeaders: header };
+  });
+};
+
+const highlightColumn = (j: number) => {
+  update((s) => {
+    s.columnHeaders[j].setActive();
+    const { grid, header } = _highlightColumn(j, s.grid, s.columnHeaders);
+    return { ...s, grid, columnHeaders: header };
+  });
+};
+
+const unhighlightColumn = (j: number) => {
+  update((s) => {
+    s.columnHeaders[j].unsetActive();
+    const { grid, header } = _unhighlightColumn(j, s.grid, s.columnHeaders);
     return { ...s, grid, columnHeaders: header };
   });
 };
@@ -86,13 +164,70 @@ const toggleHighlightCell = (i: number, j: number) => {
     };
   });
 };
+
+const highlightCell = (i: number, j: number) => {
+  update((s) => {
+    let newGrid = s.grid.slice();
+    let newRowHeaders = s.rowHeaders.slice();
+    let newColumnHeaders = s.columnHeaders.slice();
+
+    newGrid[i][j].setActive();
+
+    ({ grid: newGrid, header: newRowHeaders } = _highlightRow(
+      i,
+      newGrid,
+      newRowHeaders
+    ));
+
+    ({ grid: newGrid, header: newColumnHeaders } = _highlightColumn(
+      j,
+      newGrid,
+      newColumnHeaders
+    ));
+
+    return {
+      grid: newGrid,
+      rowHeaders: newRowHeaders,
+      columnHeaders: newColumnHeaders,
+      groups: s.groups,
+    };
+  });
+};
+
+const unhighlightCell = (i: number, j: number) => {
+  update((s) => {
+    let newGrid = s.grid.slice();
+    let newRowHeaders = s.rowHeaders.slice();
+    let newColumnHeaders = s.columnHeaders.slice();
+
+    newGrid[i][j].unsetActive();
+
+    ({ grid: newGrid, header: newRowHeaders } = _unhighlightRow(
+      i,
+      newGrid,
+      newRowHeaders
+    ));
+
+    ({ grid: newGrid, header: newColumnHeaders } = _unhighlightColumn(
+      j,
+      newGrid,
+      newColumnHeaders
+    ));
+
+    return {
+      grid: newGrid,
+      rowHeaders: newRowHeaders,
+      columnHeaders: newColumnHeaders,
+      groups: s.groups,
+    };
+  });
+};
+
 const expandGroup = (group: TableGroup) => {
   loadTable(group.expand());
-  console.log('expanded one');
 };
 const collapseGroup = (group: TableGroup) => {
   loadTable(group.collapse());
-  console.log('collapsed one');
 };
 const loadTable = (table: Table) => {
   const groupArray: TableGroup[] = [];
@@ -124,7 +259,6 @@ const loadTable = (table: Table) => {
       .map((label: Label, index) => new TableElement(index, label)),
     groups: groupArray,
   });
-  console.log('table loaded');
 };
 const expandAllGroups = () => {
   update((s) => {
@@ -147,7 +281,6 @@ const expandAllGroups = () => {
   //     }
   //   } else return s;
   // });
-  console.log('expanded all');
 };
 const collapseAllGroups = () => {
   update((s) => {
@@ -170,7 +303,6 @@ const collapseAllGroups = () => {
   //     }
   //   } else return s;
   // });
-  console.log('collapsed all');
 };
 export const state = {
   subscribe,
@@ -178,6 +310,12 @@ export const state = {
   toggleHighlightCell,
   toggleHighlightColumn,
   toggleHighlightRow,
+  highlightCell,
+  unhighlightCell,
+  highlightColumn,
+  unhighlightColumn,
+  highlightRow,
+  unhighlightRow,
   expandGroup,
   collapseGroup,
   expandAllGroups,

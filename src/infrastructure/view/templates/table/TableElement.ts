@@ -25,6 +25,18 @@ class TableElement {
   toggleHighlighted() {
     this.#highlighted = !this.#highlighted;
   }
+  setActive() {
+    this.#active = true;
+  }
+  unsetActive() {
+    this.#active = false;
+  }
+  highlight() {
+    this.#highlighted = true;
+  }
+  unHighlight() {
+    this.#highlighted = false;
+  }
   getValue(): string {
     return this.#value;
   }

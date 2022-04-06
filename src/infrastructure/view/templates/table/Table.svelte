@@ -15,19 +15,14 @@
       state.loadTable(table);
       tableSize();
     });
-
+  //smallTable tracks the size of the of the table relative to the viewport to determine formatting.
   let smallTable = true;
-
   const tableSize = () => {
     const table = document.getElementById('table');
     if (table && window.visualViewport.width < table.offsetWidth) {
       smallTable = false;
     } else smallTable = true;
-    // console.log(smallTable);
-    // console.log(window.visualViewport.width);
-    // console.log(table?.offsetWidth);
   };
-
   window.addEventListener('resize', tableSize);
   tableSize();
 </script>
@@ -43,7 +38,8 @@
           {#each $state.columnHeaders as columnHeader, j (columnHeader.id)}
             <ColumnHeader
               {columnHeader}
-              toggleHighlight={() => state.toggleHighlightColumn(j)}
+              highlight={() => state.highlightColumn(j)}
+              unhighlight={() => state.unhighlightColumn(j)}
             />
           {/each}
         </tr>
@@ -53,8 +49,10 @@
           <TableRow
             {rowHeader}
             rowOfCells={$state.grid[i]}
-            toggleHighlightCells={(j) => state.toggleHighlightCell(i, j)}
-            toggleHighlight={() => state.toggleHighlightRow(i)}
+            highlightCells={(j) => state.highlightCell(i, j)}
+            unhighlightCells={(j) => state.unhighlightCell(i, j)}
+            highlight={() => state.highlightRow(i)}
+            unhighlight={() => state.unhighlightRow(i)}
           />
         {/each}
       </tbody>
@@ -65,7 +63,10 @@
 <style>
   .table-window {
     position: relative;
-    top: 60px;
+    /* top: 60px; */
+    overflow-x: auto;
+    overflow-y: hidden;
+    overflow-y: clip;
   }
 
   .small-table {
@@ -77,7 +78,8 @@
   .antibiogram-table {
     position: relative;
     font-size: var(--table-font-size);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+    border: 1px solid black;
   }
 
   .antibiogram-table tbody tr {

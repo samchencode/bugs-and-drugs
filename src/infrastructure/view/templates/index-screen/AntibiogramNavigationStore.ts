@@ -1,18 +1,54 @@
-import type { AntibiogramId } from '@/domain/Antibiogram';
-import { writable, type Writable } from 'svelte/store';
+import { derived, writable, type Writable } from 'svelte/store';
 
-interface AntibiogramNavigation {
-  title: string;
-  subtitle: string;
-  id: AntibiogramId;
+interface AntibiogramTitle {
+  state: string;
+  institution: string;
+  interval: string;
+  details: string;
+  gramStain: string;
+  id: number | null;
 }
 
-const { subscribe, set }: Writable<AntibiogramNavigation | null> =
-  writable(null);
+const antibiogramStore: Writable<AntibiogramTitle> = writable({
+  state: '',
+  institution: '',
+  interval: '',
+  details: '',
+  gramStain: '',
+  id: null,
+});
 
-const navigate = (id: AntibiogramId) => {
-  // get info about antibiogram here
-  set(null);
+const { subscribe, set } = antibiogramStore;
+
+const setAntibiogram = (abgT: AntibiogramTitle) => {
+  set({
+    state: abgT.state,
+    institution: abgT.institution,
+    interval: abgT.interval,
+    details: abgT.details,
+    gramStain: abgT.gramStain,
+    id: abgT.id,
+  });
 };
 
-export const Antibiograms = { subscribe, navigate };
+const title = derived(antibiogramStore, ($abg) => {
+  if ($abg.id == null) {
+    return 'No antibiogram data';
+  } else return `${$abg.institution}, ${$abg.state}`;
+});
+const interval = derived(antibiogramStore, ($abg) => {
+  if ($abg.id == null) {
+    return 'NA';
+  } else {
+    return `${$abg.interval}`;
+  }
+});
+const subtitle = derived(antibiogramStore, ($abg) => {
+  if ($abg.id == null) {
+    return 'NA';
+  } else {
+    return `${$abg.details}, gram ${$abg.gramStain}`;
+  }
+});
+export const antibiogram = { subscribe, setAntibiogram };
+export { title, interval, subtitle };

@@ -5,75 +5,16 @@
   import type { WebAntibiogramGroup } from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
   import Card from './Card.svelte';
   import { GramStain } from '@/domain/Organism/Quality';
+  import { antibiogram } from './AntibiogramNavigationStore';
+  import type IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
+  import type AntibiogramTitleController from '@/infrastructure/view/controllers/AntibiogramTitleController';
 
-  const controller = getContext<AntibiogramGroupController>(
-    'antibiogramGroupController'
+  const controller = getContext<AntibiogramTitleController>(
+    'antibiogramTitleController'
   );
-  let vm: WebAntibiogramGroup[] | null = null;
-  let testVm = [
-    {
-      state: 'Binghamton, NY',
-      institution: 'Lourdes',
-      interval: 'June 2019-June 2020',
-      details: 'inpatient',
-      gramStain: 'positive',
-      id: 1,
-    },
-    {
-      state: 'Binghamton, NY',
-      institution: 'Lourdes',
-      interval: 'June 2019-June 2020',
-      details: 'inpatient',
-      gramStain: 'negative',
-      id: 2,
-    },
-    {
-      state: 'Binghamton, NY',
-      institution: 'Lourdes',
-      interval: 'June 2019-June 2020',
-      details: 'outpatient',
-      gramStain: 'positive',
-      id: 3,
-    },
-    {
-      state: 'Binghamton, NY',
-      institution: 'Lourdes',
-      interval: 'June 2019-June 2020',
-      details: 'outpatient',
-      gramStain: 'negative',
-      id: 4,
-    },
-    {
-      state: 'Binghamton, NY',
-      institution: 'UHS',
-      interval: 'January 2020-January 2021',
-      details: 'non-urine',
-      gramStain: 'negative',
-      id: 5,
-    },
-    {
-      state: 'Binghamton, NY',
-      institution: 'UHS',
-      interval: 'January 2020-January 2021',
-      details: 'non-urine',
-      gramStain: 'positive',
-      id: 6,
-    },
-    {
-      state: 'Binghamton, NY',
-      institution: 'UHS',
-      interval: 'January 2020-January 2021',
-      details: 'urine',
-      gramStain: 'unspecified',
-      id: 7,
-    },
-  ];
-  onMount(async () => {
-    vm = await controller.index();
 
-    console.log(vm);
-    console.log(testVm);
-  });
+  let testVm: any = null;
+  controller.index().then((res) => (testVm = res));
 </script>
 
 <main>
@@ -86,7 +27,7 @@
           <a class="card-nav" href={'/antibiogram/' + id} use:link>
             <Card
               title={institution + ', ' + state}
-              subtitle={details + ', ' + gramStain}
+              subtitle={details + ', gram ' + gramStain}
               dates={interval.toString()}
             />
           </a>

@@ -16,7 +16,7 @@
   on:mouseout
 >
   <div
-    class="organism-name"
+    class="organism-name "
     class:indented={rowHeader.inGroup() === true &&
       rowHeader.isFirstOfGroup() === false}
     on:click={() => state.expandGroup(rowHeader.getGroup())}
@@ -31,7 +31,6 @@
           class="groupIcon clickable"
           on:click={() => {
             state.expandGroup(rowHeader.getGroup());
-            console.log('expanded');
           }}
         >
           <ion-icon
@@ -44,7 +43,6 @@
           class="groupIcon clickable"
           on:click={() => {
             state.collapseGroup(rowHeader.getGroup());
-            console.log('collapsed');
           }}
         >
           <ion-icon
@@ -75,6 +73,7 @@
 
   .organism-name {
     font-weight: bold;
+    font-size: var(--table-font-size);
     display: inline-block;
     position: relative;
   }

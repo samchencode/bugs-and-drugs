@@ -1,14 +1,37 @@
 <script lang="ts">
+  import type AntibiogramTitleController from '@/infrastructure/view/controllers/AntibiogramTitleController';
+  import { getContext } from 'svelte';
+
   import { link } from 'svelte-spa-router';
+  import {
+    antibiogram,
+    title,
+  } from '../index-screen/AntibiogramNavigationStore';
 
   let navMenuHidden = true;
+
+  const controller = getContext<AntibiogramTitleController>(
+    'antibiogramTitleController'
+  );
+
+  controller.index().then((titles) => {
+    if (titles !== null) {
+      titles.forEach((title) => {
+        if (title.id.toString() == window.location.href.split('/').pop())
+          antibiogram.setAntibiogram(title);
+      });
+    }
+  });
+
+  export let params;
 </script>
 
 <nav>
   <a class="back" href="/" use:link>
     <ion-icon name="arrow-back-outline" />
   </a>
-  <h1 class="title">Bugs 'n Drugs</h1>
+  <h1 class="title">{$title}</h1>
+
   <button
     class="nav-menu-toggle"
     on:click={() => (navMenuHidden = !navMenuHidden)}
@@ -25,6 +48,7 @@
   nav {
     position: sticky;
     top: 0;
+    left: 0;
     z-index: 1000;
     padding: 0 var(--space-md);
     height: 60px;
@@ -86,5 +110,11 @@
   .nav-link:hover,
   .nav-link:focus {
     background: var(--main-surface-emphasis-color);
+  }
+
+  @media screen and (max-width: 250px) {
+    .title {
+      word-break: break-all;
+    }
   }
 </style>
