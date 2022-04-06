@@ -457,7 +457,7 @@ var app = (function () {
   function is_empty(obj) {
       return Object.keys(obj).length === 0;
   }
-  function subscribe$1(store, ...callbacks) {
+  function subscribe$2(store, ...callbacks) {
       if (store == null) {
           return noop;
       }
@@ -465,7 +465,7 @@ var app = (function () {
       return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
   }
   function component_subscribe(component, store, callback) {
-      component.$$.on_destroy.push(subscribe$1(store, callback));
+      component.$$.on_destroy.push(subscribe$2(store, callback));
   }
   function action_destroyer(action_result) {
       return action_result && is_function(action_result.destroy) ? action_result.destroy : noop;
@@ -532,9 +532,6 @@ var app = (function () {
       if (!current_component)
           throw new Error('Function called outside component initialization');
       return current_component;
-  }
-  function onMount(fn) {
-      get_current_component().$$.on_mount.push(fn);
   }
   function afterUpdate(fn) {
       get_current_component().$$.after_update.push(fn);
@@ -1019,7 +1016,7 @@ var app = (function () {
                   cleanup = is_function(result) ? result : noop;
               }
           };
-          const unsubscribers = stores_array.map((store, i) => subscribe$1(store, (value) => {
+          const unsubscribers = stores_array.map((store, i) => subscribe$2(store, (value) => {
               values[i] = value;
               pending &= ~(1 << i);
               if (inited) {
@@ -1098,6 +1095,18 @@ var app = (function () {
       toggleHighlighted() {
           __classPrivateFieldSet(this, _TableElement_highlighted, !__classPrivateFieldGet(this, _TableElement_highlighted, "f"), "f");
       }
+      setActive() {
+          __classPrivateFieldSet(this, _TableElement_active, true, "f");
+      }
+      unsetActive() {
+          __classPrivateFieldSet(this, _TableElement_active, false, "f");
+      }
+      highlight() {
+          __classPrivateFieldSet(this, _TableElement_highlighted, true, "f");
+      }
+      unHighlight() {
+          __classPrivateFieldSet(this, _TableElement_highlighted, false, "f");
+      }
       getValue() {
           return __classPrivateFieldGet(this, _TableElement_value, "f");
       }
@@ -1135,7 +1144,7 @@ var app = (function () {
   }
   _RowHeader_isCollapsed = new WeakMap(), _RowHeader_inGroup = new WeakMap(), _RowHeader_group = new WeakMap(), _RowHeader_firstOfGroup = new WeakMap();
 
-  const { subscribe, update, set } = writable({
+  const { subscribe: subscribe$1, update, set: set$1 } = writable({
       rowHeaders: [],
       columnHeaders: [],
       grid: [],
@@ -1148,11 +1157,39 @@ var app = (function () {
       header[row].toggleHighlighted();
       return { grid, header };
   }
+  function _highlightRow(row, grid, header) {
+      grid[row].forEach((cell) => {
+          cell.highlight();
+      });
+      header[row].highlight();
+      return { grid, header };
+  }
+  function _unhighlightRow(row, grid, header) {
+      grid[row].forEach((cell) => {
+          cell.unHighlight();
+      });
+      header[row].unHighlight();
+      return { grid, header };
+  }
   function _toggleHighlightColumn(column, grid, header) {
       grid.forEach((row) => {
           row[column].toggleHighlighted();
       });
       header[column].toggleHighlighted();
+      return { grid, header };
+  }
+  function _highlightColumn(column, grid, header) {
+      grid.forEach((row) => {
+          row[column].highlight();
+      });
+      header[column].highlight();
+      return { grid, header };
+  }
+  function _unhighlightColumn(column, grid, header) {
+      grid.forEach((row) => {
+          row[column].unHighlight();
+      });
+      header[column].unHighlight();
       return { grid, header };
   }
   const toggleHighlightRow = (i) => {
@@ -1162,10 +1199,38 @@ var app = (function () {
           return Object.assign(Object.assign({}, s), { grid, rowHeaders: header });
       });
   };
+  const highlightRow = (i) => {
+      update((s) => {
+          s.rowHeaders[i].setActive();
+          const { grid, header } = _highlightRow(i, s.grid, s.rowHeaders);
+          return Object.assign(Object.assign({}, s), { grid, rowHeaders: header });
+      });
+  };
+  const unhighlightRow = (i) => {
+      update((s) => {
+          s.rowHeaders[i].unsetActive();
+          const { grid, header } = _unhighlightRow(i, s.grid, s.rowHeaders);
+          return Object.assign(Object.assign({}, s), { grid, rowHeaders: header });
+      });
+  };
   const toggleHighlightColumn = (j) => {
       update((s) => {
           s.columnHeaders[j].toggleActive();
           const { grid, header } = _toggleHighlightColumn(j, s.grid, s.columnHeaders);
+          return Object.assign(Object.assign({}, s), { grid, columnHeaders: header });
+      });
+  };
+  const highlightColumn = (j) => {
+      update((s) => {
+          s.columnHeaders[j].setActive();
+          const { grid, header } = _highlightColumn(j, s.grid, s.columnHeaders);
+          return Object.assign(Object.assign({}, s), { grid, columnHeaders: header });
+      });
+  };
+  const unhighlightColumn = (j) => {
+      update((s) => {
+          s.columnHeaders[j].unsetActive();
+          const { grid, header } = _unhighlightColumn(j, s.grid, s.columnHeaders);
           return Object.assign(Object.assign({}, s), { grid, columnHeaders: header });
       });
   };
@@ -1185,13 +1250,43 @@ var app = (function () {
           };
       });
   };
+  const highlightCell = (i, j) => {
+      update((s) => {
+          let newGrid = s.grid.slice();
+          let newRowHeaders = s.rowHeaders.slice();
+          let newColumnHeaders = s.columnHeaders.slice();
+          newGrid[i][j].setActive();
+          ({ grid: newGrid, header: newRowHeaders } = _highlightRow(i, newGrid, newRowHeaders));
+          ({ grid: newGrid, header: newColumnHeaders } = _highlightColumn(j, newGrid, newColumnHeaders));
+          return {
+              grid: newGrid,
+              rowHeaders: newRowHeaders,
+              columnHeaders: newColumnHeaders,
+              groups: s.groups,
+          };
+      });
+  };
+  const unhighlightCell = (i, j) => {
+      update((s) => {
+          let newGrid = s.grid.slice();
+          let newRowHeaders = s.rowHeaders.slice();
+          let newColumnHeaders = s.columnHeaders.slice();
+          newGrid[i][j].unsetActive();
+          ({ grid: newGrid, header: newRowHeaders } = _unhighlightRow(i, newGrid, newRowHeaders));
+          ({ grid: newGrid, header: newColumnHeaders } = _unhighlightColumn(j, newGrid, newColumnHeaders));
+          return {
+              grid: newGrid,
+              rowHeaders: newRowHeaders,
+              columnHeaders: newColumnHeaders,
+              groups: s.groups,
+          };
+      });
+  };
   const expandGroup = (group) => {
       loadTable(group.expand());
-      console.log('expanded one');
   };
   const collapseGroup = (group) => {
       loadTable(group.collapse());
-      console.log('collapsed one');
   };
   const loadTable = (table) => {
       const groupArray = [];
@@ -1208,34 +1303,37 @@ var app = (function () {
                   groupArray.push(group);
           }
       });
-      set({
+      set$1({
           grid: table === null || table === void 0 ? void 0 : table.getCells().map((row) => row.map((cell, index) => new TableElement(index, cell))),
           rowHeaders: table === null || table === void 0 ? void 0 : table.getRows().map((row, index) => new RowHeader$1(index, row.getLabel(), row.getGroup())),
           columnHeaders: table === null || table === void 0 ? void 0 : table.getColumnLabels().map((label, index) => new TableElement(index, label)),
           groups: groupArray,
       });
-      console.log('table loaded');
   };
   const expandAllGroups = () => {
       update((s) => {
           s.groups.forEach((group) => group.expand());
           return s;
       });
-      console.log('expanded all');
   };
   const collapseAllGroups = () => {
       update((s) => {
           s.groups.forEach((group) => group.expand());
           return s;
       });
-      console.log('collapsed all');
   };
   const state = {
-      subscribe,
+      subscribe: subscribe$1,
       loadTable,
       toggleHighlightCell,
       toggleHighlightColumn,
       toggleHighlightRow,
+      highlightCell,
+      unhighlightCell,
+      highlightColumn,
+      unhighlightColumn,
+      highlightRow,
+      unhighlightRow,
       expandGroup,
       collapseGroup,
       expandAllGroups,
@@ -1849,7 +1947,7 @@ var app = (function () {
   	};
   }
 
-  // (41:50) 
+  // (40:50) 
   function create_if_block_3(ctx) {
   	let div;
   	let mounted;
@@ -1859,7 +1957,7 @@ var app = (function () {
   		c() {
   			div = element("div");
   			div.innerHTML = `<ion-icon name="chevron-down-outline" class="clickable horizontally-center"></ion-icon>`;
-  			attr(div, "class", "groupIcon clickable svelte-1jrwzdc");
+  			attr(div, "class", "groupIcon clickable svelte-okwdec");
   		},
   		m(target, anchor) {
   			insert(target, div, anchor);
@@ -1888,7 +1986,7 @@ var app = (function () {
   		c() {
   			div = element("div");
   			div.innerHTML = `<ion-icon name="chevron-forward-outline" class="clickable horizontally-center"></ion-icon>`;
-  			attr(div, "class", "groupIcon clickable svelte-1jrwzdc");
+  			attr(div, "class", "groupIcon clickable svelte-okwdec");
   		},
   		m(target, anchor) {
   			insert(target, div, anchor);
@@ -1936,9 +2034,9 @@ var app = (function () {
   			if (if_block) if_block.c();
   			t2 = space();
   			create_component(tooltip.$$.fragment);
-  			attr(div, "class", "organism-name svelte-1jrwzdc");
+  			attr(div, "class", "organism-name  svelte-okwdec");
   			toggle_class(div, "indented", /*rowHeader*/ ctx[0].inGroup() === true && /*rowHeader*/ ctx[0].isFirstOfGroup() === false);
-  			attr(th, "class", "row-header has-tooltip svelte-1jrwzdc");
+  			attr(th, "class", "row-header has-tooltip svelte-okwdec");
   			attr(th, "width", "200px");
   			toggle_class(th, "active", /*rowHeader*/ ctx[0].getActive());
   			toggle_class(th, "highlighted", /*rowHeader*/ ctx[0].getHighlighted());
@@ -2041,12 +2139,10 @@ var app = (function () {
 
   	const click_handler_1 = () => {
   		state.expandGroup(rowHeader.getGroup());
-  		console.log('expanded');
   	};
 
   	const click_handler_2 = () => {
   		state.collapseGroup(rowHeader.getGroup());
-  		console.log('collapsed');
   	};
 
   	$$self.$$set = $$props => {
@@ -2076,34 +2172,34 @@ var app = (function () {
 
   function get_each_context$2(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[12] = list[i];
-  	child_ctx[14] = i;
+  	child_ctx[14] = list[i];
+  	child_ctx[16] = i;
   	return child_ctx;
   }
 
-  // (17:2) {#each rowOfCells as cell, j (cell.id)}
+  // (19:2) {#each rowOfCells as cell, j (cell.id)}
   function create_each_block$2(key_1, ctx) {
   	let first;
   	let cell;
   	let current;
 
   	function focus_handler_1() {
-  		return /*focus_handler_1*/ ctx[8](/*j*/ ctx[14]);
+  		return /*focus_handler_1*/ ctx[10](/*j*/ ctx[16]);
   	}
 
   	function mouseover_handler_1() {
-  		return /*mouseover_handler_1*/ ctx[9](/*j*/ ctx[14]);
+  		return /*mouseover_handler_1*/ ctx[11](/*j*/ ctx[16]);
   	}
 
   	function blur_handler_1() {
-  		return /*blur_handler_1*/ ctx[10](/*j*/ ctx[14]);
+  		return /*blur_handler_1*/ ctx[12](/*j*/ ctx[16]);
   	}
 
   	function mouseout_handler_1() {
-  		return /*mouseout_handler_1*/ ctx[11](/*j*/ ctx[14]);
+  		return /*mouseout_handler_1*/ ctx[13](/*j*/ ctx[16]);
   	}
 
-  	cell = new Cell$1({ props: { cell: /*cell*/ ctx[12] } });
+  	cell = new Cell$1({ props: { cell: /*cell*/ ctx[14] } });
   	cell.$on("focus", focus_handler_1);
   	cell.$on("mouseover", mouseover_handler_1);
   	cell.$on("blur", blur_handler_1);
@@ -2125,7 +2221,7 @@ var app = (function () {
   		p(new_ctx, dirty) {
   			ctx = new_ctx;
   			const cell_changes = {};
-  			if (dirty & /*rowOfCells*/ 1) cell_changes.cell = /*cell*/ ctx[12];
+  			if (dirty & /*rowOfCells*/ 1) cell_changes.cell = /*cell*/ ctx[14];
   			cell.$set(cell_changes);
   		},
   		i(local) {
@@ -2156,12 +2252,12 @@ var app = (function () {
   			props: { rowHeader: /*rowHeader*/ ctx[1] }
   		});
 
-  	rowheader.$on("focus", /*focus_handler*/ ctx[4]);
-  	rowheader.$on("mouseover", /*mouseover_handler*/ ctx[5]);
-  	rowheader.$on("blur", /*blur_handler*/ ctx[6]);
-  	rowheader.$on("mouseout", /*mouseout_handler*/ ctx[7]);
+  	rowheader.$on("focus", /*focus_handler*/ ctx[6]);
+  	rowheader.$on("mouseover", /*mouseover_handler*/ ctx[7]);
+  	rowheader.$on("blur", /*blur_handler*/ ctx[8]);
+  	rowheader.$on("mouseout", /*mouseout_handler*/ ctx[9]);
   	let each_value = /*rowOfCells*/ ctx[0];
-  	const get_key = ctx => /*cell*/ ctx[12].id;
+  	const get_key = ctx => /*cell*/ ctx[14].id;
 
   	for (let i = 0; i < each_value.length; i += 1) {
   		let child_ctx = get_each_context$2(ctx, each_value, i);
@@ -2195,7 +2291,7 @@ var app = (function () {
   			if (dirty & /*rowHeader*/ 2) rowheader_changes.rowHeader = /*rowHeader*/ ctx[1];
   			rowheader.$set(rowheader_changes);
 
-  			if (dirty & /*rowOfCells, toggleHighlightCells*/ 5) {
+  			if (dirty & /*rowOfCells, highlightCells, unhighlightCells*/ 13) {
   				each_value = /*rowOfCells*/ ctx[0];
   				group_outros();
   				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, tr, outro_and_destroy_block, create_each_block$2, null, get_each_context$2);
@@ -2235,29 +2331,35 @@ var app = (function () {
   function instance$b($$self, $$props, $$invalidate) {
   	let { rowOfCells } = $$props;
   	let { rowHeader } = $$props;
-  	let { toggleHighlightCells } = $$props;
-  	let { toggleHighlight } = $$props;
-  	const focus_handler = () => toggleHighlight();
-  	const mouseover_handler = () => toggleHighlight();
-  	const blur_handler = () => toggleHighlight();
-  	const mouseout_handler = () => toggleHighlight();
-  	const focus_handler_1 = j => toggleHighlightCells(j);
-  	const mouseover_handler_1 = j => toggleHighlightCells(j);
-  	const blur_handler_1 = j => toggleHighlightCells(j);
-  	const mouseout_handler_1 = j => toggleHighlightCells(j);
+  	let { highlightCells } = $$props;
+  	let { unhighlightCells } = $$props;
+  	let { highlight } = $$props;
+  	let { unhighlight } = $$props;
+  	const focus_handler = () => highlight();
+  	const mouseover_handler = () => highlight();
+  	const blur_handler = () => unhighlight();
+  	const mouseout_handler = () => unhighlight();
+  	const focus_handler_1 = j => highlightCells(j);
+  	const mouseover_handler_1 = j => highlightCells(j);
+  	const blur_handler_1 = j => unhighlightCells(j);
+  	const mouseout_handler_1 = j => unhighlightCells(j);
 
   	$$self.$$set = $$props => {
   		if ('rowOfCells' in $$props) $$invalidate(0, rowOfCells = $$props.rowOfCells);
   		if ('rowHeader' in $$props) $$invalidate(1, rowHeader = $$props.rowHeader);
-  		if ('toggleHighlightCells' in $$props) $$invalidate(2, toggleHighlightCells = $$props.toggleHighlightCells);
-  		if ('toggleHighlight' in $$props) $$invalidate(3, toggleHighlight = $$props.toggleHighlight);
+  		if ('highlightCells' in $$props) $$invalidate(2, highlightCells = $$props.highlightCells);
+  		if ('unhighlightCells' in $$props) $$invalidate(3, unhighlightCells = $$props.unhighlightCells);
+  		if ('highlight' in $$props) $$invalidate(4, highlight = $$props.highlight);
+  		if ('unhighlight' in $$props) $$invalidate(5, unhighlight = $$props.unhighlight);
   	};
 
   	return [
   		rowOfCells,
   		rowHeader,
-  		toggleHighlightCells,
-  		toggleHighlight,
+  		highlightCells,
+  		unhighlightCells,
+  		highlight,
+  		unhighlight,
   		focus_handler,
   		mouseover_handler,
   		blur_handler,
@@ -2276,8 +2378,10 @@ var app = (function () {
   		init(this, options, instance$b, create_fragment$c, safe_not_equal, {
   			rowOfCells: 0,
   			rowHeader: 1,
-  			toggleHighlightCells: 2,
-  			toggleHighlight: 3
+  			highlightCells: 2,
+  			unhighlightCells: 3,
+  			highlight: 4,
+  			unhighlight: 5
   		});
   	}
   }
@@ -2308,9 +2412,9 @@ var app = (function () {
   			t0 = text(t0_value);
   			t1 = space();
   			create_component(tooltip.$$.fragment);
-  			attr(span, "class", "antibiotic-name svelte-qt761x");
+  			attr(span, "class", "antibiotic-name svelte-k48di3");
   			attr(th, "scope", "col");
-  			attr(th, "class", "column-header has-tooltip svelte-qt761x");
+  			attr(th, "class", "column-header has-tooltip svelte-k48di3");
   			toggle_class(th, "active", /*columnHeader*/ ctx[0].getActive());
   			toggle_class(th, "highlighted", /*columnHeader*/ ctx[0].getHighlighted());
   		},
@@ -2324,10 +2428,10 @@ var app = (function () {
 
   			if (!mounted) {
   				dispose = [
-  					listen(th, "focus", /*focus_handler*/ ctx[2]),
-  					listen(th, "mouseover", /*mouseover_handler*/ ctx[3]),
-  					listen(th, "blur", /*blur_handler*/ ctx[4]),
-  					listen(th, "mouseout", /*mouseout_handler*/ ctx[5])
+  					listen(th, "focus", /*focus_handler*/ ctx[3]),
+  					listen(th, "mouseover", /*mouseover_handler*/ ctx[4]),
+  					listen(th, "blur", /*blur_handler*/ ctx[5]),
+  					listen(th, "mouseout", /*mouseout_handler*/ ctx[6])
   				];
 
   				mounted = true;
@@ -2367,20 +2471,23 @@ var app = (function () {
 
   function instance$a($$self, $$props, $$invalidate) {
   	let { columnHeader } = $$props;
-  	let { toggleHighlight } = $$props;
-  	const focus_handler = () => toggleHighlight();
-  	const mouseover_handler = () => toggleHighlight();
-  	const blur_handler = () => toggleHighlight();
-  	const mouseout_handler = () => toggleHighlight();
+  	let { highlight } = $$props;
+  	let { unhighlight } = $$props;
+  	const focus_handler = () => highlight();
+  	const mouseover_handler = () => highlight();
+  	const blur_handler = () => unhighlight();
+  	const mouseout_handler = () => unhighlight();
 
   	$$self.$$set = $$props => {
   		if ('columnHeader' in $$props) $$invalidate(0, columnHeader = $$props.columnHeader);
-  		if ('toggleHighlight' in $$props) $$invalidate(1, toggleHighlight = $$props.toggleHighlight);
+  		if ('highlight' in $$props) $$invalidate(1, highlight = $$props.highlight);
+  		if ('unhighlight' in $$props) $$invalidate(2, unhighlight = $$props.unhighlight);
   	};
 
   	return [
   		columnHeader,
-  		toggleHighlight,
+  		highlight,
+  		unhighlight,
   		focus_handler,
   		mouseover_handler,
   		blur_handler,
@@ -2391,7 +2498,12 @@ var app = (function () {
   class ColumnHeader extends SvelteComponent {
   	constructor(options) {
   		super();
-  		init(this, options, instance$a, create_fragment$b, safe_not_equal, { columnHeader: 0, toggleHighlight: 1 });
+
+  		init(this, options, instance$a, create_fragment$b, safe_not_equal, {
+  			columnHeader: 0,
+  			highlight: 1,
+  			unhighlight: 2
+  		});
   	}
   }
 
@@ -2436,7 +2548,7 @@ var app = (function () {
   	return {
   		c() {
   			th = element("th");
-  			attr(th, "class", "topLeftBlock svelte-8ex4ab");
+  			attr(th, "class", "topLeftBlock svelte-6zi9zt");
   		},
   		m(target, anchor) {
   			insert(target, th, anchor);
@@ -2465,15 +2577,15 @@ var app = (function () {
 
   function get_each_context$1(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[7] = list[i];
-  	child_ctx[9] = i;
+  	child_ctx[10] = list[i];
+  	child_ctx[12] = i;
   	return child_ctx;
   }
 
   function get_each_context_1(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[10] = list[i];
-  	child_ctx[12] = i;
+  	child_ctx[13] = list[i];
+  	child_ctx[15] = i;
   	return child_ctx;
   }
 
@@ -2493,7 +2605,7 @@ var app = (function () {
   	let current;
   	emptycorner = new EmptyCorner({});
   	let each_value_1 = /*$state*/ ctx[1].columnHeaders;
-  	const get_key = ctx => /*columnHeader*/ ctx[10].id;
+  	const get_key = ctx => /*columnHeader*/ ctx[13].id;
 
   	for (let i = 0; i < each_value_1.length; i += 1) {
   		let child_ctx = get_each_context_1(ctx, each_value_1, i);
@@ -2502,7 +2614,7 @@ var app = (function () {
   	}
 
   	let each_value = /*$state*/ ctx[1].rowHeaders;
-  	const get_key_1 = ctx => /*rowHeader*/ ctx[7].id;
+  	const get_key_1 = ctx => /*rowHeader*/ ctx[10].id;
 
   	for (let i = 0; i < each_value.length; i += 1) {
   		let child_ctx = get_each_context$1(ctx, each_value, i);
@@ -2529,8 +2641,8 @@ var app = (function () {
   				each_blocks[i].c();
   			}
 
-  			attr(tr, "class", "svelte-mhzzwi");
-  			attr(table, "class", "antibiogram-table svelte-mhzzwi");
+  			attr(tr, "class", "svelte-1ftgidf");
+  			attr(table, "class", "antibiogram-table svelte-1ftgidf");
   			attr(table, "id", "table");
   		},
   		m(target, anchor) {
@@ -2647,13 +2759,18 @@ var app = (function () {
   	let current;
 
   	function func() {
-  		return /*func*/ ctx[3](/*j*/ ctx[12]);
+  		return /*func*/ ctx[3](/*j*/ ctx[15]);
+  	}
+
+  	function func_1() {
+  		return /*func_1*/ ctx[4](/*j*/ ctx[15]);
   	}
 
   	columnheader = new ColumnHeader({
   			props: {
-  				columnHeader: /*columnHeader*/ ctx[10],
-  				toggleHighlight: func
+  				columnHeader: /*columnHeader*/ ctx[13],
+  				highlight: func,
+  				unhighlight: func_1
   			}
   		});
 
@@ -2673,8 +2790,9 @@ var app = (function () {
   		p(new_ctx, dirty) {
   			ctx = new_ctx;
   			const columnheader_changes = {};
-  			if (dirty & /*$state*/ 2) columnheader_changes.columnHeader = /*columnHeader*/ ctx[10];
-  			if (dirty & /*$state*/ 2) columnheader_changes.toggleHighlight = func;
+  			if (dirty & /*$state*/ 2) columnheader_changes.columnHeader = /*columnHeader*/ ctx[13];
+  			if (dirty & /*$state*/ 2) columnheader_changes.highlight = func;
+  			if (dirty & /*$state*/ 2) columnheader_changes.unhighlight = func_1;
   			columnheader.$set(columnheader_changes);
   		},
   		i(local) {
@@ -2693,26 +2811,36 @@ var app = (function () {
   	};
   }
 
-  // (44:8) {#each $state.rowHeaders as rowHeader, i (rowHeader.id)}
+  // (45:8) {#each $state.rowHeaders as rowHeader, i (rowHeader.id)}
   function create_each_block$1(key_1, ctx) {
   	let first;
   	let tablerow;
   	let current;
 
-  	function func_1(...args) {
-  		return /*func_1*/ ctx[4](/*i*/ ctx[9], ...args);
+  	function func_2(...args) {
+  		return /*func_2*/ ctx[5](/*i*/ ctx[12], ...args);
   	}
 
-  	function func_2() {
-  		return /*func_2*/ ctx[5](/*i*/ ctx[9]);
+  	function func_3(...args) {
+  		return /*func_3*/ ctx[6](/*i*/ ctx[12], ...args);
+  	}
+
+  	function func_4() {
+  		return /*func_4*/ ctx[7](/*i*/ ctx[12]);
+  	}
+
+  	function func_5() {
+  		return /*func_5*/ ctx[8](/*i*/ ctx[12]);
   	}
 
   	tablerow = new TableRow$1({
   			props: {
-  				rowHeader: /*rowHeader*/ ctx[7],
-  				rowOfCells: /*$state*/ ctx[1].grid[/*i*/ ctx[9]],
-  				toggleHighlightCells: func_1,
-  				toggleHighlight: func_2
+  				rowHeader: /*rowHeader*/ ctx[10],
+  				rowOfCells: /*$state*/ ctx[1].grid[/*i*/ ctx[12]],
+  				highlightCells: func_2,
+  				unhighlightCells: func_3,
+  				highlight: func_4,
+  				unhighlight: func_5
   			}
   		});
 
@@ -2732,10 +2860,12 @@ var app = (function () {
   		p(new_ctx, dirty) {
   			ctx = new_ctx;
   			const tablerow_changes = {};
-  			if (dirty & /*$state*/ 2) tablerow_changes.rowHeader = /*rowHeader*/ ctx[7];
-  			if (dirty & /*$state*/ 2) tablerow_changes.rowOfCells = /*$state*/ ctx[1].grid[/*i*/ ctx[9]];
-  			if (dirty & /*$state*/ 2) tablerow_changes.toggleHighlightCells = func_1;
-  			if (dirty & /*$state*/ 2) tablerow_changes.toggleHighlight = func_2;
+  			if (dirty & /*$state*/ 2) tablerow_changes.rowHeader = /*rowHeader*/ ctx[10];
+  			if (dirty & /*$state*/ 2) tablerow_changes.rowOfCells = /*$state*/ ctx[1].grid[/*i*/ ctx[12]];
+  			if (dirty & /*$state*/ 2) tablerow_changes.highlightCells = func_2;
+  			if (dirty & /*$state*/ 2) tablerow_changes.unhighlightCells = func_3;
+  			if (dirty & /*$state*/ 2) tablerow_changes.highlight = func_4;
+  			if (dirty & /*$state*/ 2) tablerow_changes.unhighlight = func_5;
   			tablerow.$set(tablerow_changes);
   		},
   		i(local) {
@@ -2774,7 +2904,7 @@ var app = (function () {
   		c() {
   			div = element("div");
   			if_block.c();
-  			attr(div, "class", "table-window svelte-mhzzwi");
+  			attr(div, "class", "table-window svelte-1ftgidf");
   			attr(div, "id", "table-container");
   			toggle_class(div, "small-table", /*smallTable*/ ctx[0]);
   		},
@@ -2852,15 +2982,18 @@ var app = (function () {
 
   	window.addEventListener('resize', tableSize);
   	tableSize();
-  	const func = j => state.toggleHighlightColumn(j);
-  	const func_1 = (i, j) => state.toggleHighlightCell(i, j);
-  	const func_2 = i => state.toggleHighlightRow(i);
+  	const func = j => state.highlightColumn(j);
+  	const func_1 = j => state.unhighlightColumn(j);
+  	const func_2 = (i, j) => state.highlightCell(i, j);
+  	const func_3 = (i, j) => state.unhighlightCell(i, j);
+  	const func_4 = i => state.highlightRow(i);
+  	const func_5 = i => state.unhighlightRow(i);
 
   	$$self.$$set = $$props => {
   		if ('id' in $$props) $$invalidate(2, id = $$props.id);
   	};
 
-  	return [smallTable, $state, id, func, func_1, func_2];
+  	return [smallTable, $state, id, func, func_1, func_2, func_3, func_4, func_5];
   }
 
   class Table extends SvelteComponent {
@@ -2910,12 +3043,6 @@ var app = (function () {
 
   	$$self.$$set = $$props => {
   		if ('params' in $$props) $$invalidate(0, params = $$props.params);
-  	};
-
-  	$$self.$$.update = () => {
-  		if ($$self.$$.dirty & /*params*/ 1) {
-  			console.log('rendered!' + params.id);
-  		}
   	};
 
   	return [params];
@@ -3787,20 +3914,64 @@ var app = (function () {
       }
   }
 
+  const antibiogramStore = writable({
+      state: '',
+      institution: '',
+      interval: '',
+      details: '',
+      gramStain: '',
+      id: null,
+  });
+  const { subscribe, set } = antibiogramStore;
+  const setAntibiogram = (abgT) => {
+      set({
+          state: abgT.state,
+          institution: abgT.institution,
+          interval: abgT.interval,
+          details: abgT.details,
+          gramStain: abgT.gramStain,
+          id: abgT.id,
+      });
+  };
+  const title = derived(antibiogramStore, ($abg) => {
+      if ($abg.id == null) {
+          return 'No antibiogram data';
+      }
+      else
+          return `${$abg.institution}, ${$abg.state}`;
+  });
+  derived(antibiogramStore, ($abg) => {
+      if ($abg.id == null) {
+          return 'NA';
+      }
+      else {
+          return `${$abg.interval}`;
+      }
+  });
+  derived(antibiogramStore, ($abg) => {
+      if ($abg.id == null) {
+          return 'NA';
+      }
+      else {
+          return `${$abg.details}, gram ${$abg.gramStain}`;
+      }
+  });
+  const antibiogram = { subscribe, setAntibiogram };
+
   /* src\infrastructure\view\templates\index-screen\IndexScreen.svelte generated by Svelte v3.44.3 */
 
   function get_each_context(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[4] = list[i].state;
-  	child_ctx[5] = list[i].institution;
-  	child_ctx[6] = list[i].interval;
-  	child_ctx[7] = list[i].details;
-  	child_ctx[8] = list[i].gramStain;
-  	child_ctx[9] = list[i].id;
+  	child_ctx[2] = list[i].state;
+  	child_ctx[3] = list[i].institution;
+  	child_ctx[4] = list[i].interval;
+  	child_ctx[5] = list[i].details;
+  	child_ctx[6] = list[i].gramStain;
+  	child_ctx[7] = list[i].id;
   	return child_ctx;
   }
 
-  // (84:2) {:else}
+  // (14:2) {:else}
   function create_else_block(ctx) {
   	let ul;
   	let current;
@@ -3887,7 +4058,7 @@ var app = (function () {
   	};
   }
 
-  // (82:2) {#if testVm === null}
+  // (12:2) {#if testVm === null}
   function create_if_block(ctx) {
   	let p;
 
@@ -3908,7 +4079,7 @@ var app = (function () {
   	};
   }
 
-  // (86:6) {#each testVm as { state, institution, interval, details, gramStain, id }}
+  // (16:6) {#each testVm as { state, institution, interval, details, gramStain, id }}
   function create_each_block(ctx) {
   	let li;
   	let a;
@@ -3922,9 +4093,9 @@ var app = (function () {
 
   	card = new Card({
   			props: {
-  				title: /*institution*/ ctx[5] + ', ' + /*state*/ ctx[4],
-  				subtitle: /*details*/ ctx[7] + ', ' + /*gramStain*/ ctx[8],
-  				dates: /*interval*/ ctx[6].toString()
+  				title: /*institution*/ ctx[3] + ', ' + /*state*/ ctx[2],
+  				subtitle: /*details*/ ctx[5] + ', gram ' + /*gramStain*/ ctx[6],
+  				dates: /*interval*/ ctx[4].toString()
   			}
   		});
 
@@ -3935,7 +4106,7 @@ var app = (function () {
   			create_component(card.$$.fragment);
   			t = space();
   			attr(a, "class", "card-nav svelte-12z7958");
-  			attr(a, "href", a_href_value = '/antibiogram/' + /*id*/ ctx[9]);
+  			attr(a, "href", a_href_value = '/antibiogram/' + /*id*/ ctx[7]);
   		},
   		m(target, anchor) {
   			insert(target, li, anchor);
@@ -3949,7 +4120,17 @@ var app = (function () {
   				mounted = true;
   			}
   		},
-  		p: noop,
+  		p(ctx, dirty) {
+  			const card_changes = {};
+  			if (dirty & /*testVm*/ 1) card_changes.title = /*institution*/ ctx[3] + ', ' + /*state*/ ctx[2];
+  			if (dirty & /*testVm*/ 1) card_changes.subtitle = /*details*/ ctx[5] + ', gram ' + /*gramStain*/ ctx[6];
+  			if (dirty & /*testVm*/ 1) card_changes.dates = /*interval*/ ctx[4].toString();
+  			card.$set(card_changes);
+
+  			if (!current || dirty & /*testVm*/ 1 && a_href_value !== (a_href_value = '/antibiogram/' + /*id*/ ctx[7])) {
+  				attr(a, "href", a_href_value);
+  			}
+  		},
   		i(local) {
   			if (current) return;
   			transition_in(card.$$.fragment, local);
@@ -3996,7 +4177,31 @@ var app = (function () {
   			current = true;
   		},
   		p(ctx, [dirty]) {
-  			if_block.p(ctx, dirty);
+  			let previous_block_index = current_block_type_index;
+  			current_block_type_index = select_block_type(ctx);
+
+  			if (current_block_type_index === previous_block_index) {
+  				if_blocks[current_block_type_index].p(ctx, dirty);
+  			} else {
+  				group_outros();
+
+  				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+  					if_blocks[previous_block_index] = null;
+  				});
+
+  				check_outros();
+  				if_block = if_blocks[current_block_type_index];
+
+  				if (!if_block) {
+  					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+  					if_block.c();
+  				} else {
+  					if_block.p(ctx, dirty);
+  				}
+
+  				transition_in(if_block, 1);
+  				if_block.m(main, null);
+  			}
   		},
   		i(local) {
   			if (current) return;
@@ -4014,111 +4219,10 @@ var app = (function () {
   	};
   }
 
-  function instance$3($$self) {
-  	var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
-  		function adopt(value) {
-  			return value instanceof P
-  			? value
-  			: new P(function (resolve) {
-  						resolve(value);
-  					});
-  		}
-
-  		return new (P || (P = Promise))(function (resolve, reject) {
-  				function fulfilled(value) {
-  					try {
-  						step(generator.next(value));
-  					} catch(e) {
-  						reject(e);
-  					}
-  				}
-
-  				function rejected(value) {
-  					try {
-  						step(generator["throw"](value));
-  					} catch(e) {
-  						reject(e);
-  					}
-  				}
-
-  				function step(result) {
-  					result.done
-  					? resolve(result.value)
-  					: adopt(result.value).then(fulfilled, rejected);
-  				}
-
-  				step((generator = generator.apply(thisArg, _arguments || [])).next());
-  			});
-  	};
-
-  	const controller = getContext('antibiogramGroupController');
-  	let vm = null;
-
-  	let testVm = [
-  		{
-  			state: 'Binghamton, NY',
-  			institution: 'Lourdes',
-  			interval: 'June 2019-June 2020',
-  			details: 'inpatient',
-  			gramStain: 'positive',
-  			id: 1
-  		},
-  		{
-  			state: 'Binghamton, NY',
-  			institution: 'Lourdes',
-  			interval: 'June 2019-June 2020',
-  			details: 'inpatient',
-  			gramStain: 'negative',
-  			id: 2
-  		},
-  		{
-  			state: 'Binghamton, NY',
-  			institution: 'Lourdes',
-  			interval: 'June 2019-June 2020',
-  			details: 'outpatient',
-  			gramStain: 'positive',
-  			id: 3
-  		},
-  		{
-  			state: 'Binghamton, NY',
-  			institution: 'Lourdes',
-  			interval: 'June 2019-June 2020',
-  			details: 'outpatient',
-  			gramStain: 'negative',
-  			id: 4
-  		},
-  		{
-  			state: 'Binghamton, NY',
-  			institution: 'UHS',
-  			interval: 'January 2020-January 2021',
-  			details: 'non-urine',
-  			gramStain: 'negative',
-  			id: 5
-  		},
-  		{
-  			state: 'Binghamton, NY',
-  			institution: 'UHS',
-  			interval: 'January 2020-January 2021',
-  			details: 'non-urine',
-  			gramStain: 'positive',
-  			id: 6
-  		},
-  		{
-  			state: 'Binghamton, NY',
-  			institution: 'UHS',
-  			interval: 'January 2020-January 2021',
-  			details: 'non-urine',
-  			gramStain: 'unspecified',
-  			id: 7
-  		}
-  	];
-
-  	onMount(() => __awaiter(void 0, void 0, void 0, function* () {
-  		vm = yield controller.index();
-  		console.log(vm);
-  		console.log(testVm);
-  	}));
-
+  function instance$3($$self, $$props, $$invalidate) {
+  	const controller = getContext('antibiogramTitleController');
+  	let testVm = null;
+  	controller.index().then(res => $$invalidate(0, testVm = res));
   	return [testVm];
   }
 
@@ -4221,6 +4325,7 @@ var app = (function () {
   	let a;
   	let t0;
   	let h1;
+  	let t1;
   	let t2;
   	let button;
   	let t3;
@@ -4235,29 +4340,30 @@ var app = (function () {
   			a.innerHTML = `<ion-icon name="arrow-back-outline"></ion-icon>`;
   			t0 = space();
   			h1 = element("h1");
-  			h1.textContent = "Bugs 'n Drugs";
+  			t1 = text(/*$title*/ ctx[1]);
   			t2 = space();
   			button = element("button");
   			button.innerHTML = `<ion-icon name="ellipsis-vertical"></ion-icon>`;
   			t3 = space();
   			ul = element("ul");
 
-  			ul.innerHTML = `<li class="nav-link svelte-owfs5m">About</li> 
-    <li class="nav-link svelte-owfs5m">Disclaimer</li>`;
+  			ul.innerHTML = `<li class="nav-link svelte-23q4ws">About</li> 
+    <li class="nav-link svelte-23q4ws">Disclaimer</li>`;
 
-  			attr(a, "class", "back svelte-owfs5m");
+  			attr(a, "class", "back svelte-23q4ws");
   			attr(a, "href", "/");
-  			attr(h1, "class", "title svelte-owfs5m");
-  			attr(button, "class", "nav-menu-toggle svelte-owfs5m");
-  			attr(ul, "class", "nav-link-list svelte-owfs5m");
+  			attr(h1, "class", "title svelte-23q4ws");
+  			attr(button, "class", "nav-menu-toggle svelte-23q4ws");
+  			attr(ul, "class", "nav-link-list svelte-23q4ws");
   			toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[0]);
-  			attr(nav, "class", "svelte-owfs5m");
+  			attr(nav, "class", "svelte-23q4ws");
   		},
   		m(target, anchor) {
   			insert(target, nav, anchor);
   			append(nav, a);
   			append(nav, t0);
   			append(nav, h1);
+  			append(h1, t1);
   			append(nav, t2);
   			append(nav, button);
   			append(nav, t3);
@@ -4266,13 +4372,15 @@ var app = (function () {
   			if (!mounted) {
   				dispose = [
   					action_destroyer(link.call(null, a)),
-  					listen(button, "click", /*click_handler*/ ctx[1])
+  					listen(button, "click", /*click_handler*/ ctx[3])
   				];
 
   				mounted = true;
   			}
   		},
   		p(ctx, [dirty]) {
+  			if (dirty & /*$title*/ 2) set_data(t1, /*$title*/ ctx[1]);
+
   			if (dirty & /*navMenuHidden*/ 1) {
   				toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[0]);
   			}
@@ -4288,15 +4396,33 @@ var app = (function () {
   }
 
   function instance$1($$self, $$props, $$invalidate) {
+  	let $title;
+  	component_subscribe($$self, title, $$value => $$invalidate(1, $title = $$value));
   	let navMenuHidden = true;
+  	const controller = getContext('antibiogramTitleController');
+
+  	controller.index().then(titles => {
+  		if (titles !== null) {
+  			titles.forEach(title => {
+  				if (title.id.toString() == window.location.href.split('/').pop()) antibiogram.setAntibiogram(title);
+  			});
+  		}
+  	});
+
+  	let { params } = $$props;
   	const click_handler = () => $$invalidate(0, navMenuHidden = !navMenuHidden);
-  	return [navMenuHidden, click_handler];
+
+  	$$self.$$set = $$props => {
+  		if ('params' in $$props) $$invalidate(2, params = $$props.params);
+  	};
+
+  	return [navMenuHidden, $title, params, click_handler];
   }
 
   class BackNavigation extends SvelteComponent {
   	constructor(options) {
   		super();
-  		init(this, options, instance$1, create_fragment$2, safe_not_equal, {});
+  		init(this, options, instance$1, create_fragment$2, safe_not_equal, { params: 2 });
   	}
   }
 
@@ -4392,12 +4518,13 @@ var app = (function () {
   	}
   }
 
-  const svelte = (tableController, antibiogramGroupController) => {
+  const svelte = (tableController, antibiogramGroupController, antibiogramTitleController) => {
       return new App({
           target: document.body,
           context: new Map([
               ['tableController', tableController],
               ['antibiogramGroupController', antibiogramGroupController],
+              ['antibiogramTitleController', antibiogramTitleController],
           ]),
       });
   };
@@ -6524,7 +6651,8 @@ var app = (function () {
       }
       execute(id) {
           return __awaiter(this, void 0, void 0, function* () {
-              const abg = (yield this.antibiogramRepository.getAll())[id];
+              const abgId = new AntibiogramId('' + id);
+              const abg = yield this.antibiogramRepository.getById(abgId);
               const table = makeAntibiogramTable(abg);
               return table;
           });
@@ -6653,14 +6781,135 @@ var app = (function () {
       return base + '/' + exploded.join('/');
   };
 
+  var _IndexAntibiogramTitleAction_repo;
+  class IndexAntibiogramTitleAction {
+      constructor() {
+          _IndexAntibiogramTitleAction_repo.set(this, void 0);
+          __classPrivateFieldSet(this, _IndexAntibiogramTitleAction_repo, [
+              {
+                  state: 'Binghamton, NY',
+                  institution: 'Lourdes',
+                  interval: 'June 2019-June 2020',
+                  details: 'inpatient',
+                  gramStain: 'positive',
+                  id: 1,
+              },
+              {
+                  state: 'Binghamton, NY',
+                  institution: 'Lourdes',
+                  interval: 'June 2019-June 2020',
+                  details: 'inpatient',
+                  gramStain: 'negative',
+                  id: 2,
+              },
+              {
+                  state: 'Binghamton, NY',
+                  institution: 'Lourdes',
+                  interval: 'June 2019-June 2020',
+                  details: 'outpatient',
+                  gramStain: 'positive',
+                  id: 3,
+              },
+              {
+                  state: 'Binghamton, NY',
+                  institution: 'Lourdes',
+                  interval: 'June 2019-June 2020',
+                  details: 'outpatient',
+                  gramStain: 'negative',
+                  id: 4,
+              },
+              {
+                  state: 'Binghamton, NY',
+                  institution: 'UHS',
+                  interval: 'January 2020-January 2021',
+                  details: 'non-urine',
+                  gramStain: 'negative',
+                  id: 5,
+              },
+              {
+                  state: 'Binghamton, NY',
+                  institution: 'UHS',
+                  interval: 'January 2020-January 2021',
+                  details: 'non-urine',
+                  gramStain: 'positive',
+                  id: 6,
+              },
+              {
+                  state: 'Binghamton, NY',
+                  institution: 'UHS',
+                  interval: 'January 2020-January 2021',
+                  details: 'urine',
+                  gramStain: 'unspecified',
+                  id: 7,
+              },
+          ], "f");
+      }
+      present(p) {
+          return __awaiter(this, void 0, void 0, function* () {
+              const result = yield this.execute();
+              p.setData(result);
+              return p;
+          });
+      }
+      execute() {
+          return __awaiter(this, void 0, void 0, function* () {
+              return __classPrivateFieldGet(this, _IndexAntibiogramTitleAction_repo, "f");
+          });
+      }
+  }
+  _IndexAntibiogramTitleAction_repo = new WeakMap();
+
+  var _AntibiogramTitleController_action, _AntibiogramTitleController_presenter;
+  class AntibiogramTitleController {
+      constructor(indexAntibiogramTitleAction, webAntibiogramTitlePresenter) {
+          _AntibiogramTitleController_action.set(this, void 0);
+          _AntibiogramTitleController_presenter.set(this, void 0);
+          __classPrivateFieldSet(this, _AntibiogramTitleController_action, indexAntibiogramTitleAction, "f");
+          __classPrivateFieldSet(this, _AntibiogramTitleController_presenter, webAntibiogramTitlePresenter, "f");
+      }
+      index() {
+          return __awaiter(this, void 0, void 0, function* () {
+              yield __classPrivateFieldGet(this, _AntibiogramTitleController_action, "f").present(__classPrivateFieldGet(this, _AntibiogramTitleController_presenter, "f"));
+              return __classPrivateFieldGet(this, _AntibiogramTitleController_presenter, "f").buildViewModel();
+          });
+      }
+  }
+  _AntibiogramTitleController_action = new WeakMap(), _AntibiogramTitleController_presenter = new WeakMap();
+
+  var _WebAntibiogramTitlePresenter_data;
+  class WebAntibiogramTitlePresenter {
+      constructor() {
+          _WebAntibiogramTitlePresenter_data.set(this, null);
+      }
+      setData(data) {
+          __classPrivateFieldSet(this, _WebAntibiogramTitlePresenter_data, data, "f");
+      }
+      buildViewModel() {
+          if (__classPrivateFieldGet(this, _WebAntibiogramTitlePresenter_data, "f") === null)
+              return null;
+          return __classPrivateFieldGet(this, _WebAntibiogramTitlePresenter_data, "f").map((g) => ({
+              state: g.state,
+              institution: g.institution,
+              interval: g.interval,
+              details: g.details,
+              gramStain: g.gramStain,
+              id: g.id,
+          }));
+      }
+  }
+  _WebAntibiogramTitlePresenter_data = new WeakMap();
+
   const dependencies = new Module();
   dependencies.type('showAntibiogramAction', ShowAntibiogramAction);
   dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramGroupsAction);
+  dependencies.type('indexAntibiogramTitleAction', IndexAntibiogramTitleAction);
   dependencies.type('antibiogramRepository', CsvAntibiogramRepository);
   dependencies.type('filesystem', WebFileSystem);
   dependencies.type('tableController', TableController);
   dependencies.type('antibiogramGroupController', AntibiogramGroupController);
+  dependencies.type('antibiogramTitleController', AntibiogramTitleController);
   dependencies.type('webAntibiogramGroupsPresenter', WebAntibiogramGroupPresenter);
+  dependencies.type('webAntibiogramTitlePresenter', WebAntibiogramTitlePresenter);
   dependencies.value('fetch', fetch.bind(window));
   dependencies.factory('svelte', svelte);
 
