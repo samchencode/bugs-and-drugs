@@ -63,7 +63,10 @@
 <style>
   .table-window {
     position: relative;
-    top: 60px;
+    /* top: 60px; */
+    overflow-x: auto;
+    overflow-y: hidden;
+    overflow-y: clip;
   }
 
   .small-table {
@@ -75,7 +78,8 @@
   .antibiogram-table {
     position: relative;
     font-size: var(--table-font-size);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+    border: 1px solid black;
   }
 
   .antibiogram-table tbody tr {

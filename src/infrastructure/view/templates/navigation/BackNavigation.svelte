@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
   import type AntibiogramTitleController from '@/infrastructure/view/controllers/AntibiogramTitleController';
   import { getContext } from 'svelte';
 
@@ -11,7 +10,6 @@
 
   let navMenuHidden = true;
 
-  export let params: any;
   const controller = getContext<AntibiogramTitleController>(
     'antibiogramTitleController'
   );
@@ -24,6 +22,8 @@
       });
     }
   });
+
+  export let params;
 </script>
 
 <nav>
@@ -110,5 +110,11 @@
   .nav-link:hover,
   .nav-link:focus {
     background: var(--main-surface-emphasis-color);
+  }
+
+  @media screen and (max-width: 250px) {
+    .title {
+      word-break: break-all;
+    }
   }
 </style>
