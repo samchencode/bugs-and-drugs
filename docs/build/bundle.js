@@ -6578,7 +6578,7 @@ var app = (function () {
   class TableElementFactory {
       makeCell(c) {
           const data = c.data;
-          const value = data.map((d) => d.getValue() + '').join('\n');
+          const value = data.map((d) => d.getValue().toString()).join('\n');
           return new FilledCell(value);
       }
       makeLabel(text, tooltipText) {
