@@ -1,14 +1,14 @@
-import type IndexAntibiogramGroupsAction from '@/application/IndexAntibiogramGroupsAction';
-import type WebAntibiogramGroupsPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
+import type IndexAntibiogramAction from '@/application/IndexAntibiogramAction';
+import type WebAntibiogramGroupPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 import type { WebAntibiogramGroup } from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 
 class AntibiogramGroupController {
-  #action: IndexAntibiogramGroupsAction;
-  #presenter: WebAntibiogramGroupsPresenter;
+  #action: IndexAntibiogramAction;
+  #presenter: WebAntibiogramGroupPresenter;
 
   constructor(
-    indexAntibiogramGroupsAction: IndexAntibiogramGroupsAction,
-    webAntibiogramGroupsPresenter: WebAntibiogramGroupsPresenter
+    indexAntibiogramGroupsAction: IndexAntibiogramAction,
+    webAntibiogramGroupsPresenter: WebAntibiogramGroupPresenter
   ) {
     this.#action = indexAntibiogramGroupsAction;
     this.#presenter = webAntibiogramGroupsPresenter;

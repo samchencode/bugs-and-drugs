@@ -4,7 +4,7 @@ import TableController from '@/infrastructure/view/controllers/TableController';
 import AntibiogramGroupController from '@/infrastructure/view/controllers/AntibiogramGroupController';
 import CsvAntibiogramRepository from '@/infrastructure/persistence/csv/CsvAntibiogramRepository';
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
-import IndexAntibiogramGroupsAction from '@/application/IndexAntibiogramGroupsAction';
+import IndexAntibiogramAction from '@/application/IndexAntibiogramAction';
 import WebAntibiogramGroupsPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 import WebFileSystem from '@/infrastructure/filesystem/web/WebFileSystem';
 import IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
@@ -16,7 +16,7 @@ const dependencies = new Module();
 // * PORTS
 // * - Actions
 dependencies.type('showAntibiogramAction', ShowAntibiogramAction);
-dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramGroupsAction);
+dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramAction);
 dependencies.type('indexAntibiogramTitleAction', IndexAntibiogramTitleAction);
 
 // * ADAPTERS
