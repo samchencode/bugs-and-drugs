@@ -11,10 +11,6 @@
   </div>
 </li>
 
-<!-- <button class="fav-button button--unset clickable">
-  <ion-icon name="star-outline" class="icon" />
-  <ion-icon name="star" class="icon" />
-</button> -->
 <style>
   .item {
     display: flex;
