@@ -1,61 +1,119 @@
 <script lang="ts">
   export let title: string;
   export let subtitle: string;
-  export let dates: string;
+
+  let bodyHidden = false;
+
+  const handleToggle = () => (bodyHidden = !bodyHidden);
 </script>
 
-<div class="card">
-  <div class="card-left">
-    <h2 class="title">{title}</h2>
+<figure class="card" class:body-hidden={bodyHidden}>
+  <div class="header">
+    <ion-icon name="medical-outline" class="icon thumbnail" />
+    <h1 class="title">{title}</h1>
     <p class="subtitle">{subtitle}</p>
-    <p class="dates">{dates}</p>
+    <button
+      class="toggle"
+      class:toggle-inactive={bodyHidden}
+      on:click={handleToggle}
+    >
+      <ion-icon name="chevron-up-outline" class="icon" />
+    </button>
   </div>
-  <button class="fav-button button--unset clickable">
-    <ion-icon name="star-outline" class="icon" />
-    <ion-icon name="star" class="icon" />
-  </button>
-</div>
+  <div class="body">
+    <slot />
+  </div>
+</figure>
 
 <style>
   .card {
     width: 100%;
     padding: var(--space-sm);
-    border: var(--border);
+    margin: 0;
+    margin-bottom: var(--space-md);
     box-shadow: var(--bs);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    background-color: var(--main-surface-color);
   }
 
-  .card-left * {
-    display: block;
+  .header {
+    display: grid;
+    grid-template-columns: 72px 1fr 40px;
+    align-items: center;
+    transition: margin-bottom 200ms ease 200ms;
   }
 
   .title {
-    font-size: var(--font-md);
+    font-size: var(--font-lg);
+    font-weight: bold;
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
   }
 
   .subtitle {
-    font-size: var(--font-sm);
-  }
-  .dates {
-    font-size: var(--font-sm);
-  }
-
-  .fav-button {
-    font-size: var(--font-xl);
-    display: flex;
-    align-items: center;
-    color: var(--main-on-surface-color);
+    font-size: var(--font-md);
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    padding-bottom: var(--space-xs);
   }
 
-  .fav-button .icon:first-child,
-  .fav-button:hover .icon:last-child {
-    display: inline-block;
+  .icon {
+    font-size: var(--icon-md);
   }
 
-  .fav-button:hover .icon:first-child,
-  .fav-button .icon:last-child {
-    display: none;
+  .thumbnail {
+    font-size: 40px;
+    grid-column: 1 / 2;
+    grid-row: 1 / span 2;
+  }
+
+  .toggle {
+    grid-column: 3 / 4;
+    grid-row: 1 / span 2;
+    justify-self: flex-end;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+  }
+
+  .toggle:hover,
+  .toggle:focus {
+    background: var(--main-surface-emphasis-color);
+  }
+
+  .toggle .icon {
+    transition: transform 200ms ease-in;
+  }
+
+  .toggle-inactive .icon {
+    transform: rotate(180deg);
+  }
+
+  .body {
+    margin-top: var(--space-md);
+    transform: scale(1, 1);
+    height: initial;
+    overflow: hidden;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  .body-hidden .body {
+    opacity: 0;
+    animation: 200ms ease 200ms 1 forwards shrink;
+  }
+
+  @keyframes shrink {
+    from {
+      margin-top: var(--space-md);
+      max-height: 100vh;
+    }
+
+    to {
+      margin-top: 0;
+      max-height: 0;
+    }
   }
 </style>
