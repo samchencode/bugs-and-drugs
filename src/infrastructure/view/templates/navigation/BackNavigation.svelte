@@ -23,7 +23,7 @@
     }
   });
 
-  export let params;
+  export const params: any = null;
 </script>
 
 <nav>
