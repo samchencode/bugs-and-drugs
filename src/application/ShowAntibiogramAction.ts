@@ -3,10 +3,6 @@ import buildAntibiogramTable from '@/domain/AntibiogramTableBuilder';
 import type { Table } from '@/domain/Table';
 import { AntibiogramId } from '@/domain/Antibiogram';
 
-interface ShowAntibiogramActionParams {
-  id: number;
-}
-
 class ShowAntibiogramAction {
   antibiogramRepository: AntibiogramRepository;
 
@@ -14,8 +10,8 @@ class ShowAntibiogramAction {
     this.antibiogramRepository = antibiogramRepository;
   }
 
-  async execute(id: number): Promise<Table> {
-    const abgId = new AntibiogramId('' + id);
+  async execute(id: string): Promise<Table> {
+    const abgId = new AntibiogramId(id);
     const abg = await this.antibiogramRepository.getById(abgId);
     const table = buildAntibiogramTable(abg);
     return table;
@@ -23,4 +19,3 @@ class ShowAntibiogramAction {
 }
 
 export default ShowAntibiogramAction;
-export type { ShowAntibiogramActionParams };

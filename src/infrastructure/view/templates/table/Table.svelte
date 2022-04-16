@@ -7,7 +7,7 @@
   import EmptyCorner from './EmptyCorner.svelte';
   import { state } from './tableStore';
 
-  export let id: number;
+  export let id: string;
 
   (getContext('tableController') as TableController)
     .showTable(id)

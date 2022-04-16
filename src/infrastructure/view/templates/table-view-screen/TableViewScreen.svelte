@@ -2,7 +2,7 @@
   import TopBar from '../common/TopBar.svelte';
   import SelectorBar from '../table/Selectors/SelectorBar.svelte';
   import Table from '../table/Table.svelte';
-  export let params: { id?: number } = {};
+  export let params: { id?: string } = {};
 </script>
 
-<Table id={params.id ?? 0} />
+<Table id={params.id ?? '0'} />

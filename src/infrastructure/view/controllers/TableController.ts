@@ -7,7 +7,7 @@ class TableController {
     this.showAbg = showAntibiogramAction;
   }
 
-  async showTable(id: number) {
+  async showTable(id: string) {
     return await this.showAbg.execute(id);
   }
 }

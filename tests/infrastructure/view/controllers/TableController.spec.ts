@@ -12,21 +12,11 @@ describe('Table Controller', () => {
   });
 
   it('should get a specified table', () => {
-    return controller.showTable(0).then((t) => {
+    return controller.showTable('0').then((t) => {
       expect(t.getRowLabels()).toBeDefined();
       expect(t.getColumnLabels()).toBeDefined();
       expect(t.getCells()).toBeDefined();
       expect(t.getCells().length).toBe(3);
     });
   });
-
-  // TODO: indexes all tables
-
-  // TODO: add/remove filters for all tables
-
-  // TODO: sort list of all tables by ___
-
-  // TODO: add/remove filters for table rows/columns
-
-  // TODO: sort rows/columns by ___
 });
