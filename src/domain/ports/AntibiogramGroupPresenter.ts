@@ -1,7 +1,7 @@
 import type Antibiogram from '@/domain/Antibiogram';
 
-interface AntibiogramPresenter {
+interface AntibiogramGroupPresenter {
   setData(data: Antibiogram[]): void;
 }
 
-export type { AntibiogramPresenter };
+export type { AntibiogramGroupPresenter };

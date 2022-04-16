@@ -1,5 +1,5 @@
 import type { AntibiogramRepository } from '@/domain/ports/AntibiogramRepository';
-import type { AntibiogramPresenter } from '@/domain/ports/AntibiogramGroupPresenter';
+import type { AntibiogramGroupPresenter } from '@/domain/ports/AntibiogramGroupPresenter';
 import type Antibiogram from '@/domain/Antibiogram';
 
 class IndexAntibiogramAction {
@@ -13,7 +13,7 @@ class IndexAntibiogramAction {
     return await this.#repo.getAll();
   }
 
-  async present(p: AntibiogramPresenter) {
+  async present(p: AntibiogramGroupPresenter) {
     const result = await this.execute();
     p.setData(result);
     return p;

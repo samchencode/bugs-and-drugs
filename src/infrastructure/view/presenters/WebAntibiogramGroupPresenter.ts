@@ -1,6 +1,6 @@
 import type Antibiogram from '@/domain/Antibiogram';
 import type ValueObject from '@/domain/base/ValueObject';
-import type { AntibiogramPresenter } from '@/domain/ports/AntibiogramGroupPresenter';
+import type { AntibiogramGroupPresenter } from '@/domain/ports/AntibiogramGroupPresenter';
 
 type WebAntibiogramGroup = {
   place: string;
@@ -17,7 +17,7 @@ type WebAntibiogramGroup = {
       }[];
 };
 
-class WebAntibiogramGroupPresenter implements AntibiogramPresenter {
+class WebAntibiogramGroupPresenter implements AntibiogramGroupPresenter {
   #data: Antibiogram[] | null = null;
 
   setData(data: Antibiogram[]): void {
