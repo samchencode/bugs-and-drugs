@@ -7,7 +7,6 @@ import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import IndexAntibiogramAction from '@/application/IndexAntibiogramAction';
 import WebAntibiogramGroupsPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 import WebFileSystem from '@/infrastructure/filesystem/web/WebFileSystem';
-import IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
 
 const dependencies = new Module();
 
@@ -15,7 +14,6 @@ const dependencies = new Module();
 // * - Actions
 dependencies.type('showAntibiogramAction', ShowAntibiogramAction);
 dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramAction);
-dependencies.type('indexAntibiogramTitleAction', IndexAntibiogramTitleAction);
 
 // * ADAPTERS
 // * - Repositories
