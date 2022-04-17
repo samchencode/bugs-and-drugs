@@ -1,4 +1,4 @@
-organism_name,antibiotic_name,antibiotic_route,isolates,value,source
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info
 ENTEROCOCCUS FAECALIS,Nitrofurantoin--Urine use only,#N/A,73,100,"inpatient, urine"
 ENTEROCOCCUS FAECIUM,Nitrofurantoin--Urine use only,#N/A,35,11,"inpatient, urine"
 COAGULASE NEG. STAPH,Nitrofurantoin--Urine use only,#N/A,60,98,"inpatient, urine"
