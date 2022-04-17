@@ -3455,8 +3455,8 @@ var app = (function () {
   	let current;
   	let mounted;
   	let dispose;
-  	const default_slot_template = /*#slots*/ ctx[5].default;
-  	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[4], null);
+  	const default_slot_template = /*#slots*/ ctx[6].default;
+  	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[5], null);
 
   	return {
   		c() {
@@ -3471,20 +3471,21 @@ var app = (function () {
   			t3 = text(/*subtitle*/ ctx[1]);
   			t4 = space();
   			button = element("button");
-  			button.innerHTML = `<ion-icon name="chevron-up-outline" class="icon svelte-3byh1u"></ion-icon>`;
+  			button.innerHTML = `<ion-icon name="chevron-up-outline" class="icon svelte-rl4ujf"></ion-icon>`;
   			t5 = space();
   			div1 = element("div");
   			if (default_slot) default_slot.c();
   			set_custom_element_data(ion_icon0, "name", "medical-outline");
-  			set_custom_element_data(ion_icon0, "class", "icon thumbnail svelte-3byh1u");
-  			attr(h1, "class", "title svelte-3byh1u");
-  			attr(p, "class", "subtitle svelte-3byh1u");
-  			attr(button, "class", "toggle svelte-3byh1u");
+  			set_custom_element_data(ion_icon0, "class", "icon thumbnail svelte-rl4ujf");
+  			attr(h1, "class", "title svelte-rl4ujf");
+  			attr(p, "class", "subtitle svelte-rl4ujf");
+  			attr(button, "class", "toggle svelte-rl4ujf");
   			toggle_class(button, "toggle-inactive", /*bodyHidden*/ ctx[2]);
-  			attr(div0, "class", "header svelte-3byh1u");
-  			attr(div1, "class", "body svelte-3byh1u");
-  			attr(figure, "class", "card svelte-3byh1u");
+  			attr(div0, "class", "header svelte-rl4ujf");
+  			attr(div1, "class", "body svelte-rl4ujf");
+  			attr(figure, "class", "card svelte-rl4ujf");
   			toggle_class(figure, "body-hidden", /*bodyHidden*/ ctx[2]);
+  			toggle_class(figure, "undo-transition", /*undoTransition*/ ctx[3]);
   		},
   		m(target, anchor) {
   			insert(target, figure, anchor);
@@ -3508,7 +3509,7 @@ var app = (function () {
   			current = true;
 
   			if (!mounted) {
-  				dispose = listen(button, "click", /*handleToggle*/ ctx[3]);
+  				dispose = listen(button, "click", /*handleToggle*/ ctx[4]);
   				mounted = true;
   			}
   		},
@@ -3521,15 +3522,15 @@ var app = (function () {
   			}
 
   			if (default_slot) {
-  				if (default_slot.p && (!current || dirty & /*$$scope*/ 16)) {
+  				if (default_slot.p && (!current || dirty & /*$$scope*/ 32)) {
   					update_slot_base(
   						default_slot,
   						default_slot_template,
   						ctx,
-  						/*$$scope*/ ctx[4],
+  						/*$$scope*/ ctx[5],
   						!current
-  						? get_all_dirty_from_scope(/*$$scope*/ ctx[4])
-  						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[4], dirty, null),
+  						? get_all_dirty_from_scope(/*$$scope*/ ctx[5])
+  						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[5], dirty, null),
   						null
   					);
   				}
@@ -3537,6 +3538,10 @@ var app = (function () {
 
   			if (dirty & /*bodyHidden*/ 4) {
   				toggle_class(figure, "body-hidden", /*bodyHidden*/ ctx[2]);
+  			}
+
+  			if (dirty & /*undoTransition*/ 8) {
+  				toggle_class(figure, "undo-transition", /*undoTransition*/ ctx[3]);
   			}
   		},
   		i(local) {
@@ -3562,15 +3567,26 @@ var app = (function () {
   	let { title } = $$props;
   	let { subtitle } = $$props;
   	let bodyHidden = false;
-  	const handleToggle = () => $$invalidate(2, bodyHidden = !bodyHidden);
+  	let undoTransition = false;
+
+  	const handleToggle = () => {
+  		$$invalidate(2, bodyHidden = !bodyHidden);
+
+  		if (!bodyHidden) {
+  			$$invalidate(3, undoTransition = true);
+  			setTimeout(() => $$invalidate(3, undoTransition = false), 400);
+  		} else {
+  			$$invalidate(3, undoTransition = false);
+  		}
+  	};
 
   	$$self.$$set = $$props => {
   		if ('title' in $$props) $$invalidate(0, title = $$props.title);
   		if ('subtitle' in $$props) $$invalidate(1, subtitle = $$props.subtitle);
-  		if ('$$scope' in $$props) $$invalidate(4, $$scope = $$props.$$scope);
+  		if ('$$scope' in $$props) $$invalidate(5, $$scope = $$props.$$scope);
   	};
 
-  	return [title, subtitle, bodyHidden, handleToggle, $$scope, slots];
+  	return [title, subtitle, bodyHidden, undoTransition, handleToggle, $$scope, slots];
   }
 
   class Card extends SvelteComponent {
