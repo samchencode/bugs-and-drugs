@@ -6953,11 +6953,15 @@ var app = (function () {
       makeColumnLabel(c) {
           const route = c.antibiotic
               .getAntibiotics()
+              .filter((abx) => !abx.getRoute().is(routeFactory.UNKNOWN))
               .map((abx) => abx.getRoute().toString())
               .join(', ');
           const si = c.info.itemsToArray();
-          const tooltip = new Tooltip([...si, route].map((si) => new Tooltip(si.toString())));
-          return this.makeLabel(c.antibiotic.getName(), tooltip.toString());
+          const tooltipLines = [si, route]
+              .map((s) => '' + s)
+              .filter((s) => s !== '')
+              .join('\n');
+          return this.makeLabel(c.antibiotic.getName(), tooltipLines);
       }
       makeEmptyMatrix(nRow, nCol) {
           return new Array(nRow).fill(undefined).map(() => this.makeEmptyRow(nCol));
