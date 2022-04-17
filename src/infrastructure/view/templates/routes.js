@@ -6,7 +6,7 @@ const routes = {
   '/': IndexScreen,
 
   // Using named parameters, with last being optional
-  '/antibiogram/:id': TableViewScreen,
+  '/antibiogram': TableViewScreen,
 
   // Catch-all
   // This is optional, but if present it must be the last

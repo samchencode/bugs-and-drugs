@@ -6,7 +6,9 @@ describe('WebAntibiogramGroupPresenter', () => {
   // Place -> Time -> SI -> G+/-
 
   describe('instantiation', () => {
-    new WebAntibiogramGroupPresenter();
+    it('should make a new presenter instance', () => {
+      new WebAntibiogramGroupPresenter();
+    });
   });
 
   describe('behavior', () => {

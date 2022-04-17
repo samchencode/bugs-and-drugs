@@ -8,10 +8,10 @@ class AntibiogramGroupController {
 
   constructor(
     indexAntibiogramGroupsAction: IndexAntibiogramAction,
-    webAntibiogramGroupsPresenter: WebAntibiogramGroupPresenter
+    webAntibiogramGroupPresenter: WebAntibiogramGroupPresenter
   ) {
     this.#action = indexAntibiogramGroupsAction;
-    this.#presenter = webAntibiogramGroupsPresenter;
+    this.#presenter = webAntibiogramGroupPresenter;
   }
 
   async index(): Promise<WebAntibiogramGroup[] | null> {

@@ -1,27 +1,27 @@
 import { writable, type Writable } from 'svelte/store';
-import { TableElement } from '@/infrastructure/view/templates/table/TableElement';
+import WebTableElement from '@/infrastructure/view/presenters/WebTablePresenter/WebTableElement';
+import WebRowHeader from '@/infrastructure/view/presenters/WebTablePresenter/WebRowHeader';
 import type { Cell, Label, Table } from '@/domain/Table';
-import { RowHeader } from '@/infrastructure/view/templates/table/RowHeader';
 import type TableGroup from '@/domain/Table/Facade/TableGroup';
 
 interface TableState {
-  rowHeaders: RowHeader[];
-  columnHeaders: TableElement[];
-  grid: TableElement[][];
+  rowHeaders: WebRowHeader[];
+  columnHeaders: WebTableElement[];
+  grid: WebTableElement[][];
   groups: TableGroup[];
 }
 
 const { subscribe, update, set }: Writable<TableState> = writable({
-  rowHeaders: [] as RowHeader[],
-  columnHeaders: [] as TableElement[],
-  grid: [] as TableElement[][],
+  rowHeaders: [] as WebRowHeader[],
+  columnHeaders: [] as WebTableElement[],
+  grid: [] as WebTableElement[][],
   groups: [] as TableGroup[],
 });
 
 function _toggleHighlightRow(
   row: number,
-  grid: TableElement[][],
-  header: RowHeader[]
+  grid: WebTableElement[][],
+  header: WebRowHeader[]
 ) {
   grid[row].forEach((cell) => {
     cell.toggleHighlighted();
@@ -32,8 +32,8 @@ function _toggleHighlightRow(
 
 function _highlightRow(
   row: number,
-  grid: TableElement[][],
-  header: RowHeader[]
+  grid: WebTableElement[][],
+  header: WebRowHeader[]
 ) {
   grid[row].forEach((cell) => {
     cell.highlight();
@@ -43,8 +43,8 @@ function _highlightRow(
 }
 function _unhighlightRow(
   row: number,
-  grid: TableElement[][],
-  header: RowHeader[]
+  grid: WebTableElement[][],
+  header: WebRowHeader[]
 ) {
   grid[row].forEach((cell) => {
     cell.unHighlight();
@@ -55,8 +55,8 @@ function _unhighlightRow(
 
 function _toggleHighlightColumn(
   column: number,
-  grid: TableElement[][],
-  header: TableElement[]
+  grid: WebTableElement[][],
+  header: WebTableElement[]
 ) {
   grid.forEach((row) => {
     row[column].toggleHighlighted();
@@ -67,8 +67,8 @@ function _toggleHighlightColumn(
 
 function _highlightColumn(
   column: number,
-  grid: TableElement[][],
-  header: TableElement[]
+  grid: WebTableElement[][],
+  header: WebTableElement[]
 ) {
   grid.forEach((row) => {
     row[column].highlight();
@@ -79,8 +79,8 @@ function _highlightColumn(
 
 function _unhighlightColumn(
   column: number,
-  grid: TableElement[][],
-  header: TableElement[]
+  grid: WebTableElement[][],
+  header: WebTableElement[]
 ) {
   grid.forEach((row) => {
     row[column].unHighlight();
@@ -247,16 +247,16 @@ const loadTable = (table: Table) => {
     grid: table
       ?.getCells()
       .map((row: Cell[]) =>
-        row.map((cell: Cell, index) => new TableElement(index, cell))
+        row.map((cell: Cell, index) => new WebTableElement(index, cell))
       ),
     rowHeaders: table
       ?.getRows()
       .map(
-        (row, index) => new RowHeader(index, row.getLabel(), row.getGroup())
+        (row, index) => new WebRowHeader(index, row.getLabel(), row.getGroup())
       ),
     columnHeaders: table
       ?.getColumnLabels()
-      .map((label: Label, index) => new TableElement(index, label)),
+      .map((label: Label, index) => new WebTableElement(index, label)),
     groups: groupArray,
   });
 };

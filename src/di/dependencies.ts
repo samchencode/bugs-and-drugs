@@ -5,8 +5,9 @@ import AntibiogramGroupController from '@/infrastructure/view/controllers/Antibi
 import CsvAntibiogramRepository from '@/infrastructure/persistence/csv/CsvAntibiogramRepository';
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import IndexAntibiogramAction from '@/application/IndexAntibiogramAction';
-import WebAntibiogramGroupsPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
+import WebAntibiogramGroupPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 import WebFileSystem from '@/infrastructure/filesystem/web/WebFileSystem';
+import WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
 
 const dependencies = new Module();
 
@@ -23,10 +24,8 @@ dependencies.type('filesystem', WebFileSystem);
 dependencies.type('tableController', TableController);
 dependencies.type('antibiogramGroupController', AntibiogramGroupController);
 // * - Presenter
-dependencies.type(
-  'webAntibiogramGroupsPresenter',
-  WebAntibiogramGroupsPresenter
-);
+dependencies.type('webAntibiogramGroupPresenter', WebAntibiogramGroupPresenter);
+dependencies.type('webTablePresenter', WebTablePresenter);
 
 // * INJECTED EXTERNAL DEPENDENCIES
 dependencies.value('fetch', fetch.bind(window));

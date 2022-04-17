@@ -30,7 +30,7 @@
               {#each intervals as { interval, groups }}
                 {#each groups as { title, antibiograms }}
                   <a
-                    href={'/antibiogram/' +
+                    href={'/antibiogram?ids=' +
                       antibiograms.map((a) => a.id).join(',')}
                     class="link"
                     use:link

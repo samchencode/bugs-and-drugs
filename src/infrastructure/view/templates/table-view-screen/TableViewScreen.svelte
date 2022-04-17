@@ -1,8 +1,17 @@
 <script lang="ts">
-  import TopBar from '../common/TopBar.svelte';
-  import SelectorBar from '../table/Selectors/SelectorBar.svelte';
+  import { querystring } from 'svelte-spa-router';
   import Table from '../table/Table.svelte';
-  export let params: { id?: string } = {};
+
+  export const params: {} = {};
+
+  $: param = new URLSearchParams($querystring).get('ids');
+  $: ids = param?.split(',');
 </script>
 
-<Table id={params.id ?? '0'} />
+{#if !ids || ids.length === 0}
+  <p>No antibiogram selected...</p>
+{:else}
+  {#each ids as id}
+    <Table {id} />
+  {/each}
+{/if}

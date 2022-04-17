@@ -5,16 +5,25 @@
   import ColumnHeader from './ColumnHeader.svelte';
   import NoTable from './NoTable.svelte';
   import EmptyCorner from './EmptyCorner.svelte';
-  import { state } from './tableStore';
+  import type WebTable from '@/infrastructure/view/presenters/WebTablePresenter/WebTable';
 
   export let id: string;
 
-  (getContext('tableController') as TableController)
-    .showTable(id)
-    .then((table) => {
-      state.loadTable(table);
-      tableSize();
-    });
+  let vm: WebTable | null;
+
+  const s =
+    (fn: (...args: any[]) => unknown) =>
+    (...args: any[]) => {
+      const res = fn(...args);
+      vm = vm;
+      return res;
+    };
+
+  const controller = getContext<TableController>('tableController');
+  controller.show(id).then((table) => (vm = table));
+
+  $: tableSize();
+
   //smallTable tracks the size of the of the table relative to the viewport to determine formatting.
   let smallTable = true;
   const tableSize = () => {
@@ -28,31 +37,31 @@
 </script>
 
 <div class="table-window" class:small-table={smallTable} id="table-container">
-  {#if !$state.grid}
+  {#if !vm}
     <NoTable />
   {:else}
     <table class="antibiogram-table" id="table">
       <thead>
         <tr>
           <EmptyCorner />
-          {#each $state.columnHeaders as columnHeader, j (columnHeader.id)}
+          {#each vm.columnHeaders as columnHeader, j (columnHeader.id)}
             <ColumnHeader
               {columnHeader}
-              highlight={() => state.highlightColumn(j)}
-              unhighlight={() => state.unhighlightColumn(j)}
+              highlight={s(() => vm?.highlightColumn(j))}
+              unhighlight={s(() => vm?.unhighlightColumn(j))}
             />
           {/each}
         </tr>
       </thead>
       <tbody>
-        {#each $state.rowHeaders as rowHeader, i (rowHeader.id)}
+        {#each vm.rowHeaders as rowHeader, i (rowHeader.id)}
           <TableRow
             {rowHeader}
-            rowOfCells={$state.grid[i]}
-            highlightCells={(j) => state.highlightCell(i, j)}
-            unhighlightCells={(j) => state.unhighlightCell(i, j)}
-            highlight={() => state.highlightRow(i)}
-            unhighlight={() => state.unhighlightRow(i)}
+            rowOfCells={vm.grid[i]}
+            highlightCells={s((j) => vm?.highlightCell(i, j))}
+            unhighlightCells={s((j) => vm?.unhighlightCell(i, j))}
+            highlight={s(() => vm?.highlightRow(i))}
+            unhighlight={s(() => vm?.unhighlightRow(i))}
           />
         {/each}
       </tbody>
