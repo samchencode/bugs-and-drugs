@@ -1,7 +1,6 @@
 <script lang="ts">
   import { querystring } from 'svelte-spa-router';
-  import Table from '../table/Table.svelte';
-
+  import Antibiogram from '@/infrastructure/view/templates/antibiogram/Antibiogram.svelte';
   export const params: {} = {};
 
   $: param = new URLSearchParams($querystring).get('ids');
@@ -12,6 +11,6 @@
   <p>No antibiogram selected...</p>
 {:else}
   {#each ids as id}
-    <Table {id} />
+    <Antibiogram {id} />
   {/each}
 {/if}

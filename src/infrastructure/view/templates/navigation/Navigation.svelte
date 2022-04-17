@@ -28,7 +28,7 @@
     {:else if vm === null}
       Retrieving...
     {:else}
-      {vm.institution} {vm.info} {vm.publishedAt}
+      {vm.institution} {vm.info}
     {/if}
   </h1>
   <button

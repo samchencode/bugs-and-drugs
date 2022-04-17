@@ -1,30 +1,21 @@
 <script lang="ts">
-  import { getContext } from 'svelte';
-  import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
   import TableRow from './TableRow.svelte';
   import ColumnHeader from './ColumnHeader.svelte';
-  import NoTable from './NoTable.svelte';
   import EmptyCorner from './EmptyCorner.svelte';
-  import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
   import type { WebTable } from '@/infrastructure/view/presenters/WebTablePresenter';
 
-  export let id: string;
+  export let table: WebTable;
 
-  let vm: WebAntibiogram | null;
-  let table: WebTable;
+  let ourTable = table;
 
   const s =
     (fn: (...args: any[]) => unknown) =>
     (...args: any[]) => {
       const res = fn(...args);
-      vm = vm;
+      ourTable = ourTable;
       return res;
     };
 
-  const controller = getContext<AntibiogramController>('antibiogramController');
-  controller.show(id).then((abg) => (vm = abg));
-
-  $: vm && ({ table } = vm);
   $: tableSize();
 
   //smallTable tracks the size of the of the table relative to the viewport to determine formatting.
@@ -40,36 +31,32 @@
 </script>
 
 <div class="table-window" class:small-table={smallTable} id="table-container">
-  {#if !vm}
-    <NoTable />
-  {:else}
-    <table class="antibiogram-table" id="table">
-      <thead>
-        <tr>
-          <EmptyCorner />
-          {#each table.columnHeaders as columnHeader, j (columnHeader.id)}
-            <ColumnHeader
-              {columnHeader}
-              highlight={s(() => table.highlightColumn(j))}
-              unhighlight={s(() => table.unhighlightColumn(j))}
-            />
-          {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each table.rowHeaders as rowHeader, i (rowHeader.id)}
-          <TableRow
-            {rowHeader}
-            rowOfCells={table.grid[i]}
-            highlightCells={s((j) => table.highlightCell(i, j))}
-            unhighlightCells={s((j) => table.unhighlightCell(i, j))}
-            highlight={s(() => table.highlightRow(i))}
-            unhighlight={s(() => table.unhighlightRow(i))}
+  <table class="antibiogram-table" id="table">
+    <thead>
+      <tr>
+        <EmptyCorner />
+        {#each ourTable.columnHeaders as columnHeader, j (columnHeader.id)}
+          <ColumnHeader
+            {columnHeader}
+            highlight={s(() => ourTable.highlightColumn(j))}
+            unhighlight={s(() => ourTable.unhighlightColumn(j))}
           />
         {/each}
-      </tbody>
-    </table>
-  {/if}
+      </tr>
+    </thead>
+    <tbody>
+      {#each ourTable.rowHeaders as rowHeader, i (rowHeader.id)}
+        <TableRow
+          {rowHeader}
+          rowOfCells={ourTable.grid[i]}
+          highlightCells={s((j) => ourTable.highlightCell(i, j))}
+          unhighlightCells={s((j) => ourTable.unhighlightCell(i, j))}
+          highlight={s(() => ourTable.highlightRow(i))}
+          unhighlight={s(() => ourTable.unhighlightRow(i))}
+        />
+      {/each}
+    </tbody>
+  </table>
 </div>
 
 <style>
