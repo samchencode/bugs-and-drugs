@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import type TableController from '@/infrastructure/view/controllers/TableController';
+  import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
   import TableRow from './TableRow.svelte';
   import ColumnHeader from './ColumnHeader.svelte';
   import NoTable from './NoTable.svelte';
@@ -19,7 +19,7 @@
       return res;
     };
 
-  const controller = getContext<TableController>('tableController');
+  const controller = getContext<AntibiogramController>('antibiogramController');
   controller.show(id).then((table) => (vm = table));
 
   $: tableSize();

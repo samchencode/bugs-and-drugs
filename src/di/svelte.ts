@@ -1,15 +1,15 @@
 import App from '@/infrastructure/view/templates/App.svelte';
-import type TableController from '@/infrastructure/view/controllers/TableController';
+import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
 import type AntibiogramGroupController from '@/infrastructure/view/controllers/AntibiogramGroupController';
 
 const svelte = (
-  tableController: TableController,
+  antibiogramController: AntibiogramController,
   antibiogramGroupController: AntibiogramGroupController
 ) => {
   return new App({
     target: document.body,
     context: new Map<string, unknown>([
-      ['tableController', tableController],
+      ['antibiogramController', antibiogramController],
       ['antibiogramGroupController', antibiogramGroupController],
     ]),
   });

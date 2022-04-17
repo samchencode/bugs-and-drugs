@@ -1,7 +1,7 @@
 import type ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import type WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
 
-class TableController {
+class AntibiogramController {
   #action: ShowAntibiogramAction;
   #presenter: WebTablePresenter;
 
@@ -19,4 +19,4 @@ class TableController {
   }
 }
 
-export default TableController;
+export default AntibiogramController;

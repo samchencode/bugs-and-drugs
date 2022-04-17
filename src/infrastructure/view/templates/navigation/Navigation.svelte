@@ -1,14 +1,16 @@
 <script lang="ts">
-  import { link, location } from 'svelte-spa-router';
+  import { link, location, querystring } from 'svelte-spa-router';
 
   let navMenuHidden = true;
 
-  $: hasBack = $location !== '/';
-  $: abgId = $location.split('/').pop();
+  $: onHomePage = $location === '/';
+  $: abgIds = !onHomePage
+    ? new URLSearchParams($querystring).get('ids')?.split(',') ?? null
+    : null;
 </script>
 
 <nav>
-  {#if hasBack}
+  {#if !onHomePage}
     <a class="back" href="/" use:link>
       <ion-icon name="arrow-back-outline" />
     </a>
