@@ -8,7 +8,8 @@
 
   const controller = getContext<AntibiogramController>('antibiogramController');
   $: onHomePage = $location === '/';
-  $: abgIds = !onHomePage
+  $: onTablePage = $location === '/antibiogram';
+  $: abgIds = onTablePage
     ? new URLSearchParams($querystring).get('ids')?.split(',') ?? null
     : null;
   $: abgIds !== null && controller.show(abgIds[0]).then((abg) => (vm = abg));
@@ -25,6 +26,8 @@
   <h1 class="title">
     {#if onHomePage}
       Bugs 'n Drugs
+    {:else if !onTablePage}
+      Not Found
     {:else if vm === null}
       Retrieving...
     {:else}
