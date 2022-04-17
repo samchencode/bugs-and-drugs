@@ -1,12 +1,7 @@
-import type { Interval, Place } from '@/domain/Antibiogram';
-
-interface AntibiogramGroup {
-  place: Place;
-  interval: Interval;
-}
+import type Antibiogram from '@/domain/Antibiogram';
 
 interface AntibiogramGroupPresenter {
-  setData(data: AntibiogramGroup[]): void;
+  setData(data: Antibiogram[]): void;
 }
 
-export type { AntibiogramGroupPresenter, AntibiogramGroup };
+export type { AntibiogramGroupPresenter };

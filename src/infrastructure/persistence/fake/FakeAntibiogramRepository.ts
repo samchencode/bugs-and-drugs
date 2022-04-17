@@ -674,6 +674,7 @@ class FakeAntibiogramRepository implements AntibiogramRepository {
   }
 
   static data = fakeData;
+  static fakeAntibiograms = fakeAntibiograms;
 }
 
 export default FakeAntibiogramRepository;

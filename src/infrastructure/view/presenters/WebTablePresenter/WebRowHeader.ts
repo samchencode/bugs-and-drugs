@@ -1,8 +1,8 @@
 import type { Cell } from '@/domain/Table';
 import type TableGroup from '@/domain/Table/Facade/TableGroup';
-import { TableElement } from '@/infrastructure/view/templates/table/TableElement';
+import WebTableElement from '@/infrastructure/view/presenters/WebTablePresenter/WebTableElement';
 
-class RowHeader extends TableElement {
+class WebRowHeader extends WebTableElement {
   #isCollapsed: boolean | undefined;
   #inGroup: boolean;
   #group: TableGroup | null;
@@ -29,4 +29,4 @@ class RowHeader extends TableElement {
     return this.#firstOfGroup;
   }
 }
-export { RowHeader };
+export default WebRowHeader;

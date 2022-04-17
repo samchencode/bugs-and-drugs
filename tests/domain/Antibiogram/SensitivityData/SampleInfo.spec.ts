@@ -98,7 +98,7 @@ describe('SampleInfo', () => {
     expect(result.is(new SampleInfo([infoItem1]))).toBe(true);
   });
 
-  it.only('should subtract items between two sampleInfo', () => {
+  it('should subtract items between two sampleInfo', () => {
     const infoItem1 = new DemoInfo('1');
     const infoItem2 = new DemoInfo2('2');
     const infoItem3 = new DemoInfo2('3');

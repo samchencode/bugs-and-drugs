@@ -1,8 +1,8 @@
 <script lang="ts">
-  export let rowHeader: any;
-  import { NoIntersectingGroupRanges } from '@/domain/Table/Validator';
+  import type WebRowHeader from '@/infrastructure/view/presenters/WebTablePresenter/WebRowHeader';
   import ToolTip from '@/infrastructure/view/templates/table/Tooltip.svelte';
-  import { state } from './tableStore';
+
+  export let rowHeader: WebRowHeader;
 </script>
 
 <th
@@ -15,44 +15,9 @@
   on:blur
   on:mouseout
 >
-  <div
-    class="organism-name "
-    class:indented={rowHeader.inGroup() === true &&
-      rowHeader.isFirstOfGroup() === false}
-    on:click={() => state.expandGroup(rowHeader.getGroup())}
-  >
+  <div class="organism-name ">
     {rowHeader.getValue()}
   </div>
-
-  {#if rowHeader.inGroup() === true}
-    {#if rowHeader.isFirstOfGroup() === true}
-      {#if rowHeader.isCollapsed() === true}
-        <div
-          class="groupIcon clickable"
-          on:click={() => {
-            state.expandGroup(rowHeader.getGroup());
-          }}
-        >
-          <ion-icon
-            name="chevron-forward-outline"
-            class="clickable horizontally-center"
-          />
-        </div>
-      {:else if rowHeader.isCollapsed() === false}
-        <div
-          class="groupIcon clickable"
-          on:click={() => {
-            state.collapseGroup(rowHeader.getGroup());
-          }}
-        >
-          <ion-icon
-            name="chevron-down-outline"
-            class="clickable horizontally-center"
-          />
-        </div>
-      {/if}
-    {/if}
-  {/if}
   <ToolTip tooltip={rowHeader.getTooltip()} />
 </th>
 
@@ -77,21 +42,13 @@
     display: inline-block;
     position: relative;
   }
-  .groupIcon {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-  }
 
   .highlighted {
     background-color: var(--main-on-emphasis-color);
   }
+
   .active {
     background-color: var(--main-on-active-color);
     z-index: 2;
-  }
-  .indented {
-    position: relative;
-    text-indent: 50px;
   }
 </style>
