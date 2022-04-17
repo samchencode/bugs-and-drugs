@@ -1,12 +1,19 @@
 <script lang="ts">
+  import { getContext } from 'svelte';
   import { link, location, querystring } from 'svelte-spa-router';
+  import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
+  import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
 
-  let navMenuHidden = true;
+  let vm: WebAntibiogram | null = null;
 
+  const controller = getContext<AntibiogramController>('antibiogramController');
   $: onHomePage = $location === '/';
   $: abgIds = !onHomePage
     ? new URLSearchParams($querystring).get('ids')?.split(',') ?? null
     : null;
+  $: abgIds !== null && controller.show(abgIds[0]).then((abg) => (vm = abg));
+
+  let navMenuHidden = true;
 </script>
 
 <nav>
@@ -15,7 +22,15 @@
       <ion-icon name="arrow-back-outline" />
     </a>
   {/if}
-  <h1 class="title">Bugs 'n Drugs</h1>
+  <h1 class="title">
+    {#if onHomePage}
+      Bugs 'n Drugs
+    {:else if vm === null}
+      Retrieving...
+    {:else}
+      {vm.institution} {vm.info} {vm.publishedAt}
+    {/if}
+  </h1>
   <button
     class="nav-menu-toggle"
     on:click={() => (navMenuHidden = !navMenuHidden)}

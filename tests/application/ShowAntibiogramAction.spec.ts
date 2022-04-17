@@ -1,4 +1,5 @@
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
+import Antibiogram from '@/domain/Antibiogram';
 import TableFacade from '@/domain/Table/Facade/TableFacade';
 import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
 
@@ -12,8 +13,8 @@ describe('ShowAntibiogramAction', () => {
   });
 
   it('should show antibiogram as table', () => {
-    return action.execute('0').then((t) => {
-      expect(t.getCells().length).toBe(3);
+    return action.execute('0').then(({ table }) => {
+      expect(table.getCells().length).toBe(3);
     });
   });
 
@@ -26,7 +27,10 @@ describe('ShowAntibiogramAction', () => {
       expect(presenter.setData).toHaveBeenCalled();
 
       const calledWith = mockPresenter.setData.mock.calls[0][0];
-      const expected = expect.any(TableFacade);
+      const expected = expect.objectContaining({
+        table: expect.any(TableFacade),
+        antibiogram: expect.any(Antibiogram),
+      });
 
       expect(calledWith).toEqual(expected);
     });

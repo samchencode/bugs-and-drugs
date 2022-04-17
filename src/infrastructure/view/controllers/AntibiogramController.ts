@@ -1,16 +1,16 @@
 import type ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
-import type WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
+import type WebAntibiogramPresenter from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
 
 class AntibiogramController {
   #action: ShowAntibiogramAction;
-  #presenter: WebTablePresenter;
+  #presenter: WebAntibiogramPresenter;
 
   constructor(
     showAntibiogramAction: ShowAntibiogramAction,
-    webTablePresenter: WebTablePresenter
+    webAntibiogramPresenter: WebAntibiogramPresenter
   ) {
     this.#action = showAntibiogramAction;
-    this.#presenter = webTablePresenter;
+    this.#presenter = webAntibiogramPresenter;
   }
 
   async show(id: string) {

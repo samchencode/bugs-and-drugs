@@ -1,8 +1,10 @@
 import type { AntibiogramRepository } from '@/domain/ports/AntibiogramRepository';
 import buildAntibiogramTable from '@/domain/AntibiogramTableBuilder';
-import type { Table } from '@/domain/Table';
 import { AntibiogramId } from '@/domain/Antibiogram';
-import type { TablePresenter } from '@/domain/ports/TablePresenter';
+import type {
+  AntibiogramPresenter,
+  AntibiogramData,
+} from '@/domain/ports/AntibiogramPresenter';
 
 class ShowAntibiogramAction {
   antibiogramRepository: AntibiogramRepository;
@@ -11,14 +13,14 @@ class ShowAntibiogramAction {
     this.antibiogramRepository = antibiogramRepository;
   }
 
-  async execute(id: string): Promise<Table> {
+  async execute(id: string): Promise<AntibiogramData> {
     const abgId = new AntibiogramId(id);
-    const abg = await this.antibiogramRepository.getById(abgId);
-    const table = buildAntibiogramTable(abg);
-    return table;
+    const antibiogram = await this.antibiogramRepository.getById(abgId);
+    const table = buildAntibiogramTable(antibiogram);
+    return { antibiogram, table };
   }
 
-  async present(p: TablePresenter, id: string) {
+  async present(p: AntibiogramPresenter, id: string) {
     const result = await this.execute(id);
     p.setData(result);
     return p;

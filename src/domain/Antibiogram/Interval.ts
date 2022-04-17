@@ -26,11 +26,15 @@ class Interval extends ValueObject {
   }
 
   toString(): string {
-    return (
-      this.#dateToString(this.#publishedAt) +
-      ' \u2212 ' +
-      this.#dateToString(this.#expiresAt)
-    );
+    return this.publishedAtToString() + ' \u2212 ' + this.expiresAtToString();
+  }
+
+  publishedAtToString(): string {
+    return this.#dateToString(this.#publishedAt);
+  }
+
+  expiresAtToString(): string {
+    return this.#dateToString(this.#expiresAt);
   }
 
   #dateToString(d: Date): string {

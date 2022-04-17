@@ -5,11 +5,13 @@
   import ColumnHeader from './ColumnHeader.svelte';
   import NoTable from './NoTable.svelte';
   import EmptyCorner from './EmptyCorner.svelte';
-  import type WebTable from '@/infrastructure/view/presenters/WebTablePresenter/WebTable';
+  import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
+  import type { WebTable } from '@/infrastructure/view/presenters/WebTablePresenter';
 
   export let id: string;
 
-  let vm: WebTable | null;
+  let vm: WebAntibiogram | null;
+  let table: WebTable;
 
   const s =
     (fn: (...args: any[]) => unknown) =>
@@ -20,8 +22,9 @@
     };
 
   const controller = getContext<AntibiogramController>('antibiogramController');
-  controller.show(id).then((table) => (vm = table));
+  controller.show(id).then((abg) => (vm = abg));
 
+  $: vm && ({ table } = vm);
   $: tableSize();
 
   //smallTable tracks the size of the of the table relative to the viewport to determine formatting.
@@ -44,24 +47,24 @@
       <thead>
         <tr>
           <EmptyCorner />
-          {#each vm.columnHeaders as columnHeader, j (columnHeader.id)}
+          {#each table.columnHeaders as columnHeader, j (columnHeader.id)}
             <ColumnHeader
               {columnHeader}
-              highlight={s(() => vm?.highlightColumn(j))}
-              unhighlight={s(() => vm?.unhighlightColumn(j))}
+              highlight={s(() => table.highlightColumn(j))}
+              unhighlight={s(() => table.unhighlightColumn(j))}
             />
           {/each}
         </tr>
       </thead>
       <tbody>
-        {#each vm.rowHeaders as rowHeader, i (rowHeader.id)}
+        {#each table.rowHeaders as rowHeader, i (rowHeader.id)}
           <TableRow
             {rowHeader}
-            rowOfCells={vm.grid[i]}
-            highlightCells={s((j) => vm?.highlightCell(i, j))}
-            unhighlightCells={s((j) => vm?.unhighlightCell(i, j))}
-            highlight={s(() => vm?.highlightRow(i))}
-            unhighlight={s(() => vm?.unhighlightRow(i))}
+            rowOfCells={table.grid[i]}
+            highlightCells={s((j) => table.highlightCell(i, j))}
+            unhighlightCells={s((j) => table.unhighlightCell(i, j))}
+            highlight={s(() => table.highlightRow(i))}
+            unhighlight={s(() => table.unhighlightRow(i))}
           />
         {/each}
       </tbody>

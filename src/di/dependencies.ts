@@ -8,6 +8,7 @@ import IndexAntibiogramAction from '@/application/IndexAntibiogramAction';
 import WebAntibiogramGroupPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 import WebFileSystem from '@/infrastructure/filesystem/web/WebFileSystem';
 import WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
+import WebAntibiogramPresenter from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
 
 const dependencies = new Module();
 
@@ -25,6 +26,7 @@ dependencies.type('antibiogramController', AntibiogramController);
 dependencies.type('antibiogramGroupController', AntibiogramGroupController);
 // * - Presenter
 dependencies.type('webAntibiogramGroupPresenter', WebAntibiogramGroupPresenter);
+dependencies.type('webAntibiogramPresenter', WebAntibiogramPresenter);
 dependencies.type('webTablePresenter', WebTablePresenter);
 
 // * INJECTED EXTERNAL DEPENDENCIES

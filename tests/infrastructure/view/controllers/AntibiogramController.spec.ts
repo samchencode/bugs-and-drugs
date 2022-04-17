@@ -1,6 +1,7 @@
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
 import AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
+import WebAntibiogramPresenter from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
 import WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
 
 describe('Table Controller', () => {
@@ -9,20 +10,22 @@ describe('Table Controller', () => {
   beforeEach(() => {
     const repo = new FakeAntibiogramRepository();
     const action = new ShowAntibiogramAction(repo);
-    const presenter = new WebTablePresenter();
+    const tablePresenter = new WebTablePresenter();
+    const presenter = new WebAntibiogramPresenter(tablePresenter);
     controller = new AntibiogramController(action, presenter);
   });
 
   it('should present a specified table', () => {
-    return controller.show('0').then((t) => {
-      expect(t).not.toBeNull();
-      if (!t) throw Error();
+    return controller.show('0').then((antibiogram) => {
+      expect(antibiogram).not.toBeNull();
+      if (!antibiogram) throw Error;
 
-      expect(t.grid).toBeDefined();
-      expect(t.rowHeaders).toBeDefined();
-      expect(t.columnHeaders).toBeDefined();
+      const { table } = antibiogram;
+      expect(table.grid).toBeDefined();
+      expect(table.rowHeaders).toBeDefined();
+      expect(table.columnHeaders).toBeDefined();
 
-      expect(t.grid.length).toBe(3);
+      expect(table.grid.length).toBe(3);
     });
   });
 });
