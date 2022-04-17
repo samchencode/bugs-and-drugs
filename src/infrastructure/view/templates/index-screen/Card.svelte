@@ -3,11 +3,24 @@
   export let subtitle: string;
 
   let bodyHidden = false;
+  let undoTransition = false;
 
-  const handleToggle = () => (bodyHidden = !bodyHidden);
+  const handleToggle = () => {
+    bodyHidden = !bodyHidden;
+    if (!bodyHidden) {
+      undoTransition = true;
+      setTimeout(() => (undoTransition = false), 400);
+    } else {
+      undoTransition = false;
+    }
+  };
 </script>
 
-<figure class="card" class:body-hidden={bodyHidden}>
+<figure
+  class="card"
+  class:body-hidden={bodyHidden}
+  class:undo-transition={undoTransition}
+>
   <div class="header">
     <ion-icon name="medical-outline" class="icon thumbnail" />
     <h1 class="title">{title}</h1>
@@ -95,14 +108,18 @@
   .body {
     margin-top: var(--space-md);
     transform: scale(1, 1);
-    height: initial;
     overflow: hidden;
-    transition: opacity 200ms ease-in-out;
+    transition: opacity 200ms ease-in-out 200ms;
   }
 
   .body-hidden .body {
     opacity: 0;
-    animation: 200ms ease 200ms 1 forwards shrink;
+    animation: 400ms ease 1 forwards shrink;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  .undo-transition .body {
+    animation: 400ms ease 1 forwards grow;
   }
 
   @keyframes shrink {
@@ -112,8 +129,20 @@
     }
 
     to {
-      margin-top: 0;
-      max-height: 0;
+      margin-top: 0px;
+      max-height: 0px;
+    }
+  }
+
+  @keyframes grow {
+    from {
+      margin-top: 0px;
+      max-height: 0px;
+    }
+
+    to {
+      margin-top: var(--space-md);
+      max-height: 100vh;
     }
   }
 </style>
