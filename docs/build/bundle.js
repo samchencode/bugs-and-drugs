@@ -457,7 +457,7 @@ var app = (function () {
   function is_empty(obj) {
       return Object.keys(obj).length === 0;
   }
-  function subscribe$2(store, ...callbacks) {
+  function subscribe(store, ...callbacks) {
       if (store == null) {
           return noop;
       }
@@ -465,7 +465,53 @@ var app = (function () {
       return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
   }
   function component_subscribe(component, store, callback) {
-      component.$$.on_destroy.push(subscribe$2(store, callback));
+      component.$$.on_destroy.push(subscribe(store, callback));
+  }
+  function create_slot(definition, ctx, $$scope, fn) {
+      if (definition) {
+          const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+          return definition[0](slot_ctx);
+      }
+  }
+  function get_slot_context(definition, ctx, $$scope, fn) {
+      return definition[1] && fn
+          ? assign($$scope.ctx.slice(), definition[1](fn(ctx)))
+          : $$scope.ctx;
+  }
+  function get_slot_changes(definition, $$scope, dirty, fn) {
+      if (definition[2] && fn) {
+          const lets = definition[2](fn(dirty));
+          if ($$scope.dirty === undefined) {
+              return lets;
+          }
+          if (typeof lets === 'object') {
+              const merged = [];
+              const len = Math.max($$scope.dirty.length, lets.length);
+              for (let i = 0; i < len; i += 1) {
+                  merged[i] = $$scope.dirty[i] | lets[i];
+              }
+              return merged;
+          }
+          return $$scope.dirty | lets;
+      }
+      return $$scope.dirty;
+  }
+  function update_slot_base(slot, slot_definition, ctx, $$scope, slot_changes, get_slot_context_fn) {
+      if (slot_changes) {
+          const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+          slot.p(slot_context, slot_changes);
+      }
+  }
+  function get_all_dirty_from_scope($$scope) {
+      if ($$scope.ctx.length > 32) {
+          const dirty = [];
+          const length = $$scope.ctx.length / 32;
+          for (let i = 0; i < length; i++) {
+              dirty[i] = -1;
+          }
+          return dirty;
+      }
+      return -1;
   }
   function action_destroyer(action_result) {
       return action_result && is_function(action_result.destroy) ? action_result.destroy : noop;
@@ -506,6 +552,14 @@ var app = (function () {
           node.removeAttribute(attribute);
       else if (node.getAttribute(attribute) !== value)
           node.setAttribute(attribute, value);
+  }
+  function set_custom_element_data(node, prop, value) {
+      if (prop in node) {
+          node[prop] = typeof node[prop] === 'boolean' && value === '' ? true : value;
+      }
+      else {
+          attr(node, prop, value);
+      }
   }
   function children(element) {
       return Array.from(element.childNodes);
@@ -615,7 +669,7 @@ var app = (function () {
               const component = dirty_components[flushidx];
               flushidx++;
               set_current_component(component);
-              update$1(component.$$);
+              update(component.$$);
           }
           set_current_component(null);
           dirty_components.length = 0;
@@ -642,7 +696,7 @@ var app = (function () {
       seen_callbacks.clear();
       set_current_component(saved_component);
   }
-  function update$1($$) {
+  function update($$) {
       if ($$.fragment !== null) {
           $$.update();
           run_all($$.before_update);
@@ -1016,7 +1070,7 @@ var app = (function () {
                   cleanup = is_function(result) ? result : noop;
               }
           };
-          const unsubscribers = stores_array.map((store, i) => subscribe$2(store, (value) => {
+          const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
               values[i] = value;
               pending &= ~(1 << i);
               if (inited) {
@@ -1032,2027 +1086,6 @@ var app = (function () {
               cleanup();
           };
       });
-  }
-
-  /*! *****************************************************************************
-  Copyright (c) Microsoft Corporation.
-
-  Permission to use, copy, modify, and/or distribute this software for any
-  purpose with or without fee is hereby granted.
-
-  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-  PERFORMANCE OF THIS SOFTWARE.
-  ***************************************************************************** */
-
-  function __awaiter(thisArg, _arguments, P, generator) {
-      function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-      return new (P || (P = Promise))(function (resolve, reject) {
-          function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-          function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-          function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-          step((generator = generator.apply(thisArg, _arguments || [])).next());
-      });
-  }
-
-  function __classPrivateFieldGet(receiver, state, kind, f) {
-      if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-      if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-      return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-  }
-
-  function __classPrivateFieldSet(receiver, state, value, kind, f) {
-      if (kind === "m") throw new TypeError("Private method is not writable");
-      if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-      if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-      return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
-  }
-
-  var _TableElement_highlighted, _TableElement_active, _TableElement_value, _TableElement_tooltip;
-  class TableElement {
-      constructor(id, cell) {
-          _TableElement_highlighted.set(this, false);
-          _TableElement_active.set(this, false);
-          _TableElement_value.set(this, void 0);
-          _TableElement_tooltip.set(this, void 0);
-          this.id = id;
-          __classPrivateFieldSet(this, _TableElement_value, cell.getValue(), "f");
-          __classPrivateFieldSet(this, _TableElement_tooltip, cell.getTooltip().toString(), "f");
-      }
-      getHighlighted() {
-          return __classPrivateFieldGet(this, _TableElement_highlighted, "f");
-      }
-      getActive() {
-          return __classPrivateFieldGet(this, _TableElement_active, "f");
-      }
-      toggleActive() {
-          __classPrivateFieldSet(this, _TableElement_active, !__classPrivateFieldGet(this, _TableElement_active, "f"), "f");
-      }
-      toggleHighlighted() {
-          __classPrivateFieldSet(this, _TableElement_highlighted, !__classPrivateFieldGet(this, _TableElement_highlighted, "f"), "f");
-      }
-      setActive() {
-          __classPrivateFieldSet(this, _TableElement_active, true, "f");
-      }
-      unsetActive() {
-          __classPrivateFieldSet(this, _TableElement_active, false, "f");
-      }
-      highlight() {
-          __classPrivateFieldSet(this, _TableElement_highlighted, true, "f");
-      }
-      unHighlight() {
-          __classPrivateFieldSet(this, _TableElement_highlighted, false, "f");
-      }
-      getValue() {
-          return __classPrivateFieldGet(this, _TableElement_value, "f");
-      }
-      getTooltip() {
-          return __classPrivateFieldGet(this, _TableElement_tooltip, "f");
-      }
-  }
-  _TableElement_highlighted = new WeakMap(), _TableElement_active = new WeakMap(), _TableElement_value = new WeakMap(), _TableElement_tooltip = new WeakMap();
-
-  var _RowHeader_isCollapsed, _RowHeader_inGroup, _RowHeader_group, _RowHeader_firstOfGroup;
-  class RowHeader$1 extends TableElement {
-      constructor(id, cell, group) {
-          super(id, cell);
-          _RowHeader_isCollapsed.set(this, void 0);
-          _RowHeader_inGroup.set(this, void 0);
-          _RowHeader_group.set(this, void 0);
-          _RowHeader_firstOfGroup.set(this, void 0);
-          __classPrivateFieldSet(this, _RowHeader_group, group, "f");
-          __classPrivateFieldSet(this, _RowHeader_inGroup, group !== null, "f");
-          __classPrivateFieldSet(this, _RowHeader_isCollapsed, group === null || group === void 0 ? void 0 : group.isCollapsed(), "f");
-          __classPrivateFieldSet(this, _RowHeader_firstOfGroup, id === (group === null || group === void 0 ? void 0 : group.getRange()[0]), "f");
-      }
-      isCollapsed() {
-          return __classPrivateFieldGet(this, _RowHeader_isCollapsed, "f");
-      }
-      inGroup() {
-          return __classPrivateFieldGet(this, _RowHeader_inGroup, "f");
-      }
-      getGroup() {
-          return __classPrivateFieldGet(this, _RowHeader_group, "f");
-      }
-      isFirstOfGroup() {
-          return __classPrivateFieldGet(this, _RowHeader_firstOfGroup, "f");
-      }
-  }
-  _RowHeader_isCollapsed = new WeakMap(), _RowHeader_inGroup = new WeakMap(), _RowHeader_group = new WeakMap(), _RowHeader_firstOfGroup = new WeakMap();
-
-  const { subscribe: subscribe$1, update, set: set$1 } = writable({
-      rowHeaders: [],
-      columnHeaders: [],
-      grid: [],
-      groups: [],
-  });
-  function _toggleHighlightRow(row, grid, header) {
-      grid[row].forEach((cell) => {
-          cell.toggleHighlighted();
-      });
-      header[row].toggleHighlighted();
-      return { grid, header };
-  }
-  function _highlightRow(row, grid, header) {
-      grid[row].forEach((cell) => {
-          cell.highlight();
-      });
-      header[row].highlight();
-      return { grid, header };
-  }
-  function _unhighlightRow(row, grid, header) {
-      grid[row].forEach((cell) => {
-          cell.unHighlight();
-      });
-      header[row].unHighlight();
-      return { grid, header };
-  }
-  function _toggleHighlightColumn(column, grid, header) {
-      grid.forEach((row) => {
-          row[column].toggleHighlighted();
-      });
-      header[column].toggleHighlighted();
-      return { grid, header };
-  }
-  function _highlightColumn(column, grid, header) {
-      grid.forEach((row) => {
-          row[column].highlight();
-      });
-      header[column].highlight();
-      return { grid, header };
-  }
-  function _unhighlightColumn(column, grid, header) {
-      grid.forEach((row) => {
-          row[column].unHighlight();
-      });
-      header[column].unHighlight();
-      return { grid, header };
-  }
-  const toggleHighlightRow = (i) => {
-      update((s) => {
-          s.rowHeaders[i].toggleActive();
-          const { grid, header } = _toggleHighlightRow(i, s.grid, s.rowHeaders);
-          return Object.assign(Object.assign({}, s), { grid, rowHeaders: header });
-      });
-  };
-  const highlightRow = (i) => {
-      update((s) => {
-          s.rowHeaders[i].setActive();
-          const { grid, header } = _highlightRow(i, s.grid, s.rowHeaders);
-          return Object.assign(Object.assign({}, s), { grid, rowHeaders: header });
-      });
-  };
-  const unhighlightRow = (i) => {
-      update((s) => {
-          s.rowHeaders[i].unsetActive();
-          const { grid, header } = _unhighlightRow(i, s.grid, s.rowHeaders);
-          return Object.assign(Object.assign({}, s), { grid, rowHeaders: header });
-      });
-  };
-  const toggleHighlightColumn = (j) => {
-      update((s) => {
-          s.columnHeaders[j].toggleActive();
-          const { grid, header } = _toggleHighlightColumn(j, s.grid, s.columnHeaders);
-          return Object.assign(Object.assign({}, s), { grid, columnHeaders: header });
-      });
-  };
-  const highlightColumn = (j) => {
-      update((s) => {
-          s.columnHeaders[j].setActive();
-          const { grid, header } = _highlightColumn(j, s.grid, s.columnHeaders);
-          return Object.assign(Object.assign({}, s), { grid, columnHeaders: header });
-      });
-  };
-  const unhighlightColumn = (j) => {
-      update((s) => {
-          s.columnHeaders[j].unsetActive();
-          const { grid, header } = _unhighlightColumn(j, s.grid, s.columnHeaders);
-          return Object.assign(Object.assign({}, s), { grid, columnHeaders: header });
-      });
-  };
-  const toggleHighlightCell = (i, j) => {
-      update((s) => {
-          let newGrid = s.grid.slice();
-          let newRowHeaders = s.rowHeaders.slice();
-          let newColumnHeaders = s.columnHeaders.slice();
-          newGrid[i][j].toggleActive();
-          ({ grid: newGrid, header: newRowHeaders } = _toggleHighlightRow(i, newGrid, newRowHeaders));
-          ({ grid: newGrid, header: newColumnHeaders } = _toggleHighlightColumn(j, newGrid, newColumnHeaders));
-          return {
-              grid: newGrid,
-              rowHeaders: newRowHeaders,
-              columnHeaders: newColumnHeaders,
-              groups: s.groups,
-          };
-      });
-  };
-  const highlightCell = (i, j) => {
-      update((s) => {
-          let newGrid = s.grid.slice();
-          let newRowHeaders = s.rowHeaders.slice();
-          let newColumnHeaders = s.columnHeaders.slice();
-          newGrid[i][j].setActive();
-          ({ grid: newGrid, header: newRowHeaders } = _highlightRow(i, newGrid, newRowHeaders));
-          ({ grid: newGrid, header: newColumnHeaders } = _highlightColumn(j, newGrid, newColumnHeaders));
-          return {
-              grid: newGrid,
-              rowHeaders: newRowHeaders,
-              columnHeaders: newColumnHeaders,
-              groups: s.groups,
-          };
-      });
-  };
-  const unhighlightCell = (i, j) => {
-      update((s) => {
-          let newGrid = s.grid.slice();
-          let newRowHeaders = s.rowHeaders.slice();
-          let newColumnHeaders = s.columnHeaders.slice();
-          newGrid[i][j].unsetActive();
-          ({ grid: newGrid, header: newRowHeaders } = _unhighlightRow(i, newGrid, newRowHeaders));
-          ({ grid: newGrid, header: newColumnHeaders } = _unhighlightColumn(j, newGrid, newColumnHeaders));
-          return {
-              grid: newGrid,
-              rowHeaders: newRowHeaders,
-              columnHeaders: newColumnHeaders,
-              groups: s.groups,
-          };
-      });
-  };
-  const expandGroup = (group) => {
-      loadTable(group.expand());
-  };
-  const collapseGroup = (group) => {
-      loadTable(group.collapse());
-  };
-  const loadTable = (table) => {
-      const groupArray = [];
-      table.getRows().forEach((row) => {
-          const group = row.getGroup();
-          if (group) {
-              let unique = true;
-              groupArray.forEach((g) => {
-                  if (g == group) {
-                      unique = false;
-                  }
-              });
-              if (unique)
-                  groupArray.push(group);
-          }
-      });
-      set$1({
-          grid: table === null || table === void 0 ? void 0 : table.getCells().map((row) => row.map((cell, index) => new TableElement(index, cell))),
-          rowHeaders: table === null || table === void 0 ? void 0 : table.getRows().map((row, index) => new RowHeader$1(index, row.getLabel(), row.getGroup())),
-          columnHeaders: table === null || table === void 0 ? void 0 : table.getColumnLabels().map((label, index) => new TableElement(index, label)),
-          groups: groupArray,
-      });
-  };
-  const expandAllGroups = () => {
-      update((s) => {
-          s.groups.forEach((group) => group.expand());
-          return s;
-      });
-  };
-  const collapseAllGroups = () => {
-      update((s) => {
-          s.groups.forEach((group) => group.expand());
-          return s;
-      });
-  };
-  const state = {
-      subscribe: subscribe$1,
-      loadTable,
-      toggleHighlightCell,
-      toggleHighlightColumn,
-      toggleHighlightRow,
-      highlightCell,
-      unhighlightCell,
-      highlightColumn,
-      unhighlightColumn,
-      highlightRow,
-      unhighlightRow,
-      expandGroup,
-      collapseGroup,
-      expandAllGroups,
-      collapseAllGroups,
-  };
-
-  /* src\infrastructure\view\templates\table\Tooltip.svelte generated by Svelte v3.44.3 */
-
-  function get_each_context$3(ctx, list, i) {
-  	const child_ctx = ctx.slice();
-  	child_ctx[1] = list[i];
-  	return child_ctx;
-  }
-
-  // (4:0) {#if tooltip.length !== 0}
-  function create_if_block$5(ctx) {
-  	let span;
-  	let each_value = /*tooltip*/ ctx[0].split('\n');
-  	let each_blocks = [];
-
-  	for (let i = 0; i < each_value.length; i += 1) {
-  		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
-  	}
-
-  	return {
-  		c() {
-  			span = element("span");
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].c();
-  			}
-
-  			attr(span, "class", "tooltip-text svelte-rzzl1m");
-  		},
-  		m(target, anchor) {
-  			insert(target, span, anchor);
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].m(span, null);
-  			}
-  		},
-  		p(ctx, dirty) {
-  			if (dirty & /*tooltip*/ 1) {
-  				each_value = /*tooltip*/ ctx[0].split('\n');
-  				let i;
-
-  				for (i = 0; i < each_value.length; i += 1) {
-  					const child_ctx = get_each_context$3(ctx, each_value, i);
-
-  					if (each_blocks[i]) {
-  						each_blocks[i].p(child_ctx, dirty);
-  					} else {
-  						each_blocks[i] = create_each_block$3(child_ctx);
-  						each_blocks[i].c();
-  						each_blocks[i].m(span, null);
-  					}
-  				}
-
-  				for (; i < each_blocks.length; i += 1) {
-  					each_blocks[i].d(1);
-  				}
-
-  				each_blocks.length = each_value.length;
-  			}
-  		},
-  		d(detaching) {
-  			if (detaching) detach(span);
-  			destroy_each(each_blocks, detaching);
-  		}
-  	};
-  }
-
-  // (6:4) {#each tooltip.split('\n') as text}
-  function create_each_block$3(ctx) {
-  	let t0_value = /*text*/ ctx[1] + "";
-  	let t0;
-  	let t1;
-  	let br;
-
-  	return {
-  		c() {
-  			t0 = text(t0_value);
-  			t1 = space();
-  			br = element("br");
-  		},
-  		m(target, anchor) {
-  			insert(target, t0, anchor);
-  			insert(target, t1, anchor);
-  			insert(target, br, anchor);
-  		},
-  		p(ctx, dirty) {
-  			if (dirty & /*tooltip*/ 1 && t0_value !== (t0_value = /*text*/ ctx[1] + "")) set_data(t0, t0_value);
-  		},
-  		d(detaching) {
-  			if (detaching) detach(t0);
-  			if (detaching) detach(t1);
-  			if (detaching) detach(br);
-  		}
-  	};
-  }
-
-  function create_fragment$f(ctx) {
-  	let if_block_anchor;
-  	let if_block = /*tooltip*/ ctx[0].length !== 0 && create_if_block$5(ctx);
-
-  	return {
-  		c() {
-  			if (if_block) if_block.c();
-  			if_block_anchor = empty();
-  		},
-  		m(target, anchor) {
-  			if (if_block) if_block.m(target, anchor);
-  			insert(target, if_block_anchor, anchor);
-  		},
-  		p(ctx, [dirty]) {
-  			if (/*tooltip*/ ctx[0].length !== 0) {
-  				if (if_block) {
-  					if_block.p(ctx, dirty);
-  				} else {
-  					if_block = create_if_block$5(ctx);
-  					if_block.c();
-  					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-  				}
-  			} else if (if_block) {
-  				if_block.d(1);
-  				if_block = null;
-  			}
-  		},
-  		i: noop,
-  		o: noop,
-  		d(detaching) {
-  			if (if_block) if_block.d(detaching);
-  			if (detaching) detach(if_block_anchor);
-  		}
-  	};
-  }
-
-  function instance$e($$self, $$props, $$invalidate) {
-  	let { tooltip } = $$props;
-
-  	$$self.$$set = $$props => {
-  		if ('tooltip' in $$props) $$invalidate(0, tooltip = $$props.tooltip);
-  	};
-
-  	return [tooltip];
-  }
-
-  class Tooltip$1 extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$e, create_fragment$f, safe_not_equal, { tooltip: 0 });
-  	}
-  }
-
-  /* src\infrastructure\view\templates\table\Cell.svelte generated by Svelte v3.44.3 */
-
-  function create_else_block$3(ctx) {
-  	let t_value = /*cell*/ ctx[0].getValue() + "";
-  	let t;
-
-  	return {
-  		c() {
-  			t = text(t_value);
-  		},
-  		m(target, anchor) {
-  			insert(target, t, anchor);
-  		},
-  		p(ctx, dirty) {
-  			if (dirty & /*cell*/ 1 && t_value !== (t_value = /*cell*/ ctx[0].getValue() + "")) set_data(t, t_value);
-  		},
-  		d(detaching) {
-  			if (detaching) detach(t);
-  		}
-  	};
-  }
-
-  // (14:2) {#if cell.getValue() == 'NA'}
-  function create_if_block$4(ctx) {
-  	let t;
-
-  	return {
-  		c() {
-  			t = text("-");
-  		},
-  		m(target, anchor) {
-  			insert(target, t, anchor);
-  		},
-  		p: noop,
-  		d(detaching) {
-  			if (detaching) detach(t);
-  		}
-  	};
-  }
-
-  function create_fragment$e(ctx) {
-  	let td;
-  	let show_if;
-  	let t;
-  	let tooltip;
-  	let current;
-  	let mounted;
-  	let dispose;
-
-  	function select_block_type(ctx, dirty) {
-  		if (show_if == null || dirty & /*cell*/ 1) show_if = !!(/*cell*/ ctx[0].getValue() == 'NA');
-  		if (show_if) return create_if_block$4;
-  		return create_else_block$3;
-  	}
-
-  	let current_block_type = select_block_type(ctx, -1);
-  	let if_block = current_block_type(ctx);
-
-  	tooltip = new Tooltip$1({
-  			props: { tooltip: /*cell*/ ctx[0].getTooltip() }
-  		});
-
-  	return {
-  		c() {
-  			td = element("td");
-  			if_block.c();
-  			t = space();
-  			create_component(tooltip.$$.fragment);
-  			attr(td, "class", "sensitivity-data has-tooltip svelte-1uu4wbt");
-  			toggle_class(td, "active", /*cell*/ ctx[0].getActive());
-  			toggle_class(td, "highlighted", /*cell*/ ctx[0].getHighlighted());
-  		},
-  		m(target, anchor) {
-  			insert(target, td, anchor);
-  			if_block.m(td, null);
-  			append(td, t);
-  			mount_component(tooltip, td, null);
-  			current = true;
-
-  			if (!mounted) {
-  				dispose = [
-  					listen(td, "focus", /*focus_handler*/ ctx[1]),
-  					listen(td, "mouseover", /*mouseover_handler*/ ctx[2]),
-  					listen(td, "blur", /*blur_handler*/ ctx[3]),
-  					listen(td, "mouseout", /*mouseout_handler*/ ctx[4])
-  				];
-
-  				mounted = true;
-  			}
-  		},
-  		p(ctx, [dirty]) {
-  			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block) {
-  				if_block.p(ctx, dirty);
-  			} else {
-  				if_block.d(1);
-  				if_block = current_block_type(ctx);
-
-  				if (if_block) {
-  					if_block.c();
-  					if_block.m(td, t);
-  				}
-  			}
-
-  			const tooltip_changes = {};
-  			if (dirty & /*cell*/ 1) tooltip_changes.tooltip = /*cell*/ ctx[0].getTooltip();
-  			tooltip.$set(tooltip_changes);
-
-  			if (dirty & /*cell*/ 1) {
-  				toggle_class(td, "active", /*cell*/ ctx[0].getActive());
-  			}
-
-  			if (dirty & /*cell*/ 1) {
-  				toggle_class(td, "highlighted", /*cell*/ ctx[0].getHighlighted());
-  			}
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(tooltip.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(tooltip.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(td);
-  			if_block.d();
-  			destroy_component(tooltip);
-  			mounted = false;
-  			run_all(dispose);
-  		}
-  	};
-  }
-
-  function instance$d($$self, $$props, $$invalidate) {
-  	let { cell } = $$props;
-
-  	function focus_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	function mouseover_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	function blur_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	function mouseout_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	$$self.$$set = $$props => {
-  		if ('cell' in $$props) $$invalidate(0, cell = $$props.cell);
-  	};
-
-  	return [cell, focus_handler, mouseover_handler, blur_handler, mouseout_handler];
-  }
-
-  class Cell$1 extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$d, create_fragment$e, safe_not_equal, { cell: 0 });
-  	}
-  }
-
-  function validate$1(rules) {
-      for (const rule of rules) {
-          rule.check();
-      }
-  }
-
-  class NoInconsistentRowColumnNumber {
-      constructor(input) {
-          this.input = input;
-      }
-      check() {
-          const { input } = this;
-          const rowNumber = input.length;
-          if (rowNumber === 0)
-              return;
-          const columnNumber = input[0].length;
-          input.find((r, i) => {
-              if (r.length !== columnNumber)
-                  throw new InconsistentRowColumnNumberError(i);
-          });
-      }
-  }
-  class InconsistentRowColumnNumberError extends Error {
-      constructor(rowNumber) {
-          super();
-          this.message = 'Inconsistent number of columns or rows at row ' + rowNumber;
-      }
-  }
-
-  class NoInconsistentRowColumnLabelNumber {
-      constructor(input, labels) {
-          this.input = input;
-          this.labels = labels;
-      }
-      check() {
-          var _a, _b;
-          if (typeof this.labels === 'undefined')
-              return;
-          const numRows = this.input.length;
-          const numColumns = (_b = (_a = this.input[0]) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
-          const unequalRows = numRows !== this.labels.rows.length;
-          const unequalColumns = numColumns !== this.labels.columns.length;
-          if (unequalRows)
-              throw new InconsistentRowLabelsError();
-          if (unequalColumns)
-              throw new InconsistentColumnLabelsError();
-      }
-  }
-  class InconsistentRowLabelsError extends Error {
-      constructor() {
-          super();
-          this.message = 'Row labels do not match number of rows in data';
-      }
-  }
-  class InconsistentColumnLabelsError extends Error {
-      constructor() {
-          super();
-          this.message = 'Column labels do not match number of columns in data';
-      }
-  }
-
-  var _NoUndefinedValues_instances, _NoUndefinedValues_isUndefined;
-  class NoUndefinedValues {
-      constructor(input) {
-          _NoUndefinedValues_instances.add(this);
-          this.input = input;
-      }
-      check() {
-          const { input } = this;
-          input.forEach((r, i) => {
-              if (__classPrivateFieldGet(this, _NoUndefinedValues_instances, "m", _NoUndefinedValues_isUndefined).call(this, r))
-                  throw new UndefinedValueError(i);
-              r.forEach((c, j) => {
-                  if (__classPrivateFieldGet(this, _NoUndefinedValues_instances, "m", _NoUndefinedValues_isUndefined).call(this, c))
-                      throw new UndefinedValueError(i, j);
-              });
-              const hasEmpty = r.includes(undefined);
-              if (hasEmpty)
-                  throw new UndefinedValueError(i);
-          });
-      }
-  }
-  _NoUndefinedValues_instances = new WeakSet(), _NoUndefinedValues_isUndefined = function _NoUndefinedValues_isUndefined(value) {
-      return typeof value === 'undefined';
-  };
-  class UndefinedValueError extends Error {
-      constructor(row, column) {
-          super();
-          this.message = 'Undefined value at ' + row;
-          this.message += column ? ', ' + column : '';
-      }
-  }
-
-  class NoIntersectingGroupRanges {
-      constructor(data, groups) {
-          this.data = data;
-          this.groupInfo = groups === null || groups === void 0 ? void 0 : groups.rows;
-      }
-      check() {
-          if (!this.groupInfo)
-              return;
-          if (this.groupInfo.length < 2)
-              return;
-          for (let i = 0; i < this.groupInfo.length; i++) {
-              const range = this.groupInfo[i].getRange();
-              for (let j = i + 1; j < this.groupInfo.length; j++) {
-                  const otherRange = this.groupInfo[j].getRange();
-                  compareRanges(range, otherRange);
-              }
-          }
-      }
-  }
-  class DuplicateGroupRangeError extends Error {
-      constructor(r1, r2) {
-          super();
-          this.message =
-              'Duplicate group ranges: ' +
-                  JSON.stringify(r1) +
-                  ' and ' +
-                  JSON.stringify(r2);
-      }
-  }
-  class IntersectingGroupRangeError extends Error {
-      constructor(r1, r2) {
-          super();
-          this.message =
-              'Intersecting group ranges: ' +
-                  JSON.stringify(r1) +
-                  ' and ' +
-                  JSON.stringify(r2);
-      }
-  }
-  function isInRange(r, num) {
-      return r[0] <= num && r[1] > num;
-  }
-  function isSameRange(r1, r2) {
-      return r1[0] === r2[0] && r1[1] === r2[1];
-  }
-  function hasOverlapLeft(r1, r2) {
-      return isInRange(r2, r1[0]) && !isInRange(r2, r1[1]);
-  }
-  function hasOverlapRight(r1, r2) {
-      return hasOverlapLeft(r2, r1);
-  }
-  function compareRanges(r1, r2) {
-      if (isSameRange(r1, r2))
-          throw new DuplicateGroupRangeError(r1, r2);
-      if (hasOverlapLeft(r1, r2) || hasOverlapRight(r1, r2))
-          throw new IntersectingGroupRangeError(r1, r2);
-  }
-
-  class NoZeroOrOneRowGroups {
-      constructor(groups) {
-          this.groupInfo = groups === null || groups === void 0 ? void 0 : groups.rows;
-      }
-      check() {
-          if (!this.groupInfo)
-              return;
-          for (const group of this.groupInfo) {
-              const range = group.getExpandedRange();
-              if (!includesMoreThanTwoIntegers(range))
-                  throw new GroupOfLessThanTwoRowsError(range);
-          }
-      }
-  }
-  function includesMoreThanTwoIntegers(r) {
-      return r[1] - r[0] !== 1 && r[1] - r[0] !== 0;
-  }
-  class GroupOfLessThanTwoRowsError extends Error {
-      constructor(range) {
-          super();
-          this.message =
-              'Group must have at least two rows. Got range: ' + JSON.stringify(range);
-      }
-  }
-
-  class NoInvalidRowRanges {
-      constructor(groups) {
-          this.groupInfo = groups === null || groups === void 0 ? void 0 : groups.rows;
-      }
-      check() {
-          if (!this.groupInfo)
-              return;
-          for (const group of this.groupInfo) {
-              const range = group.getRange();
-              if (firstNumberIsGreaterThanSecond(range))
-                  throw new InvalidRangeError(range);
-              if (rangeIncludesNegativeNumbers(range))
-                  throw new InvalidRangeError(range);
-          }
-      }
-  }
-  function firstNumberIsGreaterThanSecond(r) {
-      return r[0] > r[1];
-  }
-  function rangeIncludesNegativeNumbers(r) {
-      return r[0] < 0 || r[1] < 0;
-  }
-  class InvalidRangeError extends Error {
-      constructor(range) {
-          super();
-          this.message = 'Invalid range: ' + JSON.stringify(range);
-      }
-  }
-
-  /* src\infrastructure\view\templates\table\RowHeader.svelte generated by Svelte v3.44.3 */
-
-  function create_if_block$3(ctx) {
-  	let show_if = /*rowHeader*/ ctx[0].isFirstOfGroup() === true;
-  	let if_block_anchor;
-  	let if_block = show_if && create_if_block_1(ctx);
-
-  	return {
-  		c() {
-  			if (if_block) if_block.c();
-  			if_block_anchor = empty();
-  		},
-  		m(target, anchor) {
-  			if (if_block) if_block.m(target, anchor);
-  			insert(target, if_block_anchor, anchor);
-  		},
-  		p(ctx, dirty) {
-  			if (dirty & /*rowHeader*/ 1) show_if = /*rowHeader*/ ctx[0].isFirstOfGroup() === true;
-
-  			if (show_if) {
-  				if (if_block) {
-  					if_block.p(ctx, dirty);
-  				} else {
-  					if_block = create_if_block_1(ctx);
-  					if_block.c();
-  					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-  				}
-  			} else if (if_block) {
-  				if_block.d(1);
-  				if_block = null;
-  			}
-  		},
-  		d(detaching) {
-  			if (if_block) if_block.d(detaching);
-  			if (detaching) detach(if_block_anchor);
-  		}
-  	};
-  }
-
-  // (27:4) {#if rowHeader.isFirstOfGroup() === true}
-  function create_if_block_1(ctx) {
-  	let show_if;
-  	let show_if_1;
-  	let if_block_anchor;
-
-  	function select_block_type(ctx, dirty) {
-  		if (show_if == null || dirty & /*rowHeader*/ 1) show_if = !!(/*rowHeader*/ ctx[0].isCollapsed() === true);
-  		if (show_if) return create_if_block_2;
-  		if (show_if_1 == null || dirty & /*rowHeader*/ 1) show_if_1 = !!(/*rowHeader*/ ctx[0].isCollapsed() === false);
-  		if (show_if_1) return create_if_block_3;
-  	}
-
-  	let current_block_type = select_block_type(ctx, -1);
-  	let if_block = current_block_type && current_block_type(ctx);
-
-  	return {
-  		c() {
-  			if (if_block) if_block.c();
-  			if_block_anchor = empty();
-  		},
-  		m(target, anchor) {
-  			if (if_block) if_block.m(target, anchor);
-  			insert(target, if_block_anchor, anchor);
-  		},
-  		p(ctx, dirty) {
-  			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block) {
-  				if_block.p(ctx, dirty);
-  			} else {
-  				if (if_block) if_block.d(1);
-  				if_block = current_block_type && current_block_type(ctx);
-
-  				if (if_block) {
-  					if_block.c();
-  					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-  				}
-  			}
-  		},
-  		d(detaching) {
-  			if (if_block) {
-  				if_block.d(detaching);
-  			}
-
-  			if (detaching) detach(if_block_anchor);
-  		}
-  	};
-  }
-
-  // (40:50) 
-  function create_if_block_3(ctx) {
-  	let div;
-  	let mounted;
-  	let dispose;
-
-  	return {
-  		c() {
-  			div = element("div");
-  			div.innerHTML = `<ion-icon name="chevron-down-outline" class="clickable horizontally-center"></ion-icon>`;
-  			attr(div, "class", "groupIcon clickable svelte-okwdec");
-  		},
-  		m(target, anchor) {
-  			insert(target, div, anchor);
-
-  			if (!mounted) {
-  				dispose = listen(div, "click", /*click_handler_2*/ ctx[7]);
-  				mounted = true;
-  			}
-  		},
-  		p: noop,
-  		d(detaching) {
-  			if (detaching) detach(div);
-  			mounted = false;
-  			dispose();
-  		}
-  	};
-  }
-
-  // (28:6) {#if rowHeader.isCollapsed() === true}
-  function create_if_block_2(ctx) {
-  	let div;
-  	let mounted;
-  	let dispose;
-
-  	return {
-  		c() {
-  			div = element("div");
-  			div.innerHTML = `<ion-icon name="chevron-forward-outline" class="clickable horizontally-center"></ion-icon>`;
-  			attr(div, "class", "groupIcon clickable svelte-okwdec");
-  		},
-  		m(target, anchor) {
-  			insert(target, div, anchor);
-
-  			if (!mounted) {
-  				dispose = listen(div, "click", /*click_handler_1*/ ctx[6]);
-  				mounted = true;
-  			}
-  		},
-  		p: noop,
-  		d(detaching) {
-  			if (detaching) detach(div);
-  			mounted = false;
-  			dispose();
-  		}
-  	};
-  }
-
-  function create_fragment$d(ctx) {
-  	let th;
-  	let div;
-  	let t0_value = /*rowHeader*/ ctx[0].getValue() + "";
-  	let t0;
-  	let t1;
-  	let show_if = /*rowHeader*/ ctx[0].inGroup() === true;
-  	let t2;
-  	let tooltip;
-  	let current;
-  	let mounted;
-  	let dispose;
-  	let if_block = show_if && create_if_block$3(ctx);
-
-  	tooltip = new Tooltip$1({
-  			props: {
-  				tooltip: /*rowHeader*/ ctx[0].getTooltip()
-  			}
-  		});
-
-  	return {
-  		c() {
-  			th = element("th");
-  			div = element("div");
-  			t0 = text(t0_value);
-  			t1 = space();
-  			if (if_block) if_block.c();
-  			t2 = space();
-  			create_component(tooltip.$$.fragment);
-  			attr(div, "class", "organism-name  svelte-okwdec");
-  			toggle_class(div, "indented", /*rowHeader*/ ctx[0].inGroup() === true && /*rowHeader*/ ctx[0].isFirstOfGroup() === false);
-  			attr(th, "class", "row-header has-tooltip svelte-okwdec");
-  			attr(th, "width", "200px");
-  			toggle_class(th, "active", /*rowHeader*/ ctx[0].getActive());
-  			toggle_class(th, "highlighted", /*rowHeader*/ ctx[0].getHighlighted());
-  		},
-  		m(target, anchor) {
-  			insert(target, th, anchor);
-  			append(th, div);
-  			append(div, t0);
-  			append(th, t1);
-  			if (if_block) if_block.m(th, null);
-  			append(th, t2);
-  			mount_component(tooltip, th, null);
-  			current = true;
-
-  			if (!mounted) {
-  				dispose = [
-  					listen(div, "click", /*click_handler*/ ctx[5]),
-  					listen(th, "focus", /*focus_handler*/ ctx[1]),
-  					listen(th, "mouseover", /*mouseover_handler*/ ctx[2]),
-  					listen(th, "blur", /*blur_handler*/ ctx[3]),
-  					listen(th, "mouseout", /*mouseout_handler*/ ctx[4])
-  				];
-
-  				mounted = true;
-  			}
-  		},
-  		p(ctx, [dirty]) {
-  			if ((!current || dirty & /*rowHeader*/ 1) && t0_value !== (t0_value = /*rowHeader*/ ctx[0].getValue() + "")) set_data(t0, t0_value);
-
-  			if (dirty & /*rowHeader*/ 1) {
-  				toggle_class(div, "indented", /*rowHeader*/ ctx[0].inGroup() === true && /*rowHeader*/ ctx[0].isFirstOfGroup() === false);
-  			}
-
-  			if (dirty & /*rowHeader*/ 1) show_if = /*rowHeader*/ ctx[0].inGroup() === true;
-
-  			if (show_if) {
-  				if (if_block) {
-  					if_block.p(ctx, dirty);
-  				} else {
-  					if_block = create_if_block$3(ctx);
-  					if_block.c();
-  					if_block.m(th, t2);
-  				}
-  			} else if (if_block) {
-  				if_block.d(1);
-  				if_block = null;
-  			}
-
-  			const tooltip_changes = {};
-  			if (dirty & /*rowHeader*/ 1) tooltip_changes.tooltip = /*rowHeader*/ ctx[0].getTooltip();
-  			tooltip.$set(tooltip_changes);
-
-  			if (dirty & /*rowHeader*/ 1) {
-  				toggle_class(th, "active", /*rowHeader*/ ctx[0].getActive());
-  			}
-
-  			if (dirty & /*rowHeader*/ 1) {
-  				toggle_class(th, "highlighted", /*rowHeader*/ ctx[0].getHighlighted());
-  			}
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(tooltip.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(tooltip.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(th);
-  			if (if_block) if_block.d();
-  			destroy_component(tooltip);
-  			mounted = false;
-  			run_all(dispose);
-  		}
-  	};
-  }
-
-  function instance$c($$self, $$props, $$invalidate) {
-  	let { rowHeader } = $$props;
-
-  	function focus_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	function mouseover_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	function blur_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	function mouseout_handler(event) {
-  		bubble.call(this, $$self, event);
-  	}
-
-  	const click_handler = () => state.expandGroup(rowHeader.getGroup());
-
-  	const click_handler_1 = () => {
-  		state.expandGroup(rowHeader.getGroup());
-  	};
-
-  	const click_handler_2 = () => {
-  		state.collapseGroup(rowHeader.getGroup());
-  	};
-
-  	$$self.$$set = $$props => {
-  		if ('rowHeader' in $$props) $$invalidate(0, rowHeader = $$props.rowHeader);
-  	};
-
-  	return [
-  		rowHeader,
-  		focus_handler,
-  		mouseover_handler,
-  		blur_handler,
-  		mouseout_handler,
-  		click_handler,
-  		click_handler_1,
-  		click_handler_2
-  	];
-  }
-
-  class RowHeader extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$c, create_fragment$d, safe_not_equal, { rowHeader: 0 });
-  	}
-  }
-
-  /* src\infrastructure\view\templates\table\TableRow.svelte generated by Svelte v3.44.3 */
-
-  function get_each_context$2(ctx, list, i) {
-  	const child_ctx = ctx.slice();
-  	child_ctx[14] = list[i];
-  	child_ctx[16] = i;
-  	return child_ctx;
-  }
-
-  // (19:2) {#each rowOfCells as cell, j (cell.id)}
-  function create_each_block$2(key_1, ctx) {
-  	let first;
-  	let cell;
-  	let current;
-
-  	function focus_handler_1() {
-  		return /*focus_handler_1*/ ctx[10](/*j*/ ctx[16]);
-  	}
-
-  	function mouseover_handler_1() {
-  		return /*mouseover_handler_1*/ ctx[11](/*j*/ ctx[16]);
-  	}
-
-  	function blur_handler_1() {
-  		return /*blur_handler_1*/ ctx[12](/*j*/ ctx[16]);
-  	}
-
-  	function mouseout_handler_1() {
-  		return /*mouseout_handler_1*/ ctx[13](/*j*/ ctx[16]);
-  	}
-
-  	cell = new Cell$1({ props: { cell: /*cell*/ ctx[14] } });
-  	cell.$on("focus", focus_handler_1);
-  	cell.$on("mouseover", mouseover_handler_1);
-  	cell.$on("blur", blur_handler_1);
-  	cell.$on("mouseout", mouseout_handler_1);
-
-  	return {
-  		key: key_1,
-  		first: null,
-  		c() {
-  			first = empty();
-  			create_component(cell.$$.fragment);
-  			this.first = first;
-  		},
-  		m(target, anchor) {
-  			insert(target, first, anchor);
-  			mount_component(cell, target, anchor);
-  			current = true;
-  		},
-  		p(new_ctx, dirty) {
-  			ctx = new_ctx;
-  			const cell_changes = {};
-  			if (dirty & /*rowOfCells*/ 1) cell_changes.cell = /*cell*/ ctx[14];
-  			cell.$set(cell_changes);
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(cell.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(cell.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(first);
-  			destroy_component(cell, detaching);
-  		}
-  	};
-  }
-
-  function create_fragment$c(ctx) {
-  	let tr;
-  	let rowheader;
-  	let t;
-  	let each_blocks = [];
-  	let each_1_lookup = new Map();
-  	let current;
-
-  	rowheader = new RowHeader({
-  			props: { rowHeader: /*rowHeader*/ ctx[1] }
-  		});
-
-  	rowheader.$on("focus", /*focus_handler*/ ctx[6]);
-  	rowheader.$on("mouseover", /*mouseover_handler*/ ctx[7]);
-  	rowheader.$on("blur", /*blur_handler*/ ctx[8]);
-  	rowheader.$on("mouseout", /*mouseout_handler*/ ctx[9]);
-  	let each_value = /*rowOfCells*/ ctx[0];
-  	const get_key = ctx => /*cell*/ ctx[14].id;
-
-  	for (let i = 0; i < each_value.length; i += 1) {
-  		let child_ctx = get_each_context$2(ctx, each_value, i);
-  		let key = get_key(child_ctx);
-  		each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
-  	}
-
-  	return {
-  		c() {
-  			tr = element("tr");
-  			create_component(rowheader.$$.fragment);
-  			t = space();
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].c();
-  			}
-  		},
-  		m(target, anchor) {
-  			insert(target, tr, anchor);
-  			mount_component(rowheader, tr, null);
-  			append(tr, t);
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].m(tr, null);
-  			}
-
-  			current = true;
-  		},
-  		p(ctx, [dirty]) {
-  			const rowheader_changes = {};
-  			if (dirty & /*rowHeader*/ 2) rowheader_changes.rowHeader = /*rowHeader*/ ctx[1];
-  			rowheader.$set(rowheader_changes);
-
-  			if (dirty & /*rowOfCells, highlightCells, unhighlightCells*/ 13) {
-  				each_value = /*rowOfCells*/ ctx[0];
-  				group_outros();
-  				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, tr, outro_and_destroy_block, create_each_block$2, null, get_each_context$2);
-  				check_outros();
-  			}
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(rowheader.$$.fragment, local);
-
-  			for (let i = 0; i < each_value.length; i += 1) {
-  				transition_in(each_blocks[i]);
-  			}
-
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(rowheader.$$.fragment, local);
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				transition_out(each_blocks[i]);
-  			}
-
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(tr);
-  			destroy_component(rowheader);
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].d();
-  			}
-  		}
-  	};
-  }
-
-  function instance$b($$self, $$props, $$invalidate) {
-  	let { rowOfCells } = $$props;
-  	let { rowHeader } = $$props;
-  	let { highlightCells } = $$props;
-  	let { unhighlightCells } = $$props;
-  	let { highlight } = $$props;
-  	let { unhighlight } = $$props;
-  	const focus_handler = () => highlight();
-  	const mouseover_handler = () => highlight();
-  	const blur_handler = () => unhighlight();
-  	const mouseout_handler = () => unhighlight();
-  	const focus_handler_1 = j => highlightCells(j);
-  	const mouseover_handler_1 = j => highlightCells(j);
-  	const blur_handler_1 = j => unhighlightCells(j);
-  	const mouseout_handler_1 = j => unhighlightCells(j);
-
-  	$$self.$$set = $$props => {
-  		if ('rowOfCells' in $$props) $$invalidate(0, rowOfCells = $$props.rowOfCells);
-  		if ('rowHeader' in $$props) $$invalidate(1, rowHeader = $$props.rowHeader);
-  		if ('highlightCells' in $$props) $$invalidate(2, highlightCells = $$props.highlightCells);
-  		if ('unhighlightCells' in $$props) $$invalidate(3, unhighlightCells = $$props.unhighlightCells);
-  		if ('highlight' in $$props) $$invalidate(4, highlight = $$props.highlight);
-  		if ('unhighlight' in $$props) $$invalidate(5, unhighlight = $$props.unhighlight);
-  	};
-
-  	return [
-  		rowOfCells,
-  		rowHeader,
-  		highlightCells,
-  		unhighlightCells,
-  		highlight,
-  		unhighlight,
-  		focus_handler,
-  		mouseover_handler,
-  		blur_handler,
-  		mouseout_handler,
-  		focus_handler_1,
-  		mouseover_handler_1,
-  		blur_handler_1,
-  		mouseout_handler_1
-  	];
-  }
-
-  class TableRow$1 extends SvelteComponent {
-  	constructor(options) {
-  		super();
-
-  		init(this, options, instance$b, create_fragment$c, safe_not_equal, {
-  			rowOfCells: 0,
-  			rowHeader: 1,
-  			highlightCells: 2,
-  			unhighlightCells: 3,
-  			highlight: 4,
-  			unhighlight: 5
-  		});
-  	}
-  }
-
-  /* src\infrastructure\view\templates\table\ColumnHeader.svelte generated by Svelte v3.44.3 */
-
-  function create_fragment$b(ctx) {
-  	let th;
-  	let span;
-  	let t0_value = /*columnHeader*/ ctx[0].getValue() + "";
-  	let t0;
-  	let t1;
-  	let tooltip;
-  	let current;
-  	let mounted;
-  	let dispose;
-
-  	tooltip = new Tooltip$1({
-  			props: {
-  				tooltip: /*columnHeader*/ ctx[0].getTooltip()
-  			}
-  		});
-
-  	return {
-  		c() {
-  			th = element("th");
-  			span = element("span");
-  			t0 = text(t0_value);
-  			t1 = space();
-  			create_component(tooltip.$$.fragment);
-  			attr(span, "class", "antibiotic-name svelte-k48di3");
-  			attr(th, "scope", "col");
-  			attr(th, "class", "column-header has-tooltip svelte-k48di3");
-  			toggle_class(th, "active", /*columnHeader*/ ctx[0].getActive());
-  			toggle_class(th, "highlighted", /*columnHeader*/ ctx[0].getHighlighted());
-  		},
-  		m(target, anchor) {
-  			insert(target, th, anchor);
-  			append(th, span);
-  			append(span, t0);
-  			append(th, t1);
-  			mount_component(tooltip, th, null);
-  			current = true;
-
-  			if (!mounted) {
-  				dispose = [
-  					listen(th, "focus", /*focus_handler*/ ctx[3]),
-  					listen(th, "mouseover", /*mouseover_handler*/ ctx[4]),
-  					listen(th, "blur", /*blur_handler*/ ctx[5]),
-  					listen(th, "mouseout", /*mouseout_handler*/ ctx[6])
-  				];
-
-  				mounted = true;
-  			}
-  		},
-  		p(ctx, [dirty]) {
-  			if ((!current || dirty & /*columnHeader*/ 1) && t0_value !== (t0_value = /*columnHeader*/ ctx[0].getValue() + "")) set_data(t0, t0_value);
-  			const tooltip_changes = {};
-  			if (dirty & /*columnHeader*/ 1) tooltip_changes.tooltip = /*columnHeader*/ ctx[0].getTooltip();
-  			tooltip.$set(tooltip_changes);
-
-  			if (dirty & /*columnHeader*/ 1) {
-  				toggle_class(th, "active", /*columnHeader*/ ctx[0].getActive());
-  			}
-
-  			if (dirty & /*columnHeader*/ 1) {
-  				toggle_class(th, "highlighted", /*columnHeader*/ ctx[0].getHighlighted());
-  			}
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(tooltip.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(tooltip.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(th);
-  			destroy_component(tooltip);
-  			mounted = false;
-  			run_all(dispose);
-  		}
-  	};
-  }
-
-  function instance$a($$self, $$props, $$invalidate) {
-  	let { columnHeader } = $$props;
-  	let { highlight } = $$props;
-  	let { unhighlight } = $$props;
-  	const focus_handler = () => highlight();
-  	const mouseover_handler = () => highlight();
-  	const blur_handler = () => unhighlight();
-  	const mouseout_handler = () => unhighlight();
-
-  	$$self.$$set = $$props => {
-  		if ('columnHeader' in $$props) $$invalidate(0, columnHeader = $$props.columnHeader);
-  		if ('highlight' in $$props) $$invalidate(1, highlight = $$props.highlight);
-  		if ('unhighlight' in $$props) $$invalidate(2, unhighlight = $$props.unhighlight);
-  	};
-
-  	return [
-  		columnHeader,
-  		highlight,
-  		unhighlight,
-  		focus_handler,
-  		mouseover_handler,
-  		blur_handler,
-  		mouseout_handler
-  	];
-  }
-
-  class ColumnHeader extends SvelteComponent {
-  	constructor(options) {
-  		super();
-
-  		init(this, options, instance$a, create_fragment$b, safe_not_equal, {
-  			columnHeader: 0,
-  			highlight: 1,
-  			unhighlight: 2
-  		});
-  	}
-  }
-
-  /* src\infrastructure\view\templates\table\NoTable.svelte generated by Svelte v3.44.3 */
-
-  function create_fragment$a(ctx) {
-  	let div;
-
-  	return {
-  		c() {
-  			div = element("div");
-  			div.textContent = "Sorry no data yet.";
-  		},
-  		m(target, anchor) {
-  			insert(target, div, anchor);
-  		},
-  		p: noop,
-  		i: noop,
-  		o: noop,
-  		d(detaching) {
-  			if (detaching) detach(div);
-  		}
-  	};
-  }
-
-  function instance$9($$self) {
-  	return [];
-  }
-
-  class NoTable extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$9, create_fragment$a, safe_not_equal, {});
-  	}
-  }
-
-  /* src\infrastructure\view\templates\table\EmptyCorner.svelte generated by Svelte v3.44.3 */
-
-  function create_fragment$9(ctx) {
-  	let th;
-
-  	return {
-  		c() {
-  			th = element("th");
-  			attr(th, "class", "topLeftBlock svelte-6zi9zt");
-  		},
-  		m(target, anchor) {
-  			insert(target, th, anchor);
-  		},
-  		p: noop,
-  		i: noop,
-  		o: noop,
-  		d(detaching) {
-  			if (detaching) detach(th);
-  		}
-  	};
-  }
-
-  function instance$8($$self) {
-  	return [];
-  }
-
-  class EmptyCorner extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$8, create_fragment$9, safe_not_equal, {});
-  	}
-  }
-
-  /* src\infrastructure\view\templates\table\Table.svelte generated by Svelte v3.44.3 */
-
-  function get_each_context$1(ctx, list, i) {
-  	const child_ctx = ctx.slice();
-  	child_ctx[10] = list[i];
-  	child_ctx[12] = i;
-  	return child_ctx;
-  }
-
-  function get_each_context_1(ctx, list, i) {
-  	const child_ctx = ctx.slice();
-  	child_ctx[13] = list[i];
-  	child_ctx[15] = i;
-  	return child_ctx;
-  }
-
-  // (30:2) {:else}
-  function create_else_block$2(ctx) {
-  	let table;
-  	let thead;
-  	let tr;
-  	let emptycorner;
-  	let t0;
-  	let each_blocks_1 = [];
-  	let each0_lookup = new Map();
-  	let t1;
-  	let tbody;
-  	let each_blocks = [];
-  	let each1_lookup = new Map();
-  	let current;
-  	emptycorner = new EmptyCorner({});
-  	let each_value_1 = /*$state*/ ctx[1].columnHeaders;
-  	const get_key = ctx => /*columnHeader*/ ctx[13].id;
-
-  	for (let i = 0; i < each_value_1.length; i += 1) {
-  		let child_ctx = get_each_context_1(ctx, each_value_1, i);
-  		let key = get_key(child_ctx);
-  		each0_lookup.set(key, each_blocks_1[i] = create_each_block_1(key, child_ctx));
-  	}
-
-  	let each_value = /*$state*/ ctx[1].rowHeaders;
-  	const get_key_1 = ctx => /*rowHeader*/ ctx[10].id;
-
-  	for (let i = 0; i < each_value.length; i += 1) {
-  		let child_ctx = get_each_context$1(ctx, each_value, i);
-  		let key = get_key_1(child_ctx);
-  		each1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
-  	}
-
-  	return {
-  		c() {
-  			table = element("table");
-  			thead = element("thead");
-  			tr = element("tr");
-  			create_component(emptycorner.$$.fragment);
-  			t0 = space();
-
-  			for (let i = 0; i < each_blocks_1.length; i += 1) {
-  				each_blocks_1[i].c();
-  			}
-
-  			t1 = space();
-  			tbody = element("tbody");
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].c();
-  			}
-
-  			attr(tr, "class", "svelte-1ftgidf");
-  			attr(table, "class", "antibiogram-table svelte-1ftgidf");
-  			attr(table, "id", "table");
-  		},
-  		m(target, anchor) {
-  			insert(target, table, anchor);
-  			append(table, thead);
-  			append(thead, tr);
-  			mount_component(emptycorner, tr, null);
-  			append(tr, t0);
-
-  			for (let i = 0; i < each_blocks_1.length; i += 1) {
-  				each_blocks_1[i].m(tr, null);
-  			}
-
-  			append(table, t1);
-  			append(table, tbody);
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].m(tbody, null);
-  			}
-
-  			current = true;
-  		},
-  		p(ctx, dirty) {
-  			if (dirty & /*$state, state*/ 2) {
-  				each_value_1 = /*$state*/ ctx[1].columnHeaders;
-  				group_outros();
-  				each_blocks_1 = update_keyed_each(each_blocks_1, dirty, get_key, 1, ctx, each_value_1, each0_lookup, tr, outro_and_destroy_block, create_each_block_1, null, get_each_context_1);
-  				check_outros();
-  			}
-
-  			if (dirty & /*$state, state*/ 2) {
-  				each_value = /*$state*/ ctx[1].rowHeaders;
-  				group_outros();
-  				each_blocks = update_keyed_each(each_blocks, dirty, get_key_1, 1, ctx, each_value, each1_lookup, tbody, outro_and_destroy_block, create_each_block$1, null, get_each_context$1);
-  				check_outros();
-  			}
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(emptycorner.$$.fragment, local);
-
-  			for (let i = 0; i < each_value_1.length; i += 1) {
-  				transition_in(each_blocks_1[i]);
-  			}
-
-  			for (let i = 0; i < each_value.length; i += 1) {
-  				transition_in(each_blocks[i]);
-  			}
-
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(emptycorner.$$.fragment, local);
-
-  			for (let i = 0; i < each_blocks_1.length; i += 1) {
-  				transition_out(each_blocks_1[i]);
-  			}
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				transition_out(each_blocks[i]);
-  			}
-
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(table);
-  			destroy_component(emptycorner);
-
-  			for (let i = 0; i < each_blocks_1.length; i += 1) {
-  				each_blocks_1[i].d();
-  			}
-
-  			for (let i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].d();
-  			}
-  		}
-  	};
-  }
-
-  // (28:2) {#if !$state.grid}
-  function create_if_block$2(ctx) {
-  	let notable;
-  	let current;
-  	notable = new NoTable({});
-
-  	return {
-  		c() {
-  			create_component(notable.$$.fragment);
-  		},
-  		m(target, anchor) {
-  			mount_component(notable, target, anchor);
-  			current = true;
-  		},
-  		p: noop,
-  		i(local) {
-  			if (current) return;
-  			transition_in(notable.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(notable.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			destroy_component(notable, detaching);
-  		}
-  	};
-  }
-
-  // (35:10) {#each $state.columnHeaders as columnHeader, j (columnHeader.id)}
-  function create_each_block_1(key_1, ctx) {
-  	let first;
-  	let columnheader;
-  	let current;
-
-  	function func() {
-  		return /*func*/ ctx[3](/*j*/ ctx[15]);
-  	}
-
-  	function func_1() {
-  		return /*func_1*/ ctx[4](/*j*/ ctx[15]);
-  	}
-
-  	columnheader = new ColumnHeader({
-  			props: {
-  				columnHeader: /*columnHeader*/ ctx[13],
-  				highlight: func,
-  				unhighlight: func_1
-  			}
-  		});
-
-  	return {
-  		key: key_1,
-  		first: null,
-  		c() {
-  			first = empty();
-  			create_component(columnheader.$$.fragment);
-  			this.first = first;
-  		},
-  		m(target, anchor) {
-  			insert(target, first, anchor);
-  			mount_component(columnheader, target, anchor);
-  			current = true;
-  		},
-  		p(new_ctx, dirty) {
-  			ctx = new_ctx;
-  			const columnheader_changes = {};
-  			if (dirty & /*$state*/ 2) columnheader_changes.columnHeader = /*columnHeader*/ ctx[13];
-  			if (dirty & /*$state*/ 2) columnheader_changes.highlight = func;
-  			if (dirty & /*$state*/ 2) columnheader_changes.unhighlight = func_1;
-  			columnheader.$set(columnheader_changes);
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(columnheader.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(columnheader.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(first);
-  			destroy_component(columnheader, detaching);
-  		}
-  	};
-  }
-
-  // (45:8) {#each $state.rowHeaders as rowHeader, i (rowHeader.id)}
-  function create_each_block$1(key_1, ctx) {
-  	let first;
-  	let tablerow;
-  	let current;
-
-  	function func_2(...args) {
-  		return /*func_2*/ ctx[5](/*i*/ ctx[12], ...args);
-  	}
-
-  	function func_3(...args) {
-  		return /*func_3*/ ctx[6](/*i*/ ctx[12], ...args);
-  	}
-
-  	function func_4() {
-  		return /*func_4*/ ctx[7](/*i*/ ctx[12]);
-  	}
-
-  	function func_5() {
-  		return /*func_5*/ ctx[8](/*i*/ ctx[12]);
-  	}
-
-  	tablerow = new TableRow$1({
-  			props: {
-  				rowHeader: /*rowHeader*/ ctx[10],
-  				rowOfCells: /*$state*/ ctx[1].grid[/*i*/ ctx[12]],
-  				highlightCells: func_2,
-  				unhighlightCells: func_3,
-  				highlight: func_4,
-  				unhighlight: func_5
-  			}
-  		});
-
-  	return {
-  		key: key_1,
-  		first: null,
-  		c() {
-  			first = empty();
-  			create_component(tablerow.$$.fragment);
-  			this.first = first;
-  		},
-  		m(target, anchor) {
-  			insert(target, first, anchor);
-  			mount_component(tablerow, target, anchor);
-  			current = true;
-  		},
-  		p(new_ctx, dirty) {
-  			ctx = new_ctx;
-  			const tablerow_changes = {};
-  			if (dirty & /*$state*/ 2) tablerow_changes.rowHeader = /*rowHeader*/ ctx[10];
-  			if (dirty & /*$state*/ 2) tablerow_changes.rowOfCells = /*$state*/ ctx[1].grid[/*i*/ ctx[12]];
-  			if (dirty & /*$state*/ 2) tablerow_changes.highlightCells = func_2;
-  			if (dirty & /*$state*/ 2) tablerow_changes.unhighlightCells = func_3;
-  			if (dirty & /*$state*/ 2) tablerow_changes.highlight = func_4;
-  			if (dirty & /*$state*/ 2) tablerow_changes.unhighlight = func_5;
-  			tablerow.$set(tablerow_changes);
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(tablerow.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(tablerow.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(first);
-  			destroy_component(tablerow, detaching);
-  		}
-  	};
-  }
-
-  function create_fragment$8(ctx) {
-  	let div;
-  	let current_block_type_index;
-  	let if_block;
-  	let current;
-  	const if_block_creators = [create_if_block$2, create_else_block$2];
-  	const if_blocks = [];
-
-  	function select_block_type(ctx, dirty) {
-  		if (!/*$state*/ ctx[1].grid) return 0;
-  		return 1;
-  	}
-
-  	current_block_type_index = select_block_type(ctx);
-  	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-
-  	return {
-  		c() {
-  			div = element("div");
-  			if_block.c();
-  			attr(div, "class", "table-window svelte-1ftgidf");
-  			attr(div, "id", "table-container");
-  			toggle_class(div, "small-table", /*smallTable*/ ctx[0]);
-  		},
-  		m(target, anchor) {
-  			insert(target, div, anchor);
-  			if_blocks[current_block_type_index].m(div, null);
-  			current = true;
-  		},
-  		p(ctx, [dirty]) {
-  			let previous_block_index = current_block_type_index;
-  			current_block_type_index = select_block_type(ctx);
-
-  			if (current_block_type_index === previous_block_index) {
-  				if_blocks[current_block_type_index].p(ctx, dirty);
-  			} else {
-  				group_outros();
-
-  				transition_out(if_blocks[previous_block_index], 1, 1, () => {
-  					if_blocks[previous_block_index] = null;
-  				});
-
-  				check_outros();
-  				if_block = if_blocks[current_block_type_index];
-
-  				if (!if_block) {
-  					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-  					if_block.c();
-  				} else {
-  					if_block.p(ctx, dirty);
-  				}
-
-  				transition_in(if_block, 1);
-  				if_block.m(div, null);
-  			}
-
-  			if (dirty & /*smallTable*/ 1) {
-  				toggle_class(div, "small-table", /*smallTable*/ ctx[0]);
-  			}
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(if_block);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(if_block);
-  			current = false;
-  		},
-  		d(detaching) {
-  			if (detaching) detach(div);
-  			if_blocks[current_block_type_index].d();
-  		}
-  	};
-  }
-
-  function instance$7($$self, $$props, $$invalidate) {
-  	let $state;
-  	component_subscribe($$self, state, $$value => $$invalidate(1, $state = $$value));
-  	let { id } = $$props;
-
-  	getContext('tableController').showTable(id).then(table => {
-  		state.loadTable(table);
-  		tableSize();
-  	});
-
-  	let smallTable = true;
-
-  	const tableSize = () => {
-  		const table = document.getElementById('table');
-
-  		if (table && window.visualViewport.width < table.offsetWidth) {
-  			$$invalidate(0, smallTable = false);
-  		} else $$invalidate(0, smallTable = true);
-  	};
-
-  	window.addEventListener('resize', tableSize);
-  	tableSize();
-  	const func = j => state.highlightColumn(j);
-  	const func_1 = j => state.unhighlightColumn(j);
-  	const func_2 = (i, j) => state.highlightCell(i, j);
-  	const func_3 = (i, j) => state.unhighlightCell(i, j);
-  	const func_4 = i => state.highlightRow(i);
-  	const func_5 = i => state.unhighlightRow(i);
-
-  	$$self.$$set = $$props => {
-  		if ('id' in $$props) $$invalidate(2, id = $$props.id);
-  	};
-
-  	return [smallTable, $state, id, func, func_1, func_2, func_3, func_4, func_5];
-  }
-
-  class Table extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$7, create_fragment$8, safe_not_equal, { id: 2 });
-  	}
-  }
-
-  /* src\infrastructure\view\templates\table-view-screen\TableViewScreen.svelte generated by Svelte v3.44.3 */
-
-  function create_fragment$7(ctx) {
-  	let table;
-  	let current;
-  	table = new Table({ props: { id: /*params*/ ctx[0].id ?? 0 } });
-
-  	return {
-  		c() {
-  			create_component(table.$$.fragment);
-  		},
-  		m(target, anchor) {
-  			mount_component(table, target, anchor);
-  			current = true;
-  		},
-  		p(ctx, [dirty]) {
-  			const table_changes = {};
-  			if (dirty & /*params*/ 1) table_changes.id = /*params*/ ctx[0].id ?? 0;
-  			table.$set(table_changes);
-  		},
-  		i(local) {
-  			if (current) return;
-  			transition_in(table.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(table.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			destroy_component(table, detaching);
-  		}
-  	};
-  }
-
-  function instance$6($$self, $$props, $$invalidate) {
-  	let { params = {} } = $$props;
-
-  	$$self.$$set = $$props => {
-  		if ('params' in $$props) $$invalidate(0, params = $$props.params);
-  	};
-
-  	return [params];
-  }
-
-  class TableViewScreen extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$6, create_fragment$7, safe_not_equal, { params: 0 });
-  	}
   }
 
   function parse(str, loose) {
@@ -3084,7 +1117,7 @@ var app = (function () {
 
   /* node_modules\svelte-spa-router\Router.svelte generated by Svelte v3.44.3 */
 
-  function create_else_block$1(ctx) {
+  function create_else_block$5(ctx) {
   	let switch_instance;
   	let switch_instance_anchor;
   	let current;
@@ -3166,7 +1199,7 @@ var app = (function () {
   }
 
   // (244:0) {#if componentParams}
-  function create_if_block$1(ctx) {
+  function create_if_block$6(ctx) {
   	let switch_instance;
   	let switch_instance_anchor;
   	let current;
@@ -3250,12 +1283,12 @@ var app = (function () {
   	};
   }
 
-  function create_fragment$6(ctx) {
+  function create_fragment$g(ctx) {
   	let current_block_type_index;
   	let if_block;
   	let if_block_anchor;
   	let current;
-  	const if_block_creators = [create_if_block$1, create_else_block$1];
+  	const if_block_creators = [create_if_block$6, create_else_block$5];
   	const if_blocks = [];
 
   	function select_block_type(ctx, dirty) {
@@ -3365,8 +1398,8 @@ var app = (function () {
   	};
   });
 
-  derived(loc, $loc => $loc.location);
-  derived(loc, $loc => $loc.querystring);
+  const location = derived(loc, $loc => $loc.location);
+  const querystring = derived(loc, $loc => $loc.querystring);
   const params = writable(undefined);
 
   function link(node, opts) {
@@ -3442,7 +1475,7 @@ var app = (function () {
   	window.location.hash = href;
   }
 
-  function instance$5($$self, $$props, $$invalidate) {
+  function instance$f($$self, $$props, $$invalidate) {
   	let { routes = {} } = $$props;
   	let { prefix = '' } = $$props;
   	let { restoreScrollState = false } = $$props;
@@ -3797,7 +1830,7 @@ var app = (function () {
   	constructor(options) {
   		super();
 
-  		init(this, options, instance$5, create_fragment$6, safe_not_equal, {
+  		init(this, options, instance$f, create_fragment$g, safe_not_equal, {
   			routes: 3,
   			prefix: 4,
   			restoreScrollState: 5
@@ -3805,177 +1838,1921 @@ var app = (function () {
   	}
   }
 
-  /* src\infrastructure\view\templates\index-screen\Card.svelte generated by Svelte v3.44.3 */
+  /* src\infrastructure\view\templates\table\Tooltip.svelte generated by Svelte v3.44.3 */
 
-  function create_fragment$5(ctx) {
-  	let div1;
-  	let div0;
-  	let h2;
-  	let t0;
-  	let t1;
-  	let p0;
-  	let t2;
-  	let t3;
-  	let p1;
-  	let t4;
-  	let t5;
-  	let button;
+  function get_each_context$4(ctx, list, i) {
+  	const child_ctx = ctx.slice();
+  	child_ctx[1] = list[i];
+  	return child_ctx;
+  }
+
+  // (4:0) {#if tooltip.length !== 0}
+  function create_if_block$5(ctx) {
+  	let span;
+  	let each_value = /*tooltip*/ ctx[0].split('\n');
+  	let each_blocks = [];
+
+  	for (let i = 0; i < each_value.length; i += 1) {
+  		each_blocks[i] = create_each_block$4(get_each_context$4(ctx, each_value, i));
+  	}
 
   	return {
   		c() {
-  			div1 = element("div");
-  			div0 = element("div");
-  			h2 = element("h2");
-  			t0 = text(/*title*/ ctx[0]);
-  			t1 = space();
-  			p0 = element("p");
-  			t2 = text(/*subtitle*/ ctx[1]);
-  			t3 = space();
-  			p1 = element("p");
-  			t4 = text(/*dates*/ ctx[2]);
-  			t5 = space();
-  			button = element("button");
+  			span = element("span");
 
-  			button.innerHTML = `<ion-icon name="star-outline" class="icon svelte-nu7w9k"></ion-icon> 
-    <ion-icon name="star" class="icon svelte-nu7w9k"></ion-icon>`;
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
 
-  			attr(h2, "class", "title svelte-nu7w9k");
-  			attr(p0, "class", "subtitle svelte-nu7w9k");
-  			attr(p1, "class", "dates svelte-nu7w9k");
-  			attr(div0, "class", "card-left svelte-nu7w9k");
-  			attr(button, "class", "fav-button button--unset clickable svelte-nu7w9k");
-  			attr(div1, "class", "card svelte-nu7w9k");
+  			attr(span, "class", "tooltip-text svelte-rzzl1m");
   		},
   		m(target, anchor) {
-  			insert(target, div1, anchor);
-  			append(div1, div0);
-  			append(div0, h2);
-  			append(h2, t0);
-  			append(div0, t1);
-  			append(div0, p0);
-  			append(p0, t2);
-  			append(div0, t3);
-  			append(div0, p1);
-  			append(p1, t4);
-  			append(div1, t5);
-  			append(div1, button);
+  			insert(target, span, anchor);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(span, null);
+  			}
+  		},
+  		p(ctx, dirty) {
+  			if (dirty & /*tooltip*/ 1) {
+  				each_value = /*tooltip*/ ctx[0].split('\n');
+  				let i;
+
+  				for (i = 0; i < each_value.length; i += 1) {
+  					const child_ctx = get_each_context$4(ctx, each_value, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(child_ctx, dirty);
+  					} else {
+  						each_blocks[i] = create_each_block$4(child_ctx);
+  						each_blocks[i].c();
+  						each_blocks[i].m(span, null);
+  					}
+  				}
+
+  				for (; i < each_blocks.length; i += 1) {
+  					each_blocks[i].d(1);
+  				}
+
+  				each_blocks.length = each_value.length;
+  			}
+  		},
+  		d(detaching) {
+  			if (detaching) detach(span);
+  			destroy_each(each_blocks, detaching);
+  		}
+  	};
+  }
+
+  // (6:4) {#each tooltip.split('\n') as text}
+  function create_each_block$4(ctx) {
+  	let t0_value = /*text*/ ctx[1] + "";
+  	let t0;
+  	let t1;
+  	let br;
+
+  	return {
+  		c() {
+  			t0 = text(t0_value);
+  			t1 = space();
+  			br = element("br");
+  		},
+  		m(target, anchor) {
+  			insert(target, t0, anchor);
+  			insert(target, t1, anchor);
+  			insert(target, br, anchor);
+  		},
+  		p(ctx, dirty) {
+  			if (dirty & /*tooltip*/ 1 && t0_value !== (t0_value = /*text*/ ctx[1] + "")) set_data(t0, t0_value);
+  		},
+  		d(detaching) {
+  			if (detaching) detach(t0);
+  			if (detaching) detach(t1);
+  			if (detaching) detach(br);
+  		}
+  	};
+  }
+
+  function create_fragment$f(ctx) {
+  	let if_block_anchor;
+  	let if_block = /*tooltip*/ ctx[0].length !== 0 && create_if_block$5(ctx);
+
+  	return {
+  		c() {
+  			if (if_block) if_block.c();
+  			if_block_anchor = empty();
+  		},
+  		m(target, anchor) {
+  			if (if_block) if_block.m(target, anchor);
+  			insert(target, if_block_anchor, anchor);
   		},
   		p(ctx, [dirty]) {
-  			if (dirty & /*title*/ 1) set_data(t0, /*title*/ ctx[0]);
-  			if (dirty & /*subtitle*/ 2) set_data(t2, /*subtitle*/ ctx[1]);
-  			if (dirty & /*dates*/ 4) set_data(t4, /*dates*/ ctx[2]);
+  			if (/*tooltip*/ ctx[0].length !== 0) {
+  				if (if_block) {
+  					if_block.p(ctx, dirty);
+  				} else {
+  					if_block = create_if_block$5(ctx);
+  					if_block.c();
+  					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+  				}
+  			} else if (if_block) {
+  				if_block.d(1);
+  				if_block = null;
+  			}
   		},
   		i: noop,
   		o: noop,
   		d(detaching) {
-  			if (detaching) detach(div1);
+  			if (if_block) if_block.d(detaching);
+  			if (detaching) detach(if_block_anchor);
+  		}
+  	};
+  }
+
+  function instance$e($$self, $$props, $$invalidate) {
+  	let { tooltip } = $$props;
+
+  	$$self.$$set = $$props => {
+  		if ('tooltip' in $$props) $$invalidate(0, tooltip = $$props.tooltip);
+  	};
+
+  	return [tooltip];
+  }
+
+  class Tooltip$1 extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$e, create_fragment$f, safe_not_equal, { tooltip: 0 });
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table\Cell.svelte generated by Svelte v3.44.3 */
+
+  function create_else_block$4(ctx) {
+  	let t_value = /*cell*/ ctx[0].getValue() + "";
+  	let t;
+
+  	return {
+  		c() {
+  			t = text(t_value);
+  		},
+  		m(target, anchor) {
+  			insert(target, t, anchor);
+  		},
+  		p(ctx, dirty) {
+  			if (dirty & /*cell*/ 1 && t_value !== (t_value = /*cell*/ ctx[0].getValue() + "")) set_data(t, t_value);
+  		},
+  		d(detaching) {
+  			if (detaching) detach(t);
+  		}
+  	};
+  }
+
+  // (14:2) {#if cell.getValue() == 'NA'}
+  function create_if_block$4(ctx) {
+  	let t;
+
+  	return {
+  		c() {
+  			t = text("-");
+  		},
+  		m(target, anchor) {
+  			insert(target, t, anchor);
+  		},
+  		p: noop,
+  		d(detaching) {
+  			if (detaching) detach(t);
+  		}
+  	};
+  }
+
+  function create_fragment$e(ctx) {
+  	let td;
+  	let show_if;
+  	let t;
+  	let tooltip;
+  	let current;
+  	let mounted;
+  	let dispose;
+
+  	function select_block_type(ctx, dirty) {
+  		if (show_if == null || dirty & /*cell*/ 1) show_if = !!(/*cell*/ ctx[0].getValue() == 'NA');
+  		if (show_if) return create_if_block$4;
+  		return create_else_block$4;
+  	}
+
+  	let current_block_type = select_block_type(ctx, -1);
+  	let if_block = current_block_type(ctx);
+
+  	tooltip = new Tooltip$1({
+  			props: { tooltip: /*cell*/ ctx[0].getTooltip() }
+  		});
+
+  	return {
+  		c() {
+  			td = element("td");
+  			if_block.c();
+  			t = space();
+  			create_component(tooltip.$$.fragment);
+  			attr(td, "class", "sensitivity-data has-tooltip svelte-1uu4wbt");
+  			toggle_class(td, "active", /*cell*/ ctx[0].getActive());
+  			toggle_class(td, "highlighted", /*cell*/ ctx[0].getHighlighted());
+  		},
+  		m(target, anchor) {
+  			insert(target, td, anchor);
+  			if_block.m(td, null);
+  			append(td, t);
+  			mount_component(tooltip, td, null);
+  			current = true;
+
+  			if (!mounted) {
+  				dispose = [
+  					listen(td, "focus", /*focus_handler*/ ctx[1]),
+  					listen(td, "mouseover", /*mouseover_handler*/ ctx[2]),
+  					listen(td, "blur", /*blur_handler*/ ctx[3]),
+  					listen(td, "mouseout", /*mouseout_handler*/ ctx[4])
+  				];
+
+  				mounted = true;
+  			}
+  		},
+  		p(ctx, [dirty]) {
+  			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block) {
+  				if_block.p(ctx, dirty);
+  			} else {
+  				if_block.d(1);
+  				if_block = current_block_type(ctx);
+
+  				if (if_block) {
+  					if_block.c();
+  					if_block.m(td, t);
+  				}
+  			}
+
+  			const tooltip_changes = {};
+  			if (dirty & /*cell*/ 1) tooltip_changes.tooltip = /*cell*/ ctx[0].getTooltip();
+  			tooltip.$set(tooltip_changes);
+
+  			if (dirty & /*cell*/ 1) {
+  				toggle_class(td, "active", /*cell*/ ctx[0].getActive());
+  			}
+
+  			if (dirty & /*cell*/ 1) {
+  				toggle_class(td, "highlighted", /*cell*/ ctx[0].getHighlighted());
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(tooltip.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(tooltip.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(td);
+  			if_block.d();
+  			destroy_component(tooltip);
+  			mounted = false;
+  			run_all(dispose);
+  		}
+  	};
+  }
+
+  function instance$d($$self, $$props, $$invalidate) {
+  	let { cell } = $$props;
+
+  	function focus_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	function mouseover_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	function blur_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	function mouseout_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	$$self.$$set = $$props => {
+  		if ('cell' in $$props) $$invalidate(0, cell = $$props.cell);
+  	};
+
+  	return [cell, focus_handler, mouseover_handler, blur_handler, mouseout_handler];
+  }
+
+  class Cell$1 extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$d, create_fragment$e, safe_not_equal, { cell: 0 });
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table\RowHeader.svelte generated by Svelte v3.44.3 */
+
+  function create_fragment$d(ctx) {
+  	let th;
+  	let div;
+  	let t0_value = /*rowHeader*/ ctx[0].getValue() + "";
+  	let t0;
+  	let t1;
+  	let tooltip;
+  	let current;
+  	let mounted;
+  	let dispose;
+
+  	tooltip = new Tooltip$1({
+  			props: {
+  				tooltip: /*rowHeader*/ ctx[0].getTooltip()
+  			}
+  		});
+
+  	return {
+  		c() {
+  			th = element("th");
+  			div = element("div");
+  			t0 = text(t0_value);
+  			t1 = space();
+  			create_component(tooltip.$$.fragment);
+  			attr(div, "class", "organism-name  svelte-lsty6d");
+  			attr(th, "class", "row-header has-tooltip svelte-lsty6d");
+  			attr(th, "width", "200px");
+  			toggle_class(th, "active", /*rowHeader*/ ctx[0].getActive());
+  			toggle_class(th, "highlighted", /*rowHeader*/ ctx[0].getHighlighted());
+  		},
+  		m(target, anchor) {
+  			insert(target, th, anchor);
+  			append(th, div);
+  			append(div, t0);
+  			append(th, t1);
+  			mount_component(tooltip, th, null);
+  			current = true;
+
+  			if (!mounted) {
+  				dispose = [
+  					listen(th, "focus", /*focus_handler*/ ctx[1]),
+  					listen(th, "mouseover", /*mouseover_handler*/ ctx[2]),
+  					listen(th, "blur", /*blur_handler*/ ctx[3]),
+  					listen(th, "mouseout", /*mouseout_handler*/ ctx[4])
+  				];
+
+  				mounted = true;
+  			}
+  		},
+  		p(ctx, [dirty]) {
+  			if ((!current || dirty & /*rowHeader*/ 1) && t0_value !== (t0_value = /*rowHeader*/ ctx[0].getValue() + "")) set_data(t0, t0_value);
+  			const tooltip_changes = {};
+  			if (dirty & /*rowHeader*/ 1) tooltip_changes.tooltip = /*rowHeader*/ ctx[0].getTooltip();
+  			tooltip.$set(tooltip_changes);
+
+  			if (dirty & /*rowHeader*/ 1) {
+  				toggle_class(th, "active", /*rowHeader*/ ctx[0].getActive());
+  			}
+
+  			if (dirty & /*rowHeader*/ 1) {
+  				toggle_class(th, "highlighted", /*rowHeader*/ ctx[0].getHighlighted());
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(tooltip.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(tooltip.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(th);
+  			destroy_component(tooltip);
+  			mounted = false;
+  			run_all(dispose);
+  		}
+  	};
+  }
+
+  function instance$c($$self, $$props, $$invalidate) {
+  	let { rowHeader } = $$props;
+
+  	function focus_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	function mouseover_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	function blur_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	function mouseout_handler(event) {
+  		bubble.call(this, $$self, event);
+  	}
+
+  	$$self.$$set = $$props => {
+  		if ('rowHeader' in $$props) $$invalidate(0, rowHeader = $$props.rowHeader);
+  	};
+
+  	return [rowHeader, focus_handler, mouseover_handler, blur_handler, mouseout_handler];
+  }
+
+  class RowHeader extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$c, create_fragment$d, safe_not_equal, { rowHeader: 0 });
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table\TableRow.svelte generated by Svelte v3.44.3 */
+
+  function get_each_context$3(ctx, list, i) {
+  	const child_ctx = ctx.slice();
+  	child_ctx[14] = list[i];
+  	child_ctx[16] = i;
+  	return child_ctx;
+  }
+
+  // (19:2) {#each rowOfCells as cell, j (cell.id)}
+  function create_each_block$3(key_1, ctx) {
+  	let first;
+  	let cell;
+  	let current;
+
+  	function focus_handler_1() {
+  		return /*focus_handler_1*/ ctx[10](/*j*/ ctx[16]);
+  	}
+
+  	function mouseover_handler_1() {
+  		return /*mouseover_handler_1*/ ctx[11](/*j*/ ctx[16]);
+  	}
+
+  	function blur_handler_1() {
+  		return /*blur_handler_1*/ ctx[12](/*j*/ ctx[16]);
+  	}
+
+  	function mouseout_handler_1() {
+  		return /*mouseout_handler_1*/ ctx[13](/*j*/ ctx[16]);
+  	}
+
+  	cell = new Cell$1({ props: { cell: /*cell*/ ctx[14] } });
+  	cell.$on("focus", focus_handler_1);
+  	cell.$on("mouseover", mouseover_handler_1);
+  	cell.$on("blur", blur_handler_1);
+  	cell.$on("mouseout", mouseout_handler_1);
+
+  	return {
+  		key: key_1,
+  		first: null,
+  		c() {
+  			first = empty();
+  			create_component(cell.$$.fragment);
+  			this.first = first;
+  		},
+  		m(target, anchor) {
+  			insert(target, first, anchor);
+  			mount_component(cell, target, anchor);
+  			current = true;
+  		},
+  		p(new_ctx, dirty) {
+  			ctx = new_ctx;
+  			const cell_changes = {};
+  			if (dirty & /*rowOfCells*/ 1) cell_changes.cell = /*cell*/ ctx[14];
+  			cell.$set(cell_changes);
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(cell.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(cell.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(first);
+  			destroy_component(cell, detaching);
+  		}
+  	};
+  }
+
+  function create_fragment$c(ctx) {
+  	let tr;
+  	let rowheader;
+  	let t;
+  	let each_blocks = [];
+  	let each_1_lookup = new Map();
+  	let current;
+
+  	rowheader = new RowHeader({
+  			props: { rowHeader: /*rowHeader*/ ctx[1] }
+  		});
+
+  	rowheader.$on("focus", /*focus_handler*/ ctx[6]);
+  	rowheader.$on("mouseover", /*mouseover_handler*/ ctx[7]);
+  	rowheader.$on("blur", /*blur_handler*/ ctx[8]);
+  	rowheader.$on("mouseout", /*mouseout_handler*/ ctx[9]);
+  	let each_value = /*rowOfCells*/ ctx[0];
+  	const get_key = ctx => /*cell*/ ctx[14].id;
+
+  	for (let i = 0; i < each_value.length; i += 1) {
+  		let child_ctx = get_each_context$3(ctx, each_value, i);
+  		let key = get_key(child_ctx);
+  		each_1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
+  	}
+
+  	return {
+  		c() {
+  			tr = element("tr");
+  			create_component(rowheader.$$.fragment);
+  			t = space();
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+  		},
+  		m(target, anchor) {
+  			insert(target, tr, anchor);
+  			mount_component(rowheader, tr, null);
+  			append(tr, t);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(tr, null);
+  			}
+
+  			current = true;
+  		},
+  		p(ctx, [dirty]) {
+  			const rowheader_changes = {};
+  			if (dirty & /*rowHeader*/ 2) rowheader_changes.rowHeader = /*rowHeader*/ ctx[1];
+  			rowheader.$set(rowheader_changes);
+
+  			if (dirty & /*rowOfCells, highlightCells, unhighlightCells*/ 13) {
+  				each_value = /*rowOfCells*/ ctx[0];
+  				group_outros();
+  				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, tr, outro_and_destroy_block, create_each_block$3, null, get_each_context$3);
+  				check_outros();
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(rowheader.$$.fragment, local);
+
+  			for (let i = 0; i < each_value.length; i += 1) {
+  				transition_in(each_blocks[i]);
+  			}
+
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(rowheader.$$.fragment, local);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				transition_out(each_blocks[i]);
+  			}
+
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(tr);
+  			destroy_component(rowheader);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].d();
+  			}
+  		}
+  	};
+  }
+
+  function instance$b($$self, $$props, $$invalidate) {
+  	let { rowOfCells } = $$props;
+  	let { rowHeader } = $$props;
+  	let { highlightCells } = $$props;
+  	let { unhighlightCells } = $$props;
+  	let { highlight } = $$props;
+  	let { unhighlight } = $$props;
+  	const focus_handler = () => highlight();
+  	const mouseover_handler = () => highlight();
+  	const blur_handler = () => unhighlight();
+  	const mouseout_handler = () => unhighlight();
+  	const focus_handler_1 = j => highlightCells(j);
+  	const mouseover_handler_1 = j => highlightCells(j);
+  	const blur_handler_1 = j => unhighlightCells(j);
+  	const mouseout_handler_1 = j => unhighlightCells(j);
+
+  	$$self.$$set = $$props => {
+  		if ('rowOfCells' in $$props) $$invalidate(0, rowOfCells = $$props.rowOfCells);
+  		if ('rowHeader' in $$props) $$invalidate(1, rowHeader = $$props.rowHeader);
+  		if ('highlightCells' in $$props) $$invalidate(2, highlightCells = $$props.highlightCells);
+  		if ('unhighlightCells' in $$props) $$invalidate(3, unhighlightCells = $$props.unhighlightCells);
+  		if ('highlight' in $$props) $$invalidate(4, highlight = $$props.highlight);
+  		if ('unhighlight' in $$props) $$invalidate(5, unhighlight = $$props.unhighlight);
+  	};
+
+  	return [
+  		rowOfCells,
+  		rowHeader,
+  		highlightCells,
+  		unhighlightCells,
+  		highlight,
+  		unhighlight,
+  		focus_handler,
+  		mouseover_handler,
+  		blur_handler,
+  		mouseout_handler,
+  		focus_handler_1,
+  		mouseover_handler_1,
+  		blur_handler_1,
+  		mouseout_handler_1
+  	];
+  }
+
+  class TableRow$1 extends SvelteComponent {
+  	constructor(options) {
+  		super();
+
+  		init(this, options, instance$b, create_fragment$c, safe_not_equal, {
+  			rowOfCells: 0,
+  			rowHeader: 1,
+  			highlightCells: 2,
+  			unhighlightCells: 3,
+  			highlight: 4,
+  			unhighlight: 5
+  		});
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table\ColumnHeader.svelte generated by Svelte v3.44.3 */
+
+  function create_fragment$b(ctx) {
+  	let th;
+  	let span;
+  	let t0_value = /*columnHeader*/ ctx[0].getValue() + "";
+  	let t0;
+  	let t1;
+  	let tooltip;
+  	let current;
+  	let mounted;
+  	let dispose;
+
+  	tooltip = new Tooltip$1({
+  			props: {
+  				tooltip: /*columnHeader*/ ctx[0].getTooltip()
+  			}
+  		});
+
+  	return {
+  		c() {
+  			th = element("th");
+  			span = element("span");
+  			t0 = text(t0_value);
+  			t1 = space();
+  			create_component(tooltip.$$.fragment);
+  			attr(span, "class", "antibiotic-name svelte-k48di3");
+  			attr(th, "scope", "col");
+  			attr(th, "class", "column-header has-tooltip svelte-k48di3");
+  			toggle_class(th, "active", /*columnHeader*/ ctx[0].getActive());
+  			toggle_class(th, "highlighted", /*columnHeader*/ ctx[0].getHighlighted());
+  		},
+  		m(target, anchor) {
+  			insert(target, th, anchor);
+  			append(th, span);
+  			append(span, t0);
+  			append(th, t1);
+  			mount_component(tooltip, th, null);
+  			current = true;
+
+  			if (!mounted) {
+  				dispose = [
+  					listen(th, "focus", /*focus_handler*/ ctx[3]),
+  					listen(th, "mouseover", /*mouseover_handler*/ ctx[4]),
+  					listen(th, "blur", /*blur_handler*/ ctx[5]),
+  					listen(th, "mouseout", /*mouseout_handler*/ ctx[6])
+  				];
+
+  				mounted = true;
+  			}
+  		},
+  		p(ctx, [dirty]) {
+  			if ((!current || dirty & /*columnHeader*/ 1) && t0_value !== (t0_value = /*columnHeader*/ ctx[0].getValue() + "")) set_data(t0, t0_value);
+  			const tooltip_changes = {};
+  			if (dirty & /*columnHeader*/ 1) tooltip_changes.tooltip = /*columnHeader*/ ctx[0].getTooltip();
+  			tooltip.$set(tooltip_changes);
+
+  			if (dirty & /*columnHeader*/ 1) {
+  				toggle_class(th, "active", /*columnHeader*/ ctx[0].getActive());
+  			}
+
+  			if (dirty & /*columnHeader*/ 1) {
+  				toggle_class(th, "highlighted", /*columnHeader*/ ctx[0].getHighlighted());
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(tooltip.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(tooltip.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(th);
+  			destroy_component(tooltip);
+  			mounted = false;
+  			run_all(dispose);
+  		}
+  	};
+  }
+
+  function instance$a($$self, $$props, $$invalidate) {
+  	let { columnHeader } = $$props;
+  	let { highlight } = $$props;
+  	let { unhighlight } = $$props;
+  	const focus_handler = () => highlight();
+  	const mouseover_handler = () => highlight();
+  	const blur_handler = () => unhighlight();
+  	const mouseout_handler = () => unhighlight();
+
+  	$$self.$$set = $$props => {
+  		if ('columnHeader' in $$props) $$invalidate(0, columnHeader = $$props.columnHeader);
+  		if ('highlight' in $$props) $$invalidate(1, highlight = $$props.highlight);
+  		if ('unhighlight' in $$props) $$invalidate(2, unhighlight = $$props.unhighlight);
+  	};
+
+  	return [
+  		columnHeader,
+  		highlight,
+  		unhighlight,
+  		focus_handler,
+  		mouseover_handler,
+  		blur_handler,
+  		mouseout_handler
+  	];
+  }
+
+  class ColumnHeader extends SvelteComponent {
+  	constructor(options) {
+  		super();
+
+  		init(this, options, instance$a, create_fragment$b, safe_not_equal, {
+  			columnHeader: 0,
+  			highlight: 1,
+  			unhighlight: 2
+  		});
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table\EmptyCorner.svelte generated by Svelte v3.44.3 */
+
+  function create_fragment$a(ctx) {
+  	let th;
+
+  	return {
+  		c() {
+  			th = element("th");
+  			attr(th, "class", "topLeftBlock svelte-6zi9zt");
+  		},
+  		m(target, anchor) {
+  			insert(target, th, anchor);
+  		},
+  		p: noop,
+  		i: noop,
+  		o: noop,
+  		d(detaching) {
+  			if (detaching) detach(th);
+  		}
+  	};
+  }
+
+  function instance$9($$self) {
+  	return [];
+  }
+
+  class EmptyCorner extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$9, create_fragment$a, safe_not_equal, {});
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table\Table.svelte generated by Svelte v3.44.3 */
+
+  function get_each_context$2(ctx, list, i) {
+  	const child_ctx = ctx.slice();
+  	child_ctx[11] = list[i];
+  	child_ctx[13] = i;
+  	return child_ctx;
+  }
+
+  function get_each_context_1$1(ctx, list, i) {
+  	const child_ctx = ctx.slice();
+  	child_ctx[14] = list[i];
+  	child_ctx[16] = i;
+  	return child_ctx;
+  }
+
+  // (30:8) {#each ourTable.columnHeaders as columnHeader, j (columnHeader.id)}
+  function create_each_block_1$1(key_1, ctx) {
+  	let first;
+  	let columnheader;
+  	let current;
+
+  	function func() {
+  		return /*func*/ ctx[4](/*j*/ ctx[16]);
+  	}
+
+  	function func_1() {
+  		return /*func_1*/ ctx[5](/*j*/ ctx[16]);
+  	}
+
+  	columnheader = new ColumnHeader({
+  			props: {
+  				columnHeader: /*columnHeader*/ ctx[14],
+  				highlight: /*s*/ ctx[2](func),
+  				unhighlight: /*s*/ ctx[2](func_1)
+  			}
+  		});
+
+  	return {
+  		key: key_1,
+  		first: null,
+  		c() {
+  			first = empty();
+  			create_component(columnheader.$$.fragment);
+  			this.first = first;
+  		},
+  		m(target, anchor) {
+  			insert(target, first, anchor);
+  			mount_component(columnheader, target, anchor);
+  			current = true;
+  		},
+  		p(new_ctx, dirty) {
+  			ctx = new_ctx;
+  			const columnheader_changes = {};
+  			if (dirty & /*ourTable*/ 1) columnheader_changes.columnHeader = /*columnHeader*/ ctx[14];
+  			if (dirty & /*ourTable*/ 1) columnheader_changes.highlight = /*s*/ ctx[2](func);
+  			if (dirty & /*ourTable*/ 1) columnheader_changes.unhighlight = /*s*/ ctx[2](func_1);
+  			columnheader.$set(columnheader_changes);
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(columnheader.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(columnheader.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(first);
+  			destroy_component(columnheader, detaching);
+  		}
+  	};
+  }
+
+  // (40:6) {#each ourTable.rowHeaders as rowHeader, i (rowHeader.id)}
+  function create_each_block$2(key_1, ctx) {
+  	let first;
+  	let tablerow;
+  	let current;
+
+  	function func_2(...args) {
+  		return /*func_2*/ ctx[6](/*i*/ ctx[13], ...args);
+  	}
+
+  	function func_3(...args) {
+  		return /*func_3*/ ctx[7](/*i*/ ctx[13], ...args);
+  	}
+
+  	function func_4() {
+  		return /*func_4*/ ctx[8](/*i*/ ctx[13]);
+  	}
+
+  	function func_5() {
+  		return /*func_5*/ ctx[9](/*i*/ ctx[13]);
+  	}
+
+  	tablerow = new TableRow$1({
+  			props: {
+  				rowHeader: /*rowHeader*/ ctx[11],
+  				rowOfCells: /*ourTable*/ ctx[0].grid[/*i*/ ctx[13]],
+  				highlightCells: /*s*/ ctx[2](func_2),
+  				unhighlightCells: /*s*/ ctx[2](func_3),
+  				highlight: /*s*/ ctx[2](func_4),
+  				unhighlight: /*s*/ ctx[2](func_5)
+  			}
+  		});
+
+  	return {
+  		key: key_1,
+  		first: null,
+  		c() {
+  			first = empty();
+  			create_component(tablerow.$$.fragment);
+  			this.first = first;
+  		},
+  		m(target, anchor) {
+  			insert(target, first, anchor);
+  			mount_component(tablerow, target, anchor);
+  			current = true;
+  		},
+  		p(new_ctx, dirty) {
+  			ctx = new_ctx;
+  			const tablerow_changes = {};
+  			if (dirty & /*ourTable*/ 1) tablerow_changes.rowHeader = /*rowHeader*/ ctx[11];
+  			if (dirty & /*ourTable*/ 1) tablerow_changes.rowOfCells = /*ourTable*/ ctx[0].grid[/*i*/ ctx[13]];
+  			if (dirty & /*ourTable*/ 1) tablerow_changes.highlightCells = /*s*/ ctx[2](func_2);
+  			if (dirty & /*ourTable*/ 1) tablerow_changes.unhighlightCells = /*s*/ ctx[2](func_3);
+  			if (dirty & /*ourTable*/ 1) tablerow_changes.highlight = /*s*/ ctx[2](func_4);
+  			if (dirty & /*ourTable*/ 1) tablerow_changes.unhighlight = /*s*/ ctx[2](func_5);
+  			tablerow.$set(tablerow_changes);
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(tablerow.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(tablerow.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(first);
+  			destroy_component(tablerow, detaching);
+  		}
+  	};
+  }
+
+  function create_fragment$9(ctx) {
+  	let div;
+  	let table_1;
+  	let thead;
+  	let tr;
+  	let emptycorner;
+  	let t0;
+  	let each_blocks_1 = [];
+  	let each0_lookup = new Map();
+  	let t1;
+  	let tbody;
+  	let each_blocks = [];
+  	let each1_lookup = new Map();
+  	let current;
+  	emptycorner = new EmptyCorner({});
+  	let each_value_1 = /*ourTable*/ ctx[0].columnHeaders;
+  	const get_key = ctx => /*columnHeader*/ ctx[14].id;
+
+  	for (let i = 0; i < each_value_1.length; i += 1) {
+  		let child_ctx = get_each_context_1$1(ctx, each_value_1, i);
+  		let key = get_key(child_ctx);
+  		each0_lookup.set(key, each_blocks_1[i] = create_each_block_1$1(key, child_ctx));
+  	}
+
+  	let each_value = /*ourTable*/ ctx[0].rowHeaders;
+  	const get_key_1 = ctx => /*rowHeader*/ ctx[11].id;
+
+  	for (let i = 0; i < each_value.length; i += 1) {
+  		let child_ctx = get_each_context$2(ctx, each_value, i);
+  		let key = get_key_1(child_ctx);
+  		each1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
+  	}
+
+  	return {
+  		c() {
+  			div = element("div");
+  			table_1 = element("table");
+  			thead = element("thead");
+  			tr = element("tr");
+  			create_component(emptycorner.$$.fragment);
+  			t0 = space();
+
+  			for (let i = 0; i < each_blocks_1.length; i += 1) {
+  				each_blocks_1[i].c();
+  			}
+
+  			t1 = space();
+  			tbody = element("tbody");
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+
+  			attr(tr, "class", "svelte-1ftgidf");
+  			attr(table_1, "class", "antibiogram-table svelte-1ftgidf");
+  			attr(table_1, "id", "table");
+  			attr(div, "class", "table-window svelte-1ftgidf");
+  			attr(div, "id", "table-container");
+  			toggle_class(div, "small-table", /*smallTable*/ ctx[1]);
+  		},
+  		m(target, anchor) {
+  			insert(target, div, anchor);
+  			append(div, table_1);
+  			append(table_1, thead);
+  			append(thead, tr);
+  			mount_component(emptycorner, tr, null);
+  			append(tr, t0);
+
+  			for (let i = 0; i < each_blocks_1.length; i += 1) {
+  				each_blocks_1[i].m(tr, null);
+  			}
+
+  			append(table_1, t1);
+  			append(table_1, tbody);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(tbody, null);
+  			}
+
+  			current = true;
+  		},
+  		p(ctx, [dirty]) {
+  			if (dirty & /*ourTable, s*/ 5) {
+  				each_value_1 = /*ourTable*/ ctx[0].columnHeaders;
+  				group_outros();
+  				each_blocks_1 = update_keyed_each(each_blocks_1, dirty, get_key, 1, ctx, each_value_1, each0_lookup, tr, outro_and_destroy_block, create_each_block_1$1, null, get_each_context_1$1);
+  				check_outros();
+  			}
+
+  			if (dirty & /*ourTable, s*/ 5) {
+  				each_value = /*ourTable*/ ctx[0].rowHeaders;
+  				group_outros();
+  				each_blocks = update_keyed_each(each_blocks, dirty, get_key_1, 1, ctx, each_value, each1_lookup, tbody, outro_and_destroy_block, create_each_block$2, null, get_each_context$2);
+  				check_outros();
+  			}
+
+  			if (dirty & /*smallTable*/ 2) {
+  				toggle_class(div, "small-table", /*smallTable*/ ctx[1]);
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(emptycorner.$$.fragment, local);
+
+  			for (let i = 0; i < each_value_1.length; i += 1) {
+  				transition_in(each_blocks_1[i]);
+  			}
+
+  			for (let i = 0; i < each_value.length; i += 1) {
+  				transition_in(each_blocks[i]);
+  			}
+
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(emptycorner.$$.fragment, local);
+
+  			for (let i = 0; i < each_blocks_1.length; i += 1) {
+  				transition_out(each_blocks_1[i]);
+  			}
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				transition_out(each_blocks[i]);
+  			}
+
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(div);
+  			destroy_component(emptycorner);
+
+  			for (let i = 0; i < each_blocks_1.length; i += 1) {
+  				each_blocks_1[i].d();
+  			}
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].d();
+  			}
+  		}
+  	};
+  }
+
+  function instance$8($$self, $$props, $$invalidate) {
+  	let { table } = $$props;
+  	let ourTable = table;
+
+  	const s = fn => (...args) => {
+  		const res = fn(...args);
+  		$$invalidate(0, ourTable);
+  		return res;
+  	};
+
+  	let smallTable = true;
+
+  	const tableSize = () => {
+  		const table = document.getElementById('table');
+
+  		if (table && window.visualViewport.width < table.offsetWidth) {
+  			$$invalidate(1, smallTable = false);
+  		} else $$invalidate(1, smallTable = true);
+  	};
+
+  	window.addEventListener('resize', tableSize);
+  	tableSize();
+  	const func = j => ourTable.highlightColumn(j);
+  	const func_1 = j => ourTable.unhighlightColumn(j);
+  	const func_2 = (i, j) => ourTable.highlightCell(i, j);
+  	const func_3 = (i, j) => ourTable.unhighlightCell(i, j);
+  	const func_4 = i => ourTable.highlightRow(i);
+  	const func_5 = i => ourTable.unhighlightRow(i);
+
+  	$$self.$$set = $$props => {
+  		if ('table' in $$props) $$invalidate(3, table = $$props.table);
+  	};
+
+  	tableSize();
+  	return [ourTable, smallTable, s, table, func, func_1, func_2, func_3, func_4, func_5];
+  }
+
+  class Table extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$8, create_fragment$9, safe_not_equal, { table: 3 });
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table\NoTable.svelte generated by Svelte v3.44.3 */
+
+  function create_fragment$8(ctx) {
+  	let div;
+
+  	return {
+  		c() {
+  			div = element("div");
+  			div.textContent = "Sorry no data yet.";
+  		},
+  		m(target, anchor) {
+  			insert(target, div, anchor);
+  		},
+  		p: noop,
+  		i: noop,
+  		o: noop,
+  		d(detaching) {
+  			if (detaching) detach(div);
+  		}
+  	};
+  }
+
+  function instance$7($$self) {
+  	return [];
+  }
+
+  class NoTable extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$7, create_fragment$8, safe_not_equal, {});
+  	}
+  }
+
+  /* src\infrastructure\view\templates\antibiogram\Antibiogram.svelte generated by Svelte v3.44.3 */
+
+  function create_else_block$3(ctx) {
+  	let header;
+  	let h1;
+  	let t0_value = /*vm*/ ctx[0].gram + "";
+  	let t0;
+  	let t1;
+  	let table_1;
+  	let current;
+  	table_1 = new Table({ props: { table: /*table*/ ctx[1] } });
+
+  	return {
+  		c() {
+  			header = element("header");
+  			h1 = element("h1");
+  			t0 = text(t0_value);
+  			t1 = space();
+  			create_component(table_1.$$.fragment);
+  			attr(h1, "class", "header-title svelte-14i3of4");
+  			attr(header, "class", "header svelte-14i3of4");
+  		},
+  		m(target, anchor) {
+  			insert(target, header, anchor);
+  			append(header, h1);
+  			append(h1, t0);
+  			insert(target, t1, anchor);
+  			mount_component(table_1, target, anchor);
+  			current = true;
+  		},
+  		p(ctx, dirty) {
+  			if ((!current || dirty & /*vm*/ 1) && t0_value !== (t0_value = /*vm*/ ctx[0].gram + "")) set_data(t0, t0_value);
+  			const table_1_changes = {};
+  			if (dirty & /*table*/ 2) table_1_changes.table = /*table*/ ctx[1];
+  			table_1.$set(table_1_changes);
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(table_1.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(table_1.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(header);
+  			if (detaching) detach(t1);
+  			destroy_component(table_1, detaching);
+  		}
+  	};
+  }
+
+  // (12:0) {#if !vm}
+  function create_if_block$3(ctx) {
+  	let notable;
+  	let current;
+  	notable = new NoTable({});
+
+  	return {
+  		c() {
+  			create_component(notable.$$.fragment);
+  		},
+  		m(target, anchor) {
+  			mount_component(notable, target, anchor);
+  			current = true;
+  		},
+  		p: noop,
+  		i(local) {
+  			if (current) return;
+  			transition_in(notable.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(notable.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			destroy_component(notable, detaching);
+  		}
+  	};
+  }
+
+  function create_fragment$7(ctx) {
+  	let current_block_type_index;
+  	let if_block;
+  	let if_block_anchor;
+  	let current;
+  	const if_block_creators = [create_if_block$3, create_else_block$3];
+  	const if_blocks = [];
+
+  	function select_block_type(ctx, dirty) {
+  		if (!/*vm*/ ctx[0]) return 0;
+  		return 1;
+  	}
+
+  	current_block_type_index = select_block_type(ctx);
+  	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+  	return {
+  		c() {
+  			if_block.c();
+  			if_block_anchor = empty();
+  		},
+  		m(target, anchor) {
+  			if_blocks[current_block_type_index].m(target, anchor);
+  			insert(target, if_block_anchor, anchor);
+  			current = true;
+  		},
+  		p(ctx, [dirty]) {
+  			let previous_block_index = current_block_type_index;
+  			current_block_type_index = select_block_type(ctx);
+
+  			if (current_block_type_index === previous_block_index) {
+  				if_blocks[current_block_type_index].p(ctx, dirty);
+  			} else {
+  				group_outros();
+
+  				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+  					if_blocks[previous_block_index] = null;
+  				});
+
+  				check_outros();
+  				if_block = if_blocks[current_block_type_index];
+
+  				if (!if_block) {
+  					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+  					if_block.c();
+  				} else {
+  					if_block.p(ctx, dirty);
+  				}
+
+  				transition_in(if_block, 1);
+  				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(if_block);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(if_block);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if_blocks[current_block_type_index].d(detaching);
+  			if (detaching) detach(if_block_anchor);
+  		}
+  	};
+  }
+
+  function instance$6($$self, $$props, $$invalidate) {
+  	let { id } = $$props;
+  	let vm;
+  	let table;
+  	const controller = getContext('antibiogramController');
+  	controller.show(id).then(abg => $$invalidate(0, vm = abg));
+
+  	$$self.$$set = $$props => {
+  		if ('id' in $$props) $$invalidate(2, id = $$props.id);
+  	};
+
+  	$$self.$$.update = () => {
+  		if ($$self.$$.dirty & /*vm*/ 1) {
+  			vm && $$invalidate(1, { table } = vm, table);
+  		}
+  	};
+
+  	return [vm, table, id];
+  }
+
+  class Antibiogram$1 extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$6, create_fragment$7, safe_not_equal, { id: 2 });
+  	}
+  }
+
+  /* src\infrastructure\view\templates\table-view-screen\TableViewScreen.svelte generated by Svelte v3.44.3 */
+
+  function get_each_context$1(ctx, list, i) {
+  	const child_ctx = ctx.slice();
+  	child_ctx[4] = list[i];
+  	return child_ctx;
+  }
+
+  // (10:0) {:else}
+  function create_else_block$2(ctx) {
+  	let each_1_anchor;
+  	let current;
+  	let each_value = /*ids*/ ctx[0];
+  	let each_blocks = [];
+
+  	for (let i = 0; i < each_value.length; i += 1) {
+  		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+  	}
+
+  	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+  		each_blocks[i] = null;
+  	});
+
+  	return {
+  		c() {
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+
+  			each_1_anchor = empty();
+  		},
+  		m(target, anchor) {
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(target, anchor);
+  			}
+
+  			insert(target, each_1_anchor, anchor);
+  			current = true;
+  		},
+  		p(ctx, dirty) {
+  			if (dirty & /*ids*/ 1) {
+  				each_value = /*ids*/ ctx[0];
+  				let i;
+
+  				for (i = 0; i < each_value.length; i += 1) {
+  					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(child_ctx, dirty);
+  						transition_in(each_blocks[i], 1);
+  					} else {
+  						each_blocks[i] = create_each_block$1(child_ctx);
+  						each_blocks[i].c();
+  						transition_in(each_blocks[i], 1);
+  						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+  					}
+  				}
+
+  				group_outros();
+
+  				for (i = each_value.length; i < each_blocks.length; i += 1) {
+  					out(i);
+  				}
+
+  				check_outros();
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+
+  			for (let i = 0; i < each_value.length; i += 1) {
+  				transition_in(each_blocks[i]);
+  			}
+
+  			current = true;
+  		},
+  		o(local) {
+  			each_blocks = each_blocks.filter(Boolean);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				transition_out(each_blocks[i]);
+  			}
+
+  			current = false;
+  		},
+  		d(detaching) {
+  			destroy_each(each_blocks, detaching);
+  			if (detaching) detach(each_1_anchor);
+  		}
+  	};
+  }
+
+  // (8:0) {#if !ids || ids.length === 0}
+  function create_if_block$2(ctx) {
+  	let p;
+
+  	return {
+  		c() {
+  			p = element("p");
+  			p.textContent = "No antibiogram selected...";
+  		},
+  		m(target, anchor) {
+  			insert(target, p, anchor);
+  		},
+  		p: noop,
+  		i: noop,
+  		o: noop,
+  		d(detaching) {
+  			if (detaching) detach(p);
+  		}
+  	};
+  }
+
+  // (11:2) {#each ids as id}
+  function create_each_block$1(ctx) {
+  	let antibiogram;
+  	let current;
+  	antibiogram = new Antibiogram$1({ props: { id: /*id*/ ctx[4] } });
+
+  	return {
+  		c() {
+  			create_component(antibiogram.$$.fragment);
+  		},
+  		m(target, anchor) {
+  			mount_component(antibiogram, target, anchor);
+  			current = true;
+  		},
+  		p(ctx, dirty) {
+  			const antibiogram_changes = {};
+  			if (dirty & /*ids*/ 1) antibiogram_changes.id = /*id*/ ctx[4];
+  			antibiogram.$set(antibiogram_changes);
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(antibiogram.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(antibiogram.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			destroy_component(antibiogram, detaching);
+  		}
+  	};
+  }
+
+  function create_fragment$6(ctx) {
+  	let current_block_type_index;
+  	let if_block;
+  	let if_block_anchor;
+  	let current;
+  	const if_block_creators = [create_if_block$2, create_else_block$2];
+  	const if_blocks = [];
+
+  	function select_block_type(ctx, dirty) {
+  		if (!/*ids*/ ctx[0] || /*ids*/ ctx[0].length === 0) return 0;
+  		return 1;
+  	}
+
+  	current_block_type_index = select_block_type(ctx);
+  	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+  	return {
+  		c() {
+  			if_block.c();
+  			if_block_anchor = empty();
+  		},
+  		m(target, anchor) {
+  			if_blocks[current_block_type_index].m(target, anchor);
+  			insert(target, if_block_anchor, anchor);
+  			current = true;
+  		},
+  		p(ctx, [dirty]) {
+  			let previous_block_index = current_block_type_index;
+  			current_block_type_index = select_block_type(ctx);
+
+  			if (current_block_type_index === previous_block_index) {
+  				if_blocks[current_block_type_index].p(ctx, dirty);
+  			} else {
+  				group_outros();
+
+  				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+  					if_blocks[previous_block_index] = null;
+  				});
+
+  				check_outros();
+  				if_block = if_blocks[current_block_type_index];
+
+  				if (!if_block) {
+  					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+  					if_block.c();
+  				} else {
+  					if_block.p(ctx, dirty);
+  				}
+
+  				transition_in(if_block, 1);
+  				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(if_block);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(if_block);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if_blocks[current_block_type_index].d(detaching);
+  			if (detaching) detach(if_block_anchor);
+  		}
+  	};
+  }
+
+  function instance$5($$self, $$props, $$invalidate) {
+  	let param;
+  	let ids;
+  	let $querystring;
+  	component_subscribe($$self, querystring, $$value => $$invalidate(3, $querystring = $$value));
+  	const params = {};
+
+  	$$self.$$.update = () => {
+  		if ($$self.$$.dirty & /*$querystring*/ 8) {
+  			$$invalidate(2, param = new URLSearchParams($querystring).get('ids'));
+  		}
+
+  		if ($$self.$$.dirty & /*param*/ 4) {
+  			$$invalidate(0, ids = param === null || param === void 0
+  			? void 0
+  			: param.split(','));
+  		}
+  	};
+
+  	return [ids, params, param, $querystring];
+  }
+
+  class TableViewScreen extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$5, create_fragment$6, safe_not_equal, { params: 1 });
+  	}
+
+  	get params() {
+  		return this.$$.ctx[1];
+  	}
+  }
+
+  /* src\infrastructure\view\templates\index-screen\Card.svelte generated by Svelte v3.44.3 */
+
+  function create_fragment$5(ctx) {
+  	let figure;
+  	let div0;
+  	let ion_icon0;
+  	let t0;
+  	let h1;
+  	let t1;
+  	let t2;
+  	let p;
+  	let t3;
+  	let t4;
+  	let button;
+  	let t5;
+  	let div1;
+  	let current;
+  	let mounted;
+  	let dispose;
+  	const default_slot_template = /*#slots*/ ctx[5].default;
+  	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[4], null);
+
+  	return {
+  		c() {
+  			figure = element("figure");
+  			div0 = element("div");
+  			ion_icon0 = element("ion-icon");
+  			t0 = space();
+  			h1 = element("h1");
+  			t1 = text(/*title*/ ctx[0]);
+  			t2 = space();
+  			p = element("p");
+  			t3 = text(/*subtitle*/ ctx[1]);
+  			t4 = space();
+  			button = element("button");
+  			button.innerHTML = `<ion-icon name="chevron-up-outline" class="icon svelte-3byh1u"></ion-icon>`;
+  			t5 = space();
+  			div1 = element("div");
+  			if (default_slot) default_slot.c();
+  			set_custom_element_data(ion_icon0, "name", "medical-outline");
+  			set_custom_element_data(ion_icon0, "class", "icon thumbnail svelte-3byh1u");
+  			attr(h1, "class", "title svelte-3byh1u");
+  			attr(p, "class", "subtitle svelte-3byh1u");
+  			attr(button, "class", "toggle svelte-3byh1u");
+  			toggle_class(button, "toggle-inactive", /*bodyHidden*/ ctx[2]);
+  			attr(div0, "class", "header svelte-3byh1u");
+  			attr(div1, "class", "body svelte-3byh1u");
+  			attr(figure, "class", "card svelte-3byh1u");
+  			toggle_class(figure, "body-hidden", /*bodyHidden*/ ctx[2]);
+  		},
+  		m(target, anchor) {
+  			insert(target, figure, anchor);
+  			append(figure, div0);
+  			append(div0, ion_icon0);
+  			append(div0, t0);
+  			append(div0, h1);
+  			append(h1, t1);
+  			append(div0, t2);
+  			append(div0, p);
+  			append(p, t3);
+  			append(div0, t4);
+  			append(div0, button);
+  			append(figure, t5);
+  			append(figure, div1);
+
+  			if (default_slot) {
+  				default_slot.m(div1, null);
+  			}
+
+  			current = true;
+
+  			if (!mounted) {
+  				dispose = listen(button, "click", /*handleToggle*/ ctx[3]);
+  				mounted = true;
+  			}
+  		},
+  		p(ctx, [dirty]) {
+  			if (!current || dirty & /*title*/ 1) set_data(t1, /*title*/ ctx[0]);
+  			if (!current || dirty & /*subtitle*/ 2) set_data(t3, /*subtitle*/ ctx[1]);
+
+  			if (dirty & /*bodyHidden*/ 4) {
+  				toggle_class(button, "toggle-inactive", /*bodyHidden*/ ctx[2]);
+  			}
+
+  			if (default_slot) {
+  				if (default_slot.p && (!current || dirty & /*$$scope*/ 16)) {
+  					update_slot_base(
+  						default_slot,
+  						default_slot_template,
+  						ctx,
+  						/*$$scope*/ ctx[4],
+  						!current
+  						? get_all_dirty_from_scope(/*$$scope*/ ctx[4])
+  						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[4], dirty, null),
+  						null
+  					);
+  				}
+  			}
+
+  			if (dirty & /*bodyHidden*/ 4) {
+  				toggle_class(figure, "body-hidden", /*bodyHidden*/ ctx[2]);
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(default_slot, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(default_slot, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(figure);
+  			if (default_slot) default_slot.d(detaching);
+  			mounted = false;
+  			dispose();
   		}
   	};
   }
 
   function instance$4($$self, $$props, $$invalidate) {
+  	let { $$slots: slots = {}, $$scope } = $$props;
   	let { title } = $$props;
   	let { subtitle } = $$props;
-  	let { dates } = $$props;
+  	let bodyHidden = false;
+  	const handleToggle = () => $$invalidate(2, bodyHidden = !bodyHidden);
 
   	$$self.$$set = $$props => {
   		if ('title' in $$props) $$invalidate(0, title = $$props.title);
   		if ('subtitle' in $$props) $$invalidate(1, subtitle = $$props.subtitle);
-  		if ('dates' in $$props) $$invalidate(2, dates = $$props.dates);
+  		if ('$$scope' in $$props) $$invalidate(4, $$scope = $$props.$$scope);
   	};
 
-  	return [title, subtitle, dates];
+  	return [title, subtitle, bodyHidden, handleToggle, $$scope, slots];
   }
 
   class Card extends SvelteComponent {
   	constructor(options) {
   		super();
-  		init(this, options, instance$4, create_fragment$5, safe_not_equal, { title: 0, subtitle: 1, dates: 2 });
+  		init(this, options, instance$4, create_fragment$5, safe_not_equal, { title: 0, subtitle: 1 });
   	}
   }
 
-  class ValueObject {
-      is(v) {
-          const { constructor } = Object.getPrototypeOf(v);
-          if (!(this instanceof constructor))
-              return false;
-          return this.isIdentical(v);
-      }
-      static filterUniqueValues(arr) {
-          const uniqueValues = [];
-          for (const val of arr) {
-              const match = uniqueValues.find((v) => v.isIdentical(val));
-              const seen = !(typeof match === 'undefined');
-              if (seen)
-                  continue;
-              uniqueValues.push(val);
-          }
-          return uniqueValues;
-      }
+  /* src\infrastructure\view\templates\index-screen\List.svelte generated by Svelte v3.44.3 */
+
+  function create_fragment$4(ctx) {
+  	let ul;
+  	let current;
+  	const default_slot_template = /*#slots*/ ctx[1].default;
+  	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
+
+  	return {
+  		c() {
+  			ul = element("ul");
+  			if (default_slot) default_slot.c();
+  			attr(ul, "class", "list svelte-12a3vld");
+  		},
+  		m(target, anchor) {
+  			insert(target, ul, anchor);
+
+  			if (default_slot) {
+  				default_slot.m(ul, null);
+  			}
+
+  			current = true;
+  		},
+  		p(ctx, [dirty]) {
+  			if (default_slot) {
+  				if (default_slot.p && (!current || dirty & /*$$scope*/ 1)) {
+  					update_slot_base(
+  						default_slot,
+  						default_slot_template,
+  						ctx,
+  						/*$$scope*/ ctx[0],
+  						!current
+  						? get_all_dirty_from_scope(/*$$scope*/ ctx[0])
+  						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[0], dirty, null),
+  						null
+  					);
+  				}
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(default_slot, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(default_slot, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(ul);
+  			if (default_slot) default_slot.d(detaching);
+  		}
+  	};
   }
 
-  const antibiogramStore = writable({
-      state: '',
-      institution: '',
-      interval: '',
-      details: '',
-      gramStain: '',
-      id: null,
-  });
-  const { subscribe, set } = antibiogramStore;
-  const setAntibiogram = (abgT) => {
-      set({
-          state: abgT.state,
-          institution: abgT.institution,
-          interval: abgT.interval,
-          details: abgT.details,
-          gramStain: abgT.gramStain,
-          id: abgT.id,
-      });
-  };
-  const title = derived(antibiogramStore, ($abg) => {
-      if ($abg.id == null) {
-          return 'No antibiogram data';
-      }
-      else
-          return `${$abg.institution}, ${$abg.state}`;
-  });
-  derived(antibiogramStore, ($abg) => {
-      if ($abg.id == null) {
-          return 'NA';
-      }
-      else {
-          return `${$abg.interval}`;
-      }
-  });
-  derived(antibiogramStore, ($abg) => {
-      if ($abg.id == null) {
-          return 'NA';
-      }
-      else {
-          return `${$abg.details}, gram ${$abg.gramStain}`;
-      }
-  });
-  const antibiogram = { subscribe, setAntibiogram };
+  function instance$3($$self, $$props, $$invalidate) {
+  	let { $$slots: slots = {}, $$scope } = $$props;
+
+  	$$self.$$set = $$props => {
+  		if ('$$scope' in $$props) $$invalidate(0, $$scope = $$props.$$scope);
+  	};
+
+  	return [$$scope, slots];
+  }
+
+  class List extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$3, create_fragment$4, safe_not_equal, {});
+  	}
+  }
+
+  /* src\infrastructure\view\templates\index-screen\ListItem.svelte generated by Svelte v3.44.3 */
+
+  function create_fragment$3(ctx) {
+  	let li;
+  	let ion_icon;
+  	let t0;
+  	let div;
+  	let h2;
+  	let t1;
+  	let t2;
+  	let p;
+  	let t3;
+
+  	return {
+  		c() {
+  			li = element("li");
+  			ion_icon = element("ion-icon");
+  			t0 = space();
+  			div = element("div");
+  			h2 = element("h2");
+  			t1 = text(/*title*/ ctx[0]);
+  			t2 = space();
+  			p = element("p");
+  			t3 = text(/*subtitle*/ ctx[1]);
+  			set_custom_element_data(ion_icon, "name", "file-tray-full-outline");
+  			set_custom_element_data(ion_icon, "class", "icon svelte-lr7xpq");
+  			attr(h2, "class", "title svelte-lr7xpq");
+  			attr(p, "class", "subtitle svelte-lr7xpq");
+  			attr(div, "class", "label svelte-lr7xpq");
+  			attr(li, "class", "item svelte-lr7xpq");
+  		},
+  		m(target, anchor) {
+  			insert(target, li, anchor);
+  			append(li, ion_icon);
+  			append(li, t0);
+  			append(li, div);
+  			append(div, h2);
+  			append(h2, t1);
+  			append(div, t2);
+  			append(div, p);
+  			append(p, t3);
+  		},
+  		p(ctx, [dirty]) {
+  			if (dirty & /*title*/ 1) set_data(t1, /*title*/ ctx[0]);
+  			if (dirty & /*subtitle*/ 2) set_data(t3, /*subtitle*/ ctx[1]);
+  		},
+  		i: noop,
+  		o: noop,
+  		d(detaching) {
+  			if (detaching) detach(li);
+  		}
+  	};
+  }
+
+  function instance$2($$self, $$props, $$invalidate) {
+  	let { title } = $$props;
+  	let { subtitle } = $$props;
+
+  	$$self.$$set = $$props => {
+  		if ('title' in $$props) $$invalidate(0, title = $$props.title);
+  		if ('subtitle' in $$props) $$invalidate(1, subtitle = $$props.subtitle);
+  	};
+
+  	return [title, subtitle];
+  }
+
+  class ListItem extends SvelteComponent {
+  	constructor(options) {
+  		super();
+  		init(this, options, instance$2, create_fragment$3, safe_not_equal, { title: 0, subtitle: 1 });
+  	}
+  }
 
   /* src\infrastructure\view\templates\index-screen\IndexScreen.svelte generated by Svelte v3.44.3 */
 
   function get_each_context(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[2] = list[i].state;
-  	child_ctx[3] = list[i].institution;
-  	child_ctx[4] = list[i].interval;
-  	child_ctx[5] = list[i].details;
-  	child_ctx[6] = list[i].gramStain;
-  	child_ctx[7] = list[i].id;
+  	child_ctx[2] = list[i].place;
+  	child_ctx[3] = list[i].intervals;
+  	return child_ctx;
+  }
+
+  function get_each_context_1(ctx, list, i) {
+  	const child_ctx = ctx.slice();
+  	child_ctx[6] = list[i].interval;
+  	child_ctx[7] = list[i].groups;
+  	return child_ctx;
+  }
+
+  function get_each_context_2(ctx, list, i) {
+  	const child_ctx = ctx.slice();
+  	child_ctx[10] = list[i].title;
+  	child_ctx[11] = list[i].antibiograms;
   	return child_ctx;
   }
 
   // (14:2) {:else}
-  function create_else_block(ctx) {
+  function create_else_block$1(ctx) {
   	let ul;
   	let current;
-  	let each_value = /*testVm*/ ctx[0];
+  	let each_value = /*vm*/ ctx[0];
   	let each_blocks = [];
 
   	for (let i = 0; i < each_value.length; i += 1) {
@@ -3993,8 +3770,6 @@ var app = (function () {
   			for (let i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
-
-  			attr(ul, "class", "list svelte-12z7958");
   		},
   		m(target, anchor) {
   			insert(target, ul, anchor);
@@ -4006,8 +3781,8 @@ var app = (function () {
   			current = true;
   		},
   		p(ctx, dirty) {
-  			if (dirty & /*testVm*/ 1) {
-  				each_value = /*testVm*/ ctx[0];
+  			if (dirty & /*vm*/ 1) {
+  				each_value = /*vm*/ ctx[0];
   				let i;
 
   				for (i = 0; i < each_value.length; i += 1) {
@@ -4058,14 +3833,14 @@ var app = (function () {
   	};
   }
 
-  // (12:2) {#if testVm === null}
-  function create_if_block(ctx) {
+  // (12:2) {#if vm.length === 0}
+  function create_if_block$1(ctx) {
   	let p;
 
   	return {
   		c() {
   			p = element("p");
-  			p.textContent = "Sorry no results yet...";
+  			p.textContent = "No results yet...";
   		},
   		m(target, anchor) {
   			insert(target, p, anchor);
@@ -4079,57 +3854,320 @@ var app = (function () {
   	};
   }
 
-  // (16:6) {#each testVm as { state, institution, interval, details, gramStain, id }}
-  function create_each_block(ctx) {
-  	let li;
+  // (24:16) {#each groups as { title, antibiograms }}
+  function create_each_block_2(ctx) {
   	let a;
-  	let card;
-  	let a_href_value;
-  	let link_action;
+  	let listitem;
   	let t;
+  	let a_href_value;
   	let current;
   	let mounted;
   	let dispose;
 
+  	listitem = new ListItem({
+  			props: {
+  				title: /*title*/ ctx[10],
+  				subtitle: /*interval*/ ctx[6]
+  			}
+  		});
+
+  	return {
+  		c() {
+  			a = element("a");
+  			create_component(listitem.$$.fragment);
+  			t = space();
+  			attr(a, "href", a_href_value = '/antibiogram?ids=' + /*antibiograms*/ ctx[11].map(func).join(','));
+  			attr(a, "class", "link svelte-1034exl");
+  		},
+  		m(target, anchor) {
+  			insert(target, a, anchor);
+  			mount_component(listitem, a, null);
+  			append(a, t);
+  			current = true;
+
+  			if (!mounted) {
+  				dispose = action_destroyer(link.call(null, a));
+  				mounted = true;
+  			}
+  		},
+  		p(ctx, dirty) {
+  			const listitem_changes = {};
+  			if (dirty & /*vm*/ 1) listitem_changes.title = /*title*/ ctx[10];
+  			if (dirty & /*vm*/ 1) listitem_changes.subtitle = /*interval*/ ctx[6];
+  			listitem.$set(listitem_changes);
+
+  			if (!current || dirty & /*vm*/ 1 && a_href_value !== (a_href_value = '/antibiogram?ids=' + /*antibiograms*/ ctx[11].map(func).join(','))) {
+  				attr(a, "href", a_href_value);
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(listitem.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(listitem.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			if (detaching) detach(a);
+  			destroy_component(listitem);
+  			mounted = false;
+  			dispose();
+  		}
+  	};
+  }
+
+  // (23:14) {#each intervals as { interval, groups }}
+  function create_each_block_1(ctx) {
+  	let each_1_anchor;
+  	let current;
+  	let each_value_2 = /*groups*/ ctx[7];
+  	let each_blocks = [];
+
+  	for (let i = 0; i < each_value_2.length; i += 1) {
+  		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+  	}
+
+  	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+  		each_blocks[i] = null;
+  	});
+
+  	return {
+  		c() {
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+
+  			each_1_anchor = empty();
+  		},
+  		m(target, anchor) {
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(target, anchor);
+  			}
+
+  			insert(target, each_1_anchor, anchor);
+  			current = true;
+  		},
+  		p(ctx, dirty) {
+  			if (dirty & /*vm*/ 1) {
+  				each_value_2 = /*groups*/ ctx[7];
+  				let i;
+
+  				for (i = 0; i < each_value_2.length; i += 1) {
+  					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(child_ctx, dirty);
+  						transition_in(each_blocks[i], 1);
+  					} else {
+  						each_blocks[i] = create_each_block_2(child_ctx);
+  						each_blocks[i].c();
+  						transition_in(each_blocks[i], 1);
+  						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+  					}
+  				}
+
+  				group_outros();
+
+  				for (i = each_value_2.length; i < each_blocks.length; i += 1) {
+  					out(i);
+  				}
+
+  				check_outros();
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+
+  			for (let i = 0; i < each_value_2.length; i += 1) {
+  				transition_in(each_blocks[i]);
+  			}
+
+  			current = true;
+  		},
+  		o(local) {
+  			each_blocks = each_blocks.filter(Boolean);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				transition_out(each_blocks[i]);
+  			}
+
+  			current = false;
+  		},
+  		d(detaching) {
+  			destroy_each(each_blocks, detaching);
+  			if (detaching) detach(each_1_anchor);
+  		}
+  	};
+  }
+
+  // (22:12) <List>
+  function create_default_slot_1(ctx) {
+  	let each_1_anchor;
+  	let current;
+  	let each_value_1 = /*intervals*/ ctx[3];
+  	let each_blocks = [];
+
+  	for (let i = 0; i < each_value_1.length; i += 1) {
+  		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+  	}
+
+  	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+  		each_blocks[i] = null;
+  	});
+
+  	return {
+  		c() {
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+
+  			each_1_anchor = empty();
+  		},
+  		m(target, anchor) {
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(target, anchor);
+  			}
+
+  			insert(target, each_1_anchor, anchor);
+  			current = true;
+  		},
+  		p(ctx, dirty) {
+  			if (dirty & /*vm*/ 1) {
+  				each_value_1 = /*intervals*/ ctx[3];
+  				let i;
+
+  				for (i = 0; i < each_value_1.length; i += 1) {
+  					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(child_ctx, dirty);
+  						transition_in(each_blocks[i], 1);
+  					} else {
+  						each_blocks[i] = create_each_block_1(child_ctx);
+  						each_blocks[i].c();
+  						transition_in(each_blocks[i], 1);
+  						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+  					}
+  				}
+
+  				group_outros();
+
+  				for (i = each_value_1.length; i < each_blocks.length; i += 1) {
+  					out(i);
+  				}
+
+  				check_outros();
+  			}
+  		},
+  		i(local) {
+  			if (current) return;
+
+  			for (let i = 0; i < each_value_1.length; i += 1) {
+  				transition_in(each_blocks[i]);
+  			}
+
+  			current = true;
+  		},
+  		o(local) {
+  			each_blocks = each_blocks.filter(Boolean);
+
+  			for (let i = 0; i < each_blocks.length; i += 1) {
+  				transition_out(each_blocks[i]);
+  			}
+
+  			current = false;
+  		},
+  		d(detaching) {
+  			destroy_each(each_blocks, detaching);
+  			if (detaching) detach(each_1_anchor);
+  		}
+  	};
+  }
+
+  // (18:10) <Card             title={place.split(' \u2212 ').shift() ?? ''}             subtitle={place.split(' \u2212 ').pop() ?? ''}           >
+  function create_default_slot(ctx) {
+  	let list;
+  	let current;
+
+  	list = new List({
+  			props: {
+  				$$slots: { default: [create_default_slot_1] },
+  				$$scope: { ctx }
+  			}
+  		});
+
+  	return {
+  		c() {
+  			create_component(list.$$.fragment);
+  		},
+  		m(target, anchor) {
+  			mount_component(list, target, anchor);
+  			current = true;
+  		},
+  		p(ctx, dirty) {
+  			const list_changes = {};
+
+  			if (dirty & /*$$scope, vm*/ 16385) {
+  				list_changes.$$scope = { dirty, ctx };
+  			}
+
+  			list.$set(list_changes);
+  		},
+  		i(local) {
+  			if (current) return;
+  			transition_in(list.$$.fragment, local);
+  			current = true;
+  		},
+  		o(local) {
+  			transition_out(list.$$.fragment, local);
+  			current = false;
+  		},
+  		d(detaching) {
+  			destroy_component(list, detaching);
+  		}
+  	};
+  }
+
+  // (16:6) {#each vm as { place, intervals }}
+  function create_each_block(ctx) {
+  	let li;
+  	let card;
+  	let t;
+  	let current;
+
   	card = new Card({
   			props: {
-  				title: /*institution*/ ctx[3] + ', ' + /*state*/ ctx[2],
-  				subtitle: /*details*/ ctx[5] + ', gram ' + /*gramStain*/ ctx[6],
-  				dates: /*interval*/ ctx[4].toString()
+  				title: /*place*/ ctx[2].split(' \u2212 ').shift() ?? '',
+  				subtitle: /*place*/ ctx[2].split(' \u2212 ').pop() ?? '',
+  				$$slots: { default: [create_default_slot] },
+  				$$scope: { ctx }
   			}
   		});
 
   	return {
   		c() {
   			li = element("li");
-  			a = element("a");
   			create_component(card.$$.fragment);
   			t = space();
-  			attr(a, "class", "card-nav svelte-12z7958");
-  			attr(a, "href", a_href_value = '/antibiogram/' + /*id*/ ctx[7]);
   		},
   		m(target, anchor) {
   			insert(target, li, anchor);
-  			append(li, a);
-  			mount_component(card, a, null);
+  			mount_component(card, li, null);
   			append(li, t);
   			current = true;
-
-  			if (!mounted) {
-  				dispose = action_destroyer(link_action = link.call(null, a));
-  				mounted = true;
-  			}
   		},
   		p(ctx, dirty) {
   			const card_changes = {};
-  			if (dirty & /*testVm*/ 1) card_changes.title = /*institution*/ ctx[3] + ', ' + /*state*/ ctx[2];
-  			if (dirty & /*testVm*/ 1) card_changes.subtitle = /*details*/ ctx[5] + ', gram ' + /*gramStain*/ ctx[6];
-  			if (dirty & /*testVm*/ 1) card_changes.dates = /*interval*/ ctx[4].toString();
-  			card.$set(card_changes);
+  			if (dirty & /*vm*/ 1) card_changes.title = /*place*/ ctx[2].split(' \u2212 ').shift() ?? '';
+  			if (dirty & /*vm*/ 1) card_changes.subtitle = /*place*/ ctx[2].split(' \u2212 ').pop() ?? '';
 
-  			if (!current || dirty & /*testVm*/ 1 && a_href_value !== (a_href_value = '/antibiogram/' + /*id*/ ctx[7])) {
-  				attr(a, "href", a_href_value);
+  			if (dirty & /*$$scope, vm*/ 16385) {
+  				card_changes.$$scope = { dirty, ctx };
   			}
+
+  			card.$set(card_changes);
   		},
   		i(local) {
   			if (current) return;
@@ -4143,22 +4181,20 @@ var app = (function () {
   		d(detaching) {
   			if (detaching) detach(li);
   			destroy_component(card);
-  			mounted = false;
-  			dispose();
   		}
   	};
   }
 
-  function create_fragment$4(ctx) {
+  function create_fragment$2(ctx) {
   	let main;
   	let current_block_type_index;
   	let if_block;
   	let current;
-  	const if_block_creators = [create_if_block, create_else_block];
+  	const if_block_creators = [create_if_block$1, create_else_block$1];
   	const if_blocks = [];
 
   	function select_block_type(ctx, dirty) {
-  		if (/*testVm*/ ctx[0] === null) return 0;
+  		if (/*vm*/ ctx[0].length === 0) return 0;
   		return 1;
   	}
 
@@ -4169,7 +4205,7 @@ var app = (function () {
   		c() {
   			main = element("main");
   			if_block.c();
-  			attr(main, "class", "svelte-12z7958");
+  			attr(main, "class", "svelte-1034exl");
   		},
   		m(target, anchor) {
   			insert(target, main, anchor);
@@ -4219,17 +4255,19 @@ var app = (function () {
   	};
   }
 
-  function instance$3($$self, $$props, $$invalidate) {
-  	const controller = getContext('antibiogramTitleController');
-  	let testVm = null;
-  	controller.index().then(res => $$invalidate(0, testVm = res));
-  	return [testVm];
+  const func = a => a.id;
+
+  function instance$1($$self, $$props, $$invalidate) {
+  	const groupController = getContext('antibiogramGroupController');
+  	let vm = [];
+  	groupController.index().then(res => res !== null && $$invalidate(0, vm = res));
+  	return [vm];
   }
 
   class IndexScreen extends SvelteComponent {
   	constructor(options) {
   		super();
-  		init(this, options, instance$3, create_fragment$4, safe_not_equal, {});
+  		init(this, options, instance$1, create_fragment$2, safe_not_equal, {});
   	}
   }
 
@@ -4238,7 +4276,7 @@ var app = (function () {
     '/': IndexScreen,
 
     // Using named parameters, with last being optional
-    '/antibiogram/:id': TableViewScreen,
+    '/antibiogram': TableViewScreen,
 
     // Catch-all
     // This is optional, but if present it must be the last
@@ -4247,222 +4285,248 @@ var app = (function () {
 
   /* src\infrastructure\view\templates\navigation\Navigation.svelte generated by Svelte v3.44.3 */
 
-  function create_fragment$3(ctx) {
-  	let nav;
-  	let h1;
-  	let t1;
-  	let button;
-  	let t2;
-  	let ul;
+  function create_if_block_2(ctx) {
+  	let a;
+  	let link_action;
   	let mounted;
   	let dispose;
 
   	return {
   		c() {
-  			nav = element("nav");
-  			h1 = element("h1");
-  			h1.textContent = "Bugs 'n Drugs";
-  			t1 = space();
-  			button = element("button");
-  			button.innerHTML = `<ion-icon name="ellipsis-vertical"></ion-icon>`;
-  			t2 = space();
-  			ul = element("ul");
-
-  			ul.innerHTML = `<li class="nav-link svelte-h5uj4p">About</li> 
-    <li class="nav-link svelte-h5uj4p">Disclaimer</li>`;
-
-  			attr(h1, "class", "title svelte-h5uj4p");
-  			attr(button, "class", "nav-menu-toggle svelte-h5uj4p");
-  			attr(ul, "class", "nav-link-list svelte-h5uj4p");
-  			toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[0]);
-  			attr(nav, "class", "svelte-h5uj4p");
+  			a = element("a");
+  			a.innerHTML = `<ion-icon name="arrow-back-outline"></ion-icon>`;
+  			attr(a, "class", "back svelte-23q4ws");
+  			attr(a, "href", "/");
   		},
   		m(target, anchor) {
-  			insert(target, nav, anchor);
-  			append(nav, h1);
-  			append(nav, t1);
-  			append(nav, button);
-  			append(nav, t2);
-  			append(nav, ul);
+  			insert(target, a, anchor);
 
   			if (!mounted) {
-  				dispose = listen(button, "click", /*click_handler*/ ctx[1]);
+  				dispose = action_destroyer(link_action = link.call(null, a));
   				mounted = true;
   			}
   		},
-  		p(ctx, [dirty]) {
-  			if (dirty & /*navMenuHidden*/ 1) {
-  				toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[0]);
-  			}
-  		},
-  		i: noop,
-  		o: noop,
   		d(detaching) {
-  			if (detaching) detach(nav);
+  			if (detaching) detach(a);
   			mounted = false;
   			dispose();
   		}
   	};
   }
 
-  function instance$2($$self, $$props, $$invalidate) {
-  	let navMenuHidden = true;
-  	const click_handler = () => $$invalidate(0, navMenuHidden = !navMenuHidden);
-  	return [navMenuHidden, click_handler];
+  // (25:4) {:else}
+  function create_else_block(ctx) {
+  	let t0_value = /*vm*/ ctx[1].institution + "";
+  	let t0;
+  	let t1;
+  	let t2_value = /*vm*/ ctx[1].info + "";
+  	let t2;
+
+  	return {
+  		c() {
+  			t0 = text(t0_value);
+  			t1 = space();
+  			t2 = text(t2_value);
+  		},
+  		m(target, anchor) {
+  			insert(target, t0, anchor);
+  			insert(target, t1, anchor);
+  			insert(target, t2, anchor);
+  		},
+  		p(ctx, dirty) {
+  			if (dirty & /*vm*/ 2 && t0_value !== (t0_value = /*vm*/ ctx[1].institution + "")) set_data(t0, t0_value);
+  			if (dirty & /*vm*/ 2 && t2_value !== (t2_value = /*vm*/ ctx[1].info + "")) set_data(t2, t2_value);
+  		},
+  		d(detaching) {
+  			if (detaching) detach(t0);
+  			if (detaching) detach(t1);
+  			if (detaching) detach(t2);
+  		}
+  	};
   }
 
-  class Navigation extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$2, create_fragment$3, safe_not_equal, {});
-  	}
+  // (23:26) 
+  function create_if_block_1(ctx) {
+  	let t;
+
+  	return {
+  		c() {
+  			t = text("Retrieving...");
+  		},
+  		m(target, anchor) {
+  			insert(target, t, anchor);
+  		},
+  		p: noop,
+  		d(detaching) {
+  			if (detaching) detach(t);
+  		}
+  	};
   }
 
-  /* src\infrastructure\view\templates\navigation\BackNavigation.svelte generated by Svelte v3.44.3 */
+  // (21:4) {#if onHomePage}
+  function create_if_block(ctx) {
+  	let t;
 
-  function create_fragment$2(ctx) {
+  	return {
+  		c() {
+  			t = text("Bugs 'n Drugs");
+  		},
+  		m(target, anchor) {
+  			insert(target, t, anchor);
+  		},
+  		p: noop,
+  		d(detaching) {
+  			if (detaching) detach(t);
+  		}
+  	};
+  }
+
+  function create_fragment$1(ctx) {
   	let nav;
-  	let a;
   	let t0;
   	let h1;
   	let t1;
-  	let t2;
   	let button;
-  	let t3;
+  	let t2;
   	let ul;
   	let mounted;
   	let dispose;
+  	let if_block0 = !/*onHomePage*/ ctx[0] && create_if_block_2();
+
+  	function select_block_type(ctx, dirty) {
+  		if (/*onHomePage*/ ctx[0]) return create_if_block;
+  		if (/*vm*/ ctx[1] === null) return create_if_block_1;
+  		return create_else_block;
+  	}
+
+  	let current_block_type = select_block_type(ctx);
+  	let if_block1 = current_block_type(ctx);
 
   	return {
   		c() {
   			nav = element("nav");
-  			a = element("a");
-  			a.innerHTML = `<ion-icon name="arrow-back-outline"></ion-icon>`;
+  			if (if_block0) if_block0.c();
   			t0 = space();
   			h1 = element("h1");
-  			t1 = text(/*$title*/ ctx[1]);
-  			t2 = space();
+  			if_block1.c();
+  			t1 = space();
   			button = element("button");
   			button.innerHTML = `<ion-icon name="ellipsis-vertical"></ion-icon>`;
-  			t3 = space();
+  			t2 = space();
   			ul = element("ul");
 
   			ul.innerHTML = `<li class="nav-link svelte-23q4ws">About</li> 
     <li class="nav-link svelte-23q4ws">Disclaimer</li>`;
 
-  			attr(a, "class", "back svelte-23q4ws");
-  			attr(a, "href", "/");
   			attr(h1, "class", "title svelte-23q4ws");
   			attr(button, "class", "nav-menu-toggle svelte-23q4ws");
   			attr(ul, "class", "nav-link-list svelte-23q4ws");
-  			toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[0]);
+  			toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[2]);
   			attr(nav, "class", "svelte-23q4ws");
   		},
   		m(target, anchor) {
   			insert(target, nav, anchor);
-  			append(nav, a);
+  			if (if_block0) if_block0.m(nav, null);
   			append(nav, t0);
   			append(nav, h1);
-  			append(h1, t1);
-  			append(nav, t2);
+  			if_block1.m(h1, null);
+  			append(nav, t1);
   			append(nav, button);
-  			append(nav, t3);
+  			append(nav, t2);
   			append(nav, ul);
 
   			if (!mounted) {
-  				dispose = [
-  					action_destroyer(link.call(null, a)),
-  					listen(button, "click", /*click_handler*/ ctx[3])
-  				];
-
+  				dispose = listen(button, "click", /*click_handler*/ ctx[8]);
   				mounted = true;
   			}
   		},
   		p(ctx, [dirty]) {
-  			if (dirty & /*$title*/ 2) set_data(t1, /*$title*/ ctx[1]);
+  			if (!/*onHomePage*/ ctx[0]) {
+  				if (if_block0) ; else {
+  					if_block0 = create_if_block_2();
+  					if_block0.c();
+  					if_block0.m(nav, t0);
+  				}
+  			} else if (if_block0) {
+  				if_block0.d(1);
+  				if_block0 = null;
+  			}
 
-  			if (dirty & /*navMenuHidden*/ 1) {
-  				toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[0]);
+  			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block1) {
+  				if_block1.p(ctx, dirty);
+  			} else {
+  				if_block1.d(1);
+  				if_block1 = current_block_type(ctx);
+
+  				if (if_block1) {
+  					if_block1.c();
+  					if_block1.m(h1, null);
+  				}
+  			}
+
+  			if (dirty & /*navMenuHidden*/ 4) {
+  				toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[2]);
   			}
   		},
   		i: noop,
   		o: noop,
   		d(detaching) {
   			if (detaching) detach(nav);
+  			if (if_block0) if_block0.d();
+  			if_block1.d();
   			mounted = false;
-  			run_all(dispose);
+  			dispose();
   		}
   	};
   }
 
-  function instance$1($$self, $$props, $$invalidate) {
-  	let $title;
-  	component_subscribe($$self, title, $$value => $$invalidate(1, $title = $$value));
+  function instance($$self, $$props, $$invalidate) {
+  	let onHomePage;
+  	let abgIds;
+  	let $querystring;
+  	let $location;
+  	component_subscribe($$self, querystring, $$value => $$invalidate(6, $querystring = $$value));
+  	component_subscribe($$self, location, $$value => $$invalidate(7, $location = $$value));
+  	var _a, _b;
+  	let vm = null;
+  	const controller = getContext('antibiogramController');
   	let navMenuHidden = true;
-  	const controller = getContext('antibiogramTitleController');
+  	const click_handler = () => $$invalidate(2, navMenuHidden = !navMenuHidden);
 
-  	controller.index().then(titles => {
-  		if (titles !== null) {
-  			titles.forEach(title => {
-  				if (title.id.toString() == window.location.href.split('/').pop()) antibiogram.setAntibiogram(title);
-  			});
+  	$$self.$$.update = () => {
+  		if ($$self.$$.dirty & /*$location*/ 128) {
+  			$$invalidate(0, onHomePage = $location === '/');
   		}
-  	});
 
-  	let { params } = $$props;
-  	const click_handler = () => $$invalidate(0, navMenuHidden = !navMenuHidden);
+  		if ($$self.$$.dirty & /*onHomePage, $querystring, _a, _b*/ 89) {
+  			$$invalidate(5, abgIds = !onHomePage
+  			? $$invalidate(4, _b = $$invalidate(3, _a = new URLSearchParams($querystring).get('ids')) === null || _a === void 0
+  				? void 0
+  				: _a.split(',')) !== null && _b !== void 0
+  				? _b
+  				: null
+  			: null);
+  		}
 
-  	$$self.$$set = $$props => {
-  		if ('params' in $$props) $$invalidate(2, params = $$props.params);
-  	};
-
-  	return [navMenuHidden, $title, params, click_handler];
-  }
-
-  class BackNavigation extends SvelteComponent {
-  	constructor(options) {
-  		super();
-  		init(this, options, instance$1, create_fragment$2, safe_not_equal, { params: 2 });
-  	}
-  }
-
-  /* src\infrastructure\view\templates\navigation\index.svelte generated by Svelte v3.44.3 */
-
-  function create_fragment$1(ctx) {
-  	let router;
-  	let current;
-  	router = new Router({ props: { routes: /*routes*/ ctx[0] } });
-
-  	return {
-  		c() {
-  			create_component(router.$$.fragment);
-  		},
-  		m(target, anchor) {
-  			mount_component(router, target, anchor);
-  			current = true;
-  		},
-  		p: noop,
-  		i(local) {
-  			if (current) return;
-  			transition_in(router.$$.fragment, local);
-  			current = true;
-  		},
-  		o(local) {
-  			transition_out(router.$$.fragment, local);
-  			current = false;
-  		},
-  		d(detaching) {
-  			destroy_component(router, detaching);
+  		if ($$self.$$.dirty & /*abgIds*/ 32) {
+  			abgIds !== null && controller.show(abgIds[0]).then(abg => $$invalidate(1, vm = abg));
   		}
   	};
+
+  	return [
+  		onHomePage,
+  		vm,
+  		navMenuHidden,
+  		_a,
+  		_b,
+  		abgIds,
+  		$querystring,
+  		$location,
+  		click_handler
+  	];
   }
 
-  function instance($$self) {
-  	const routes = { '/': Navigation, '*': BackNavigation };
-  	return [routes];
-  }
-
-  class Navigation_1 extends SvelteComponent {
+  class Navigation extends SvelteComponent {
   	constructor(options) {
   		super();
   		init(this, options, instance, create_fragment$1, safe_not_equal, {});
@@ -4476,7 +4540,7 @@ var app = (function () {
   	let t;
   	let router;
   	let current;
-  	navigation = new Navigation_1({});
+  	navigation = new Navigation({});
   	router = new Router({ props: { routes } });
 
   	return {
@@ -4518,35 +4582,78 @@ var app = (function () {
   	}
   }
 
-  const svelte = (tableController, antibiogramGroupController, antibiogramTitleController) => {
+  const svelte = (antibiogramController, antibiogramGroupController) => {
       return new App({
           target: document.body,
           context: new Map([
-              ['tableController', tableController],
+              ['antibiogramController', antibiogramController],
               ['antibiogramGroupController', antibiogramGroupController],
-              ['antibiogramTitleController', antibiogramTitleController],
           ]),
       });
   };
 
-  class TableController {
-      constructor(showAntibiogramAction) {
-          this.showAbg = showAntibiogramAction;
+  /*! *****************************************************************************
+  Copyright (c) Microsoft Corporation.
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** */
+
+  function __awaiter(thisArg, _arguments, P, generator) {
+      function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+      return new (P || (P = Promise))(function (resolve, reject) {
+          function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+          function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+          function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+          step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+  }
+
+  function __classPrivateFieldGet(receiver, state, kind, f) {
+      if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+      if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+      return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  }
+
+  function __classPrivateFieldSet(receiver, state, value, kind, f) {
+      if (kind === "m") throw new TypeError("Private method is not writable");
+      if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+      if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+      return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+  }
+
+  var _AntibiogramController_action, _AntibiogramController_presenter;
+  class AntibiogramController {
+      constructor(showAntibiogramAction, webAntibiogramPresenter) {
+          _AntibiogramController_action.set(this, void 0);
+          _AntibiogramController_presenter.set(this, void 0);
+          __classPrivateFieldSet(this, _AntibiogramController_action, showAntibiogramAction, "f");
+          __classPrivateFieldSet(this, _AntibiogramController_presenter, webAntibiogramPresenter, "f");
       }
-      showTable(id) {
+      show(id) {
           return __awaiter(this, void 0, void 0, function* () {
-              return yield this.showAbg.execute(id);
+              yield __classPrivateFieldGet(this, _AntibiogramController_action, "f").present(__classPrivateFieldGet(this, _AntibiogramController_presenter, "f"), id);
+              return __classPrivateFieldGet(this, _AntibiogramController_presenter, "f").buildViewModel();
           });
       }
   }
+  _AntibiogramController_action = new WeakMap(), _AntibiogramController_presenter = new WeakMap();
 
   var _AntibiogramGroupController_action, _AntibiogramGroupController_presenter;
   class AntibiogramGroupController {
-      constructor(indexAntibiogramGroupsAction, webAntibiogramGroupsPresenter) {
+      constructor(indexAntibiogramGroupsAction, webAntibiogramGroupPresenter) {
           _AntibiogramGroupController_action.set(this, void 0);
           _AntibiogramGroupController_presenter.set(this, void 0);
           __classPrivateFieldSet(this, _AntibiogramGroupController_action, indexAntibiogramGroupsAction, "f");
-          __classPrivateFieldSet(this, _AntibiogramGroupController_presenter, webAntibiogramGroupsPresenter, "f");
+          __classPrivateFieldSet(this, _AntibiogramGroupController_presenter, webAntibiogramGroupPresenter, "f");
       }
       index() {
           return __awaiter(this, void 0, void 0, function* () {
@@ -4574,6 +4681,26 @@ var app = (function () {
       }
   }
 
+  class ValueObject {
+      is(v) {
+          const { constructor } = Object.getPrototypeOf(v);
+          if (!(this instanceof constructor))
+              return false;
+          return this.isIdentical(v);
+      }
+      static filterUniqueValues(arr) {
+          const uniqueValues = [];
+          for (const val of arr) {
+              const match = uniqueValues.find((v) => v.isIdentical(val));
+              const seen = !(typeof match === 'undefined');
+              if (seen)
+                  continue;
+              uniqueValues.push(val);
+          }
+          return uniqueValues;
+      }
+  }
+
   class GramValue extends ValueObject {
       isIdentical() {
           return true;
@@ -4594,7 +4721,7 @@ var app = (function () {
 
   class Unspecified extends GramValue {
       toString() {
-          return 'Unspecified';
+          return 'Gram Unspecified';
       }
   }
 
@@ -4799,6 +4926,9 @@ var app = (function () {
       getInstitution() {
           return __classPrivateFieldGet(this, _Place_institution, "f");
       }
+      toString() {
+          return `${__classPrivateFieldGet(this, _Place_institution, "f")} \u2212 ${__classPrivateFieldGet(this, _Place_region, "f")}`;
+      }
       isIdentical(that) {
           if (that.getState() !== this.getState())
               return false;
@@ -4838,9 +4968,13 @@ var app = (function () {
           return true;
       }
       toString() {
-          return (__classPrivateFieldGet(this, _Interval_instances, "m", _Interval_dateToString).call(this, __classPrivateFieldGet(this, _Interval_publishedAt, "f")) +
-              ' \u2212 ' +
-              __classPrivateFieldGet(this, _Interval_instances, "m", _Interval_dateToString).call(this, __classPrivateFieldGet(this, _Interval_expiresAt, "f")));
+          return this.publishedAtToString() + ' \u2212 ' + this.expiresAtToString();
+      }
+      publishedAtToString() {
+          return __classPrivateFieldGet(this, _Interval_instances, "m", _Interval_dateToString).call(this, __classPrivateFieldGet(this, _Interval_publishedAt, "f"));
+      }
+      expiresAtToString() {
+          return __classPrivateFieldGet(this, _Interval_instances, "m", _Interval_dateToString).call(this, __classPrivateFieldGet(this, _Interval_expiresAt, "f"));
       }
   }
   _Interval_publishedAt = new WeakMap(), _Interval_expiresAt = new WeakMap(), _Interval_instances = new WeakSet(), _Interval_dateToString = function _Interval_dateToString(d) {
@@ -5494,7 +5628,7 @@ var app = (function () {
   }
   _CsvMissingRequiredValueError_field = new WeakMap(), _CsvMissingRequiredValueError_rowNumber = new WeakMap();
 
-  function validate(requiredFields, rows) {
+  function validate$1(requiredFields, rows) {
       rows.forEach((r, i) => {
           try {
               validateRow(requiredFields, r);
@@ -5526,7 +5660,7 @@ var app = (function () {
           if (!__classPrivateFieldGet(this, _Csv_parsed, "f")) {
               const parsed = parseCsv(__classPrivateFieldGet(this, _Csv_csv, "f"));
               const required = this.getRequiredFields();
-              validate(required, parsed);
+              validate$1(required, parsed);
               __classPrivateFieldSet(this, _Csv_parsed, parsed, "f");
           }
           return __classPrivateFieldGet(this, _Csv_parsed, "f");
@@ -6006,6 +6140,211 @@ var app = (function () {
       }
   }
   _FilledCell_value = new WeakMap(), _FilledCell_tooltip = new WeakMap(), _FilledCell_alert = new WeakMap();
+
+  function validate(rules) {
+      for (const rule of rules) {
+          rule.check();
+      }
+  }
+
+  class NoInconsistentRowColumnNumber {
+      constructor(input) {
+          this.input = input;
+      }
+      check() {
+          const { input } = this;
+          const rowNumber = input.length;
+          if (rowNumber === 0)
+              return;
+          const columnNumber = input[0].length;
+          input.find((r, i) => {
+              if (r.length !== columnNumber)
+                  throw new InconsistentRowColumnNumberError(i);
+          });
+      }
+  }
+  class InconsistentRowColumnNumberError extends Error {
+      constructor(rowNumber) {
+          super();
+          this.message = 'Inconsistent number of columns or rows at row ' + rowNumber;
+      }
+  }
+
+  class NoInconsistentRowColumnLabelNumber {
+      constructor(input, labels) {
+          this.input = input;
+          this.labels = labels;
+      }
+      check() {
+          var _a, _b;
+          if (typeof this.labels === 'undefined')
+              return;
+          const numRows = this.input.length;
+          const numColumns = (_b = (_a = this.input[0]) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
+          const unequalRows = numRows !== this.labels.rows.length;
+          const unequalColumns = numColumns !== this.labels.columns.length;
+          if (unequalRows)
+              throw new InconsistentRowLabelsError();
+          if (unequalColumns)
+              throw new InconsistentColumnLabelsError();
+      }
+  }
+  class InconsistentRowLabelsError extends Error {
+      constructor() {
+          super();
+          this.message = 'Row labels do not match number of rows in data';
+      }
+  }
+  class InconsistentColumnLabelsError extends Error {
+      constructor() {
+          super();
+          this.message = 'Column labels do not match number of columns in data';
+      }
+  }
+
+  var _NoUndefinedValues_instances, _NoUndefinedValues_isUndefined;
+  class NoUndefinedValues {
+      constructor(input) {
+          _NoUndefinedValues_instances.add(this);
+          this.input = input;
+      }
+      check() {
+          const { input } = this;
+          input.forEach((r, i) => {
+              if (__classPrivateFieldGet(this, _NoUndefinedValues_instances, "m", _NoUndefinedValues_isUndefined).call(this, r))
+                  throw new UndefinedValueError(i);
+              r.forEach((c, j) => {
+                  if (__classPrivateFieldGet(this, _NoUndefinedValues_instances, "m", _NoUndefinedValues_isUndefined).call(this, c))
+                      throw new UndefinedValueError(i, j);
+              });
+              const hasEmpty = r.includes(undefined);
+              if (hasEmpty)
+                  throw new UndefinedValueError(i);
+          });
+      }
+  }
+  _NoUndefinedValues_instances = new WeakSet(), _NoUndefinedValues_isUndefined = function _NoUndefinedValues_isUndefined(value) {
+      return typeof value === 'undefined';
+  };
+  class UndefinedValueError extends Error {
+      constructor(row, column) {
+          super();
+          this.message = 'Undefined value at ' + row;
+          this.message += column ? ', ' + column : '';
+      }
+  }
+
+  class NoIntersectingGroupRanges {
+      constructor(data, groups) {
+          this.data = data;
+          this.groupInfo = groups === null || groups === void 0 ? void 0 : groups.rows;
+      }
+      check() {
+          if (!this.groupInfo)
+              return;
+          if (this.groupInfo.length < 2)
+              return;
+          for (let i = 0; i < this.groupInfo.length; i++) {
+              const range = this.groupInfo[i].getRange();
+              for (let j = i + 1; j < this.groupInfo.length; j++) {
+                  const otherRange = this.groupInfo[j].getRange();
+                  compareRanges(range, otherRange);
+              }
+          }
+      }
+  }
+  class DuplicateGroupRangeError extends Error {
+      constructor(r1, r2) {
+          super();
+          this.message =
+              'Duplicate group ranges: ' +
+                  JSON.stringify(r1) +
+                  ' and ' +
+                  JSON.stringify(r2);
+      }
+  }
+  class IntersectingGroupRangeError extends Error {
+      constructor(r1, r2) {
+          super();
+          this.message =
+              'Intersecting group ranges: ' +
+                  JSON.stringify(r1) +
+                  ' and ' +
+                  JSON.stringify(r2);
+      }
+  }
+  function isInRange(r, num) {
+      return r[0] <= num && r[1] > num;
+  }
+  function isSameRange(r1, r2) {
+      return r1[0] === r2[0] && r1[1] === r2[1];
+  }
+  function hasOverlapLeft(r1, r2) {
+      return isInRange(r2, r1[0]) && !isInRange(r2, r1[1]);
+  }
+  function hasOverlapRight(r1, r2) {
+      return hasOverlapLeft(r2, r1);
+  }
+  function compareRanges(r1, r2) {
+      if (isSameRange(r1, r2))
+          throw new DuplicateGroupRangeError(r1, r2);
+      if (hasOverlapLeft(r1, r2) || hasOverlapRight(r1, r2))
+          throw new IntersectingGroupRangeError(r1, r2);
+  }
+
+  class NoZeroOrOneRowGroups {
+      constructor(groups) {
+          this.groupInfo = groups === null || groups === void 0 ? void 0 : groups.rows;
+      }
+      check() {
+          if (!this.groupInfo)
+              return;
+          for (const group of this.groupInfo) {
+              const range = group.getExpandedRange();
+              if (!includesMoreThanTwoIntegers(range))
+                  throw new GroupOfLessThanTwoRowsError(range);
+          }
+      }
+  }
+  function includesMoreThanTwoIntegers(r) {
+      return r[1] - r[0] !== 1 && r[1] - r[0] !== 0;
+  }
+  class GroupOfLessThanTwoRowsError extends Error {
+      constructor(range) {
+          super();
+          this.message =
+              'Group must have at least two rows. Got range: ' + JSON.stringify(range);
+      }
+  }
+
+  class NoInvalidRowRanges {
+      constructor(groups) {
+          this.groupInfo = groups === null || groups === void 0 ? void 0 : groups.rows;
+      }
+      check() {
+          if (!this.groupInfo)
+              return;
+          for (const group of this.groupInfo) {
+              const range = group.getRange();
+              if (firstNumberIsGreaterThanSecond(range))
+                  throw new InvalidRangeError(range);
+              if (rangeIncludesNegativeNumbers(range))
+                  throw new InvalidRangeError(range);
+          }
+      }
+  }
+  function firstNumberIsGreaterThanSecond(r) {
+      return r[0] > r[1];
+  }
+  function rangeIncludesNegativeNumbers(r) {
+      return r[0] < 0 || r[1] < 0;
+  }
+  class InvalidRangeError extends Error {
+      constructor(range) {
+          super();
+          this.message = 'Invalid range: ' + JSON.stringify(range);
+      }
+  }
 
   var rules = (data, params) => [
       new NoUndefinedValues(data),
@@ -6569,7 +6908,7 @@ var app = (function () {
   }
 
   function makeTable(data, params) {
-      validate$1(rules(data, params));
+      validate(rules(data, params));
       let table = new BaseTable(data, params);
       table = new RowCollapsible(table);
       return new TableFacade(table);
@@ -6651,29 +6990,30 @@ var app = (function () {
       }
       execute(id) {
           return __awaiter(this, void 0, void 0, function* () {
-              const abgId = new AntibiogramId('' + id);
-              const abg = yield this.antibiogramRepository.getById(abgId);
-              const table = makeAntibiogramTable(abg);
-              return table;
+              const abgId = new AntibiogramId(id);
+              const antibiogram = yield this.antibiogramRepository.getById(abgId);
+              const table = makeAntibiogramTable(antibiogram);
+              return { antibiogram, table };
+          });
+      }
+      present(p, id) {
+          return __awaiter(this, void 0, void 0, function* () {
+              const result = yield this.execute(id);
+              p.setData(result);
+              return p;
           });
       }
   }
 
-  var _IndexAntibiogramGroupsAction_instances, _IndexAntibiogramGroupsAction_repo, _IndexAntibiogramGroupsAction_findUniquePlaceAndInterval;
-  class IndexAntibiogramGroupsAction {
+  var _IndexAntibiogramAction_repo;
+  class IndexAntibiogramAction {
       constructor(antibiogramRepository) {
-          _IndexAntibiogramGroupsAction_instances.add(this);
-          _IndexAntibiogramGroupsAction_repo.set(this, void 0);
-          __classPrivateFieldSet(this, _IndexAntibiogramGroupsAction_repo, antibiogramRepository, "f");
+          _IndexAntibiogramAction_repo.set(this, void 0);
+          __classPrivateFieldSet(this, _IndexAntibiogramAction_repo, antibiogramRepository, "f");
       }
       execute() {
           return __awaiter(this, void 0, void 0, function* () {
-              const abgs = yield __classPrivateFieldGet(this, _IndexAntibiogramGroupsAction_repo, "f").getAll();
-              const placesAndIntervals = abgs.map((v) => [
-                  v.place,
-                  v.interval,
-              ]);
-              return __classPrivateFieldGet(this, _IndexAntibiogramGroupsAction_instances, "m", _IndexAntibiogramGroupsAction_findUniquePlaceAndInterval).call(this, placesAndIntervals).map(([place, interval]) => ({ place, interval }));
+              return yield __classPrivateFieldGet(this, _IndexAntibiogramAction_repo, "f").getAll();
           });
       }
       present(p) {
@@ -6684,32 +7024,12 @@ var app = (function () {
           });
       }
   }
-  _IndexAntibiogramGroupsAction_repo = new WeakMap(), _IndexAntibiogramGroupsAction_instances = new WeakSet(), _IndexAntibiogramGroupsAction_findUniquePlaceAndInterval = function _IndexAntibiogramGroupsAction_findUniquePlaceAndInterval(arr) {
-      const seenPlaces = [];
-      const seenIntervals = new Map();
-      const result = [];
-      for (const [p, i] of arr) {
-          const seenPlace = seenPlaces.find((v) => p.is(v));
-          if (!seenPlace) {
-              seenPlaces.push(p);
-              seenIntervals.set(p, [i]);
-              result.push([p, i]);
-          }
-          else {
-              const intervals = seenIntervals.get(seenPlace);
-              const hasSameInterval = intervals === null || intervals === void 0 ? void 0 : intervals.find((v) => i.is(v));
-              if (hasSameInterval)
-                  continue;
-              intervals === null || intervals === void 0 ? void 0 : intervals.push(i);
-              result.push([p, i]);
-          }
-      }
-      return result;
-  };
+  _IndexAntibiogramAction_repo = new WeakMap();
 
-  var _WebAntibiogramGroupPresenter_data;
+  var _WebAntibiogramGroupPresenter_instances, _WebAntibiogramGroupPresenter_data, _WebAntibiogramGroupPresenter_group, _WebAntibiogramGroupPresenter_findUnique;
   class WebAntibiogramGroupPresenter {
       constructor() {
+          _WebAntibiogramGroupPresenter_instances.add(this);
           _WebAntibiogramGroupPresenter_data.set(this, null);
       }
       setData(data) {
@@ -6718,14 +7038,41 @@ var app = (function () {
       buildViewModel() {
           if (__classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_data, "f") === null)
               return null;
-          return __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_data, "f").map((g) => ({
-              institution: g.place.getInstitution(),
-              state: g.place.getState(),
-              interval: g.interval.toString(),
+          const data = __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_data, "f");
+          const places = __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_group).call(this, (d) => d.place, data);
+          const result = places.map(([place, data]) => ({
+              place: place.toString(),
+              intervals: __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_group).call(this, (d) => d.interval, data).map(([interval, data]) => ({
+                  interval: interval.toString(),
+                  groups: __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_group).call(this, (d) => d.info, data).map(([si, data]) => ({
+                      title: si.toString(),
+                      antibiograms: data.map((abg) => ({
+                          gram: abg.gram.toString(),
+                          id: abg.id.getValue(),
+                      })),
+                  })),
+              })),
           }));
+          return result;
       }
   }
-  _WebAntibiogramGroupPresenter_data = new WeakMap();
+  _WebAntibiogramGroupPresenter_data = new WeakMap(), _WebAntibiogramGroupPresenter_instances = new WeakSet(), _WebAntibiogramGroupPresenter_group = function _WebAntibiogramGroupPresenter_group(accessor, arr) {
+      const uq = __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_findUnique).call(this, accessor, arr);
+      const map = new Map();
+      for (const item of uq) {
+          const ingroup = arr.filter((v) => accessor(v).is(item));
+          map.set(item, ingroup);
+      }
+      return Array.from(map.entries());
+  }, _WebAntibiogramGroupPresenter_findUnique = function _WebAntibiogramGroupPresenter_findUnique(accessor, arr) {
+      const seen = [];
+      for (const item of arr.map((v) => accessor(v))) {
+          if (seen.find((p) => p.is(item)))
+              continue;
+          seen.push(item);
+      }
+      return seen;
+  };
 
   var _WebFile_instances, _WebFile_uri, _WebFile_fetch, _WebFile_validateUri;
   class WebFile {
@@ -6781,135 +7128,196 @@ var app = (function () {
       return base + '/' + exploded.join('/');
   };
 
-  var _IndexAntibiogramTitleAction_repo;
-  class IndexAntibiogramTitleAction {
-      constructor() {
-          _IndexAntibiogramTitleAction_repo.set(this, void 0);
-          __classPrivateFieldSet(this, _IndexAntibiogramTitleAction_repo, [
-              {
-                  state: 'Binghamton, NY',
-                  institution: 'Lourdes',
-                  interval: 'June 2019-June 2020',
-                  details: 'inpatient',
-                  gramStain: 'positive',
-                  id: 1,
-              },
-              {
-                  state: 'Binghamton, NY',
-                  institution: 'Lourdes',
-                  interval: 'June 2019-June 2020',
-                  details: 'inpatient',
-                  gramStain: 'negative',
-                  id: 2,
-              },
-              {
-                  state: 'Binghamton, NY',
-                  institution: 'Lourdes',
-                  interval: 'June 2019-June 2020',
-                  details: 'outpatient',
-                  gramStain: 'positive',
-                  id: 3,
-              },
-              {
-                  state: 'Binghamton, NY',
-                  institution: 'Lourdes',
-                  interval: 'June 2019-June 2020',
-                  details: 'outpatient',
-                  gramStain: 'negative',
-                  id: 4,
-              },
-              {
-                  state: 'Binghamton, NY',
-                  institution: 'UHS',
-                  interval: 'January 2020-January 2021',
-                  details: 'non-urine',
-                  gramStain: 'negative',
-                  id: 5,
-              },
-              {
-                  state: 'Binghamton, NY',
-                  institution: 'UHS',
-                  interval: 'January 2020-January 2021',
-                  details: 'non-urine',
-                  gramStain: 'positive',
-                  id: 6,
-              },
-              {
-                  state: 'Binghamton, NY',
-                  institution: 'UHS',
-                  interval: 'January 2020-January 2021',
-                  details: 'urine',
-                  gramStain: 'unspecified',
-                  id: 7,
-              },
-          ], "f");
+  var _WebTableElement_highlighted, _WebTableElement_active, _WebTableElement_value, _WebTableElement_tooltip;
+  class WebTableElement {
+      constructor(id, cell) {
+          _WebTableElement_highlighted.set(this, false);
+          _WebTableElement_active.set(this, false);
+          _WebTableElement_value.set(this, void 0);
+          _WebTableElement_tooltip.set(this, void 0);
+          this.id = id;
+          __classPrivateFieldSet(this, _WebTableElement_value, cell.getValue(), "f");
+          __classPrivateFieldSet(this, _WebTableElement_tooltip, cell.getTooltip().toString(), "f");
       }
-      present(p) {
-          return __awaiter(this, void 0, void 0, function* () {
-              const result = yield this.execute();
-              p.setData(result);
-              return p;
-          });
+      getHighlighted() {
+          return __classPrivateFieldGet(this, _WebTableElement_highlighted, "f");
       }
-      execute() {
-          return __awaiter(this, void 0, void 0, function* () {
-              return __classPrivateFieldGet(this, _IndexAntibiogramTitleAction_repo, "f");
-          });
+      getActive() {
+          return __classPrivateFieldGet(this, _WebTableElement_active, "f");
+      }
+      toggleActive() {
+          __classPrivateFieldSet(this, _WebTableElement_active, !__classPrivateFieldGet(this, _WebTableElement_active, "f"), "f");
+      }
+      toggleHighlighted() {
+          __classPrivateFieldSet(this, _WebTableElement_highlighted, !__classPrivateFieldGet(this, _WebTableElement_highlighted, "f"), "f");
+      }
+      setActive() {
+          __classPrivateFieldSet(this, _WebTableElement_active, true, "f");
+      }
+      unsetActive() {
+          __classPrivateFieldSet(this, _WebTableElement_active, false, "f");
+      }
+      highlight() {
+          __classPrivateFieldSet(this, _WebTableElement_highlighted, true, "f");
+      }
+      unHighlight() {
+          __classPrivateFieldSet(this, _WebTableElement_highlighted, false, "f");
+      }
+      getValue() {
+          return __classPrivateFieldGet(this, _WebTableElement_value, "f");
+      }
+      getTooltip() {
+          return __classPrivateFieldGet(this, _WebTableElement_tooltip, "f");
       }
   }
-  _IndexAntibiogramTitleAction_repo = new WeakMap();
+  _WebTableElement_highlighted = new WeakMap(), _WebTableElement_active = new WeakMap(), _WebTableElement_value = new WeakMap(), _WebTableElement_tooltip = new WeakMap();
 
-  var _AntibiogramTitleController_action, _AntibiogramTitleController_presenter;
-  class AntibiogramTitleController {
-      constructor(indexAntibiogramTitleAction, webAntibiogramTitlePresenter) {
-          _AntibiogramTitleController_action.set(this, void 0);
-          _AntibiogramTitleController_presenter.set(this, void 0);
-          __classPrivateFieldSet(this, _AntibiogramTitleController_action, indexAntibiogramTitleAction, "f");
-          __classPrivateFieldSet(this, _AntibiogramTitleController_presenter, webAntibiogramTitlePresenter, "f");
+  var _WebRowHeader_isCollapsed, _WebRowHeader_inGroup, _WebRowHeader_group, _WebRowHeader_firstOfGroup;
+  class WebRowHeader extends WebTableElement {
+      constructor(id, cell, group) {
+          super(id, cell);
+          _WebRowHeader_isCollapsed.set(this, void 0);
+          _WebRowHeader_inGroup.set(this, void 0);
+          _WebRowHeader_group.set(this, void 0);
+          _WebRowHeader_firstOfGroup.set(this, void 0);
+          __classPrivateFieldSet(this, _WebRowHeader_group, group, "f");
+          __classPrivateFieldSet(this, _WebRowHeader_inGroup, group !== null, "f");
+          __classPrivateFieldSet(this, _WebRowHeader_isCollapsed, group === null || group === void 0 ? void 0 : group.isCollapsed(), "f");
+          __classPrivateFieldSet(this, _WebRowHeader_firstOfGroup, id === (group === null || group === void 0 ? void 0 : group.getRange()[0]), "f");
       }
-      index() {
-          return __awaiter(this, void 0, void 0, function* () {
-              yield __classPrivateFieldGet(this, _AntibiogramTitleController_action, "f").present(__classPrivateFieldGet(this, _AntibiogramTitleController_presenter, "f"));
-              return __classPrivateFieldGet(this, _AntibiogramTitleController_presenter, "f").buildViewModel();
-          });
+      isCollapsed() {
+          return __classPrivateFieldGet(this, _WebRowHeader_isCollapsed, "f");
+      }
+      inGroup() {
+          return __classPrivateFieldGet(this, _WebRowHeader_inGroup, "f");
+      }
+      getGroup() {
+          return __classPrivateFieldGet(this, _WebRowHeader_group, "f");
+      }
+      isFirstOfGroup() {
+          return __classPrivateFieldGet(this, _WebRowHeader_firstOfGroup, "f");
       }
   }
-  _AntibiogramTitleController_action = new WeakMap(), _AntibiogramTitleController_presenter = new WeakMap();
+  _WebRowHeader_isCollapsed = new WeakMap(), _WebRowHeader_inGroup = new WeakMap(), _WebRowHeader_group = new WeakMap(), _WebRowHeader_firstOfGroup = new WeakMap();
 
-  var _WebAntibiogramTitlePresenter_data;
-  class WebAntibiogramTitlePresenter {
-      constructor() {
-          _WebAntibiogramTitlePresenter_data.set(this, null);
+  var _WebTable_instances, _WebTable_highlightColumn, _WebTable_unhighlightColumn, _WebTable_highlightRow, _WebTable_unhighlightRow;
+  class WebTable {
+      constructor(table) {
+          _WebTable_instances.add(this);
+          this.grid = table
+              .getCells()
+              .map((r) => r.map((c, i) => new WebTableElement(i, c)));
+          this.rowHeaders = table
+              .getRows()
+              .map((r, i) => new WebRowHeader(i, r.getLabel(), r.getGroup()));
+          this.columnHeaders = table
+              .getColumnLabels()
+              .map((l, i) => new WebTableElement(i, l));
       }
-      setData(data) {
-          __classPrivateFieldSet(this, _WebAntibiogramTitlePresenter_data, data, "f");
+      highlightColumn(i) {
+          this.columnHeaders[i].setActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightColumn).call(this, i);
+      }
+      unhighlightColumn(i) {
+          this.columnHeaders[i].unsetActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightColumn).call(this, i);
+      }
+      highlightCell(i, j) {
+          this.grid[i][j].setActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightRow).call(this, i);
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightColumn).call(this, j);
+      }
+      unhighlightCell(i, j) {
+          this.grid[i][j].unsetActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightRow).call(this, i);
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightColumn).call(this, j);
+      }
+      highlightRow(i) {
+          this.rowHeaders[i].setActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightRow).call(this, i);
+      }
+      unhighlightRow(i) {
+          this.rowHeaders[i].unsetActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightRow).call(this, i);
+      }
+  }
+  _WebTable_instances = new WeakSet(), _WebTable_highlightColumn = function _WebTable_highlightColumn(i) {
+      this.grid.forEach((row) => {
+          row[i].highlight();
+      });
+      this.columnHeaders[i].highlight();
+  }, _WebTable_unhighlightColumn = function _WebTable_unhighlightColumn(i) {
+      this.grid.forEach((row) => {
+          row[i].unHighlight();
+      });
+      this.columnHeaders[i].unHighlight();
+  }, _WebTable_highlightRow = function _WebTable_highlightRow(i) {
+      this.grid[i].forEach((cell) => {
+          cell.highlight();
+      });
+      this.rowHeaders[i].highlight();
+  }, _WebTable_unhighlightRow = function _WebTable_unhighlightRow(i) {
+      this.grid[i].forEach((cell) => {
+          cell.unHighlight();
+      });
+      this.rowHeaders[i].unHighlight();
+  };
+
+  var _WebTablePresenter_table;
+  class WebTablePresenter {
+      constructor() {
+          _WebTablePresenter_table.set(this, null);
+      }
+      setData(t) {
+          __classPrivateFieldSet(this, _WebTablePresenter_table, t, "f");
       }
       buildViewModel() {
-          if (__classPrivateFieldGet(this, _WebAntibiogramTitlePresenter_data, "f") === null)
+          if (!__classPrivateFieldGet(this, _WebTablePresenter_table, "f"))
               return null;
-          return __classPrivateFieldGet(this, _WebAntibiogramTitlePresenter_data, "f").map((g) => ({
-              state: g.state,
-              institution: g.institution,
-              interval: g.interval,
-              details: g.details,
-              gramStain: g.gramStain,
-              id: g.id,
-          }));
+          return new WebTable(__classPrivateFieldGet(this, _WebTablePresenter_table, "f"));
       }
   }
-  _WebAntibiogramTitlePresenter_data = new WeakMap();
+  _WebTablePresenter_table = new WeakMap();
+
+  var _WebAntibiogramPresenter_tablePresenter, _WebAntibiogramPresenter_abg;
+  class WebAntibiogramPresenter {
+      constructor(webTablePresenter) {
+          _WebAntibiogramPresenter_tablePresenter.set(this, void 0);
+          _WebAntibiogramPresenter_abg.set(this, null);
+          __classPrivateFieldSet(this, _WebAntibiogramPresenter_tablePresenter, webTablePresenter, "f");
+      }
+      setData(data) {
+          __classPrivateFieldGet(this, _WebAntibiogramPresenter_tablePresenter, "f").setData(data.table);
+          __classPrivateFieldSet(this, _WebAntibiogramPresenter_abg, data.antibiogram, "f");
+      }
+      buildViewModel() {
+          const table = __classPrivateFieldGet(this, _WebAntibiogramPresenter_tablePresenter, "f").buildViewModel();
+          if (!__classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f") || !table)
+              return null;
+          return {
+              table,
+              antibiogramId: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").id.getValue(),
+              region: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").place.getState(),
+              institution: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").place.getInstitution(),
+              publishedAt: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").interval.publishedAtToString(),
+              expiresAt: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").interval.expiresAtToString(),
+              gram: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").gram.toString(),
+              info: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").info.toString(),
+          };
+      }
+  }
+  _WebAntibiogramPresenter_tablePresenter = new WeakMap(), _WebAntibiogramPresenter_abg = new WeakMap();
 
   const dependencies = new Module();
   dependencies.type('showAntibiogramAction', ShowAntibiogramAction);
-  dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramGroupsAction);
-  dependencies.type('indexAntibiogramTitleAction', IndexAntibiogramTitleAction);
+  dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramAction);
   dependencies.type('antibiogramRepository', CsvAntibiogramRepository);
   dependencies.type('filesystem', WebFileSystem);
-  dependencies.type('tableController', TableController);
+  dependencies.type('antibiogramController', AntibiogramController);
   dependencies.type('antibiogramGroupController', AntibiogramGroupController);
-  dependencies.type('antibiogramTitleController', AntibiogramTitleController);
-  dependencies.type('webAntibiogramGroupsPresenter', WebAntibiogramGroupPresenter);
-  dependencies.type('webAntibiogramTitlePresenter', WebAntibiogramTitlePresenter);
+  dependencies.type('webAntibiogramGroupPresenter', WebAntibiogramGroupPresenter);
+  dependencies.type('webAntibiogramPresenter', WebAntibiogramPresenter);
+  dependencies.type('webTablePresenter', WebTablePresenter);
   dependencies.value('fetch', fetch.bind(window));
   dependencies.factory('svelte', svelte);
 
