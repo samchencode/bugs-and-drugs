@@ -26,7 +26,7 @@ describe('AntibiogramGroupController', () => {
       expect(result[1].intervals[0].groups[0].title).toBe('');
       expect(result[1].intervals[0].groups[1].title).toBe('Inpatient Setting');
       expect(result[0].intervals[0].groups[0].antibiograms[0].gram).toBe(
-        'Unspecified'
+        'Gram Unspecified'
       );
       expect(result[0].intervals[0].groups[0].antibiograms[0].id).toBe('0');
       expect(result[1].intervals[0].groups[0].antibiograms[0].id).toBe('1');
