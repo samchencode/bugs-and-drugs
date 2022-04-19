@@ -4102,7 +4102,7 @@ var app = (function () {
   	};
   }
 
-  // (18:10) <Card             title={place.split(' \u2212 ').shift() ?? ''}             subtitle={place.split(' \u2212 ').pop() ?? ''}           >
+  // (18:10) <Card              title={place.split(' \u2212 ').shift() ?? ''}              subtitle={place.split(' \u2212 ').pop() ?? ''}            >
   function create_default_slot(ctx) {
   	let list;
   	let current;
@@ -5016,12 +5016,48 @@ var app = (function () {
       }
   }
 
+  class NonMeningitis extends SourceValue {
+      toString() {
+          return 'Non-Meningitis';
+      }
+      isIdentical() {
+          return true;
+      }
+  }
+
+  class Meningitis extends SourceValue {
+      toString() {
+          return 'Meningitis';
+      }
+      isIdentical() {
+          return true;
+      }
+  }
+
+  class Oral extends SourceValue {
+      toString() {
+          return 'Oral';
+      }
+      isIdentical() {
+          return true;
+      }
+  }
+
   const Sources = {
       get URINE() {
           return new Source(new Urine());
       },
       get NONURINE() {
           return new Source(new NonUrine());
+      },
+      get MENINGITIS() {
+          return new Source(new Meningitis());
+      },
+      get NONMENINGITIS() {
+          return new Source(new NonMeningitis());
+      },
+      get ORAL() {
+          return new Source(new Oral());
       },
   };
 
@@ -5844,6 +5880,12 @@ var app = (function () {
           return Sources.URINE;
       if (value === 'non-urine')
           return Sources.NONURINE;
+      if (value === 'Menengitis')
+          return Sources.MENINGITIS;
+      if (value === 'Non-menengitis')
+          return Sources.NONMENINGITIS;
+      if (value === 'Oral')
+          return Sources.ORAL;
       throw new Error('Unknown Sample Info Item' + value);
   };
   const info = (listStr) => {
