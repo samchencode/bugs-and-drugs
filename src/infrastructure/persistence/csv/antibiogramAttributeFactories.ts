@@ -40,6 +40,9 @@ export const infoItem = (value: string) => {
   if (value === 'outpatient') return Settings.OUTPATIENT;
   if (value === 'urine') return Sources.URINE;
   if (value === 'non-urine') return Sources.NONURINE;
+  if (value === 'Menengitis') return Sources.MENINGITIS;
+  if (value === 'Non-menengitis') return Sources.NONMENINGITIS;
+  if (value === 'Oral') return Sources.ORAL;
   throw new Error('Unknown Sample Info Item' + value);
 };
 
