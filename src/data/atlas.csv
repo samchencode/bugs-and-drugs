@@ -6,3 +6,7 @@
 "Binghamton, NY",UHS,202001,202101,5,non-urine,negative,uhs_nonurine_gn_2020.csv
 "Binghamton, NY",UHS,202001,202101,6,non-urine,positive,uhs_nonurine_gp_2020.csv
 "Binghamton, NY",UHS,202001,202101,7,non-urine,unspecified,uhs_urine_2020.csv
+"Ithica, NY",Cayuga Healthcare System,002020,002021,8,#N/A,negative,cayuga_gn_2020.csv
+"Ithica, NY",Cayuga Healthcare System,002020,002021,9,#N/A,positive,cayuga_gp_2020.csv
+"Ithica, NY",Schuyler,002020,002021,10,#N/A,negative,schuyer_gn_2020.csv
+"Ithica, NY",Schuyler,002020,002021,11,#N/A,positive,schuyer_gp_2020.csv
