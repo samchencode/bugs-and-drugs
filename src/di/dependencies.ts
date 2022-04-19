@@ -1,38 +1,33 @@
 import { Module } from 'didi';
 import svelte from '@/di/svelte';
-import TableController from '@/infrastructure/view/controllers/TableController';
+import AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
 import AntibiogramGroupController from '@/infrastructure/view/controllers/AntibiogramGroupController';
 import CsvAntibiogramRepository from '@/infrastructure/persistence/csv/CsvAntibiogramRepository';
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
-import IndexAntibiogramGroupsAction from '@/application/IndexAntibiogramGroupsAction';
-import WebAntibiogramGroupsPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
+import IndexAntibiogramAction from '@/application/IndexAntibiogramAction';
+import WebAntibiogramGroupPresenter from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
 import WebFileSystem from '@/infrastructure/filesystem/web/WebFileSystem';
-import IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
-import AntibiogramTitleController from '@/infrastructure/view/controllers/AntibiogramTitleController';
-import WebAntibiogramTitlePresenter from '@/infrastructure/view/presenters/WebAntibiogramTitlePresenter';
+import WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
+import WebAntibiogramPresenter from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
 
 const dependencies = new Module();
 
 // * PORTS
 // * - Actions
 dependencies.type('showAntibiogramAction', ShowAntibiogramAction);
-dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramGroupsAction);
-dependencies.type('indexAntibiogramTitleAction', IndexAntibiogramTitleAction);
+dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramAction);
 
 // * ADAPTERS
 // * - Repositories
 dependencies.type('antibiogramRepository', CsvAntibiogramRepository);
 dependencies.type('filesystem', WebFileSystem);
 // * - Controllers
-dependencies.type('tableController', TableController);
+dependencies.type('antibiogramController', AntibiogramController);
 dependencies.type('antibiogramGroupController', AntibiogramGroupController);
-dependencies.type('antibiogramTitleController', AntibiogramTitleController);
 // * - Presenter
-dependencies.type(
-  'webAntibiogramGroupsPresenter',
-  WebAntibiogramGroupsPresenter
-);
-dependencies.type('webAntibiogramTitlePresenter', WebAntibiogramTitlePresenter);
+dependencies.type('webAntibiogramGroupPresenter', WebAntibiogramGroupPresenter);
+dependencies.type('webAntibiogramPresenter', WebAntibiogramPresenter);
+dependencies.type('webTablePresenter', WebTablePresenter);
 
 // * INJECTED EXTERNAL DEPENDENCIES
 dependencies.value('fetch', fetch.bind(window));

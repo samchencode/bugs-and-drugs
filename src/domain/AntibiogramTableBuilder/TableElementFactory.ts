@@ -8,11 +8,12 @@ import {
 import type RowInfo from '@/domain/AntibiogramTableBuilder/RowInfo';
 import type CellInfo from '@/domain/AntibiogramTableBuilder/CellInfo';
 import type ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
+import { Routes } from '@/domain/Antibiogram';
 
 class TableElementFactory {
   makeCell(c: CellInfo) {
     const data = c.data;
-    const value = data.map((d) => d.getValue() + '').join('\n');
+    const value = data.map((d) => d.getValue().toString()).join('\n');
     // TODO: handle multiple data vs one data w/ ?tooltip
     return new FilledCell(value);
   }
@@ -35,14 +36,16 @@ class TableElementFactory {
   makeColumnLabel(c: ColumnInfo) {
     const route = c.antibiotic
       .getAntibiotics()
+      .filter((abx) => !abx.getRoute().is(Routes.UNKNOWN))
       .map((abx) => abx.getRoute().toString())
       .join(', ');
 
     const si = c.info.itemsToArray();
-    const tooltip = new Tooltip(
-      [...si, route].map((si) => new Tooltip(si.toString()))
-    );
-    return this.makeLabel(c.antibiotic.getName(), tooltip.toString());
+    const tooltipLines = [si, route]
+      .map((s) => '' + s)
+      .filter((s) => s !== '')
+      .join('\n');
+    return this.makeLabel(c.antibiotic.getName(), tooltipLines);
   }
 
   makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {

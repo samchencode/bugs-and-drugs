@@ -18,6 +18,10 @@ class Place extends ValueObject {
     return this.#institution;
   }
 
+  toString() {
+    return `${this.#institution} \u2212 ${this.#region}`;
+  }
+
   protected isIdentical(that: Place): boolean {
     if (that.getState() !== this.getState()) return false;
     if (that.getInstitution() !== this.getInstitution()) return false;

@@ -1,6 +1,6 @@
 import type { Cell } from '@/domain/Table';
 
-class TableElement {
+class WebTableElement {
   id: number;
   #highlighted = false;
   #active = false;
@@ -45,4 +45,4 @@ class TableElement {
   }
 }
 
-export { TableElement };
+export default WebTableElement;

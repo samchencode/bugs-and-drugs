@@ -1,36 +1,46 @@
 <script lang="ts">
-  import { getContext, onMount } from 'svelte';
+  import { getContext } from 'svelte';
   import { link } from 'svelte-spa-router';
   import type AntibiogramGroupController from '@/infrastructure/view/controllers/AntibiogramGroupController';
   import type { WebAntibiogramGroup } from '@/infrastructure/view/presenters/WebAntibiogramGroupPresenter';
-  import Card from './Card.svelte';
-  import { GramStain } from '@/domain/Organism/Quality';
-  import { antibiogram } from './AntibiogramNavigationStore';
-  import type IndexAntibiogramTitleAction from '@/application/IndexAntibiogramTitleAction';
-  import type AntibiogramTitleController from '@/infrastructure/view/controllers/AntibiogramTitleController';
+  import Card from '@/infrastructure/view/templates/index-screen/Card.svelte';
+  import List from '@/infrastructure/view/templates/index-screen/List.svelte';
+  import ListItem from '@/infrastructure/view/templates/index-screen/ListItem.svelte';
 
-  const controller = getContext<AntibiogramTitleController>(
-    'antibiogramTitleController'
+  const groupController = getContext<AntibiogramGroupController>(
+    'antibiogramGroupController'
   );
 
-  let testVm: any = null;
-  controller.index().then((res) => (testVm = res));
+  let vm: WebAntibiogramGroup[] = [];
+  groupController.index().then((res) => res !== null && (vm = res));
 </script>
 
 <main>
-  {#if testVm === null}
-    <p>Sorry no results yet...</p>
+  {#if vm.length === 0}
+    <p>No results yet...</p>
   {:else}
-    <ul class="list">
-      {#each testVm as { state, institution, interval, details, gramStain, id }}
+    <ul>
+      {#each vm as { place, intervals }}
         <li>
-          <a class="card-nav" href={'/antibiogram/' + id} use:link>
-            <Card
-              title={institution + ', ' + state}
-              subtitle={details + ', gram ' + gramStain}
-              dates={interval.toString()}
-            />
-          </a>
+          <Card
+            title={place.split(' \u2212 ').shift() ?? ''}
+            subtitle={place.split(' \u2212 ').pop() ?? ''}
+          >
+            <List>
+              {#each intervals as { interval, groups }}
+                {#each groups as { title, antibiograms }}
+                  <a
+                    href={'/antibiogram?ids=' +
+                      antibiograms.map((a) => a.id).join(',')}
+                    class="link"
+                    use:link
+                  >
+                    <ListItem {title} subtitle={interval} />
+                  </a>
+                {/each}
+              {/each}
+            </List>
+          </Card>
         </li>
       {/each}
     </ul>
@@ -41,14 +51,14 @@
   main {
     margin: var(--space-md);
   }
-  .list {
-    display: grid;
-    gap: var(--space-md);
+
+  .link {
+    color: inherit;
+    text-decoration: inherit;
   }
-  .card-nav {
-    all: unset;
-  }
-  .card-nav:hover {
-    cursor: pointer;
+
+  .link:hover,
+  .link:focus {
+    background-color: var(--main-surface-emphasis-color);
   }
 </style>
