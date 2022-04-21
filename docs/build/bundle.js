@@ -4835,7 +4835,7 @@ var app = (function () {
 
   class Unspecified extends GramValue {
       toString() {
-          return 'Gram Unspecified';
+          return 'Gram positive and negative';
       }
   }
 
@@ -5880,11 +5880,11 @@ var app = (function () {
           return Sources.URINE;
       if (value === 'non-urine')
           return Sources.NONURINE;
-      if (value === 'Menengitis')
+      if (value === 'meningitis')
           return Sources.MENINGITIS;
-      if (value === 'Non-menengitis')
+      if (value === 'non-meningitis')
           return Sources.NONMENINGITIS;
-      if (value === 'Oral')
+      if (value === 'oral')
           return Sources.ORAL;
       throw new Error('Unknown Sample Info Item' + value);
   };
