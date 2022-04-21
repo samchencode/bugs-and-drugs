@@ -2,10 +2,10 @@ organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info,row,co
 Enterococcus faecium,AMPICILLIN,IV/PO,57,26,#N/A,1,1
 Enterococcus faecalis,AMPICILLIN,IV/PO,416,100,#N/A,2,1
 "Beta Strep, Grp B",AMPICILLIN,IV/PO,136,100,#N/A,6,1
-Strep pneumoniae,CEFTRIAXONE,IV,22,100,Non-menengitis,7,2
-Strep pneumoniae,CEFTRIAXONE,IV,22,100,Menengitis,7,2
-Strep pneumoniae,CEFOTAXIME,IV/PO,22,100,Menengitis,7,3
-Strep pneumoniae,CEFOTAXIME,IV/PO,22,100,Non-menengitis,7,3
+Strep pneumoniae,CEFTRIAXONE,IV,22,100,non-meningitis,7,2
+Strep pneumoniae,CEFTRIAXONE,IV,22,100,meningitis,7,2
+Strep pneumoniae,CEFOTAXIME,IV/PO,22,100,meningitis,7,3
+Strep pneumoniae,CEFOTAXIME,IV/PO,22,100,non-meningitis,7,3
 Strep pneumoniae,AUGMENTIN,PO,22,100,#N/A,7,4
 Strep pneumoniae,AZITHROMYCIN,IV/PO,22,68,#N/A,7,5
 Strep pneumoniae,CEFACLOR,PO,22,86,#N/A,7,6
@@ -30,9 +30,9 @@ Staph aureus(total),OXACILLIN,IV,990,65,#N/A,3,12
 non-MRSA,OXACILLIN,IV,647,100,#N/A,5,12
 Enterococcus faecium,PENICILLIN,IV/PO,57,7,#N/A,1,13
 Enterococcus faecalis,PENICILLIN,IV/PO,416,98,#N/A,2,13
-Strep pneumoniae,PENICILLIN,IV/PO,22,89,Oral,7,13
-Strep pneumoniae,PENICILLIN,IV/PO,22,100,Non-menengitis,7,13
-Strep pneumoniae,PENICILLIN,IV/PO,22,89,Menengitis,7,13
+Strep pneumoniae,PENICILLIN,IV/PO,22,89,oral,7,13
+Strep pneumoniae,PENICILLIN,IV/PO,22,100,non-meningitis,7,13
+Strep pneumoniae,PENICILLIN,IV/PO,22,89,meningitis,7,13
 Enterococcus faecium,TETRACYCLINE,PO,57,7,#N/A,1,14
 Enterococcus faecalis,TETRACYCLINE,PO,416,24,#N/A,2,14
 Staph aureus(total),TETRACYCLINE,PO,990,93,#N/A,3,14
