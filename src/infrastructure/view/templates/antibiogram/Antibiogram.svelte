@@ -5,6 +5,7 @@
   import type { WebTable } from '@/infrastructure/view/presenters/WebTablePresenter';
   import Table from '@/infrastructure/view/templates/table/Table.svelte';
   import NoTable from '@/infrastructure/view/templates/table/NoTable.svelte';
+  import { compute_rest_props } from 'svelte/internal';
 
   export let id: string;
 
@@ -17,16 +18,24 @@
   $: vm && ({ table } = vm);
 </script>
 
-{#if !vm}
-  <NoTable />
-{:else}
-  <header class="header">
-    <h1 class="header-title">{vm.gram}</h1>
-  </header>
-  <Table {table} />
-{/if}
+<section>
+  {#if !vm}
+    <NoTable />
+  {:else}
+    <header class="header">
+      <h1 class="header-title">{vm.gram}</h1>
+    </header>
+    <Table {table} />
+  {/if}
+</section>
 
 <style>
+  section {
+    box-shadow: var(--bs);
+    padding: var(--space-sm);
+    margin-bottom: var(--space-lg);
+  }
+
   .header {
     display: flex;
     justify-content: center;
