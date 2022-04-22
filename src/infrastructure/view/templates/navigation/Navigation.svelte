@@ -3,6 +3,8 @@
   import { link, location, querystring } from 'svelte-spa-router';
   import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
   import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
+  import About from '@/infrastructure/view/templates/General information/About.svelte';
+  import Disclaimer from '@/infrastructure/view/templates/General information/Disclaimer.svelte';
 
   let vm: WebAntibiogram | null = null;
 
@@ -15,6 +17,8 @@
   $: abgIds !== null && controller.show(abgIds[0]).then((abg) => (vm = abg));
 
   let navMenuHidden = true;
+  let infoAboutHidden = true;
+  let infoDisclaimerHidden = true;
 </script>
 
 <nav>
@@ -25,7 +29,7 @@
   {/if}
   <h1 class="title">
     {#if onHomePage}
-      Bugs 'n Drugs
+      Available Antibiograms
     {:else if !onTablePage}
       Not Found
     {:else if vm === null}
@@ -41,8 +45,21 @@
     <ion-icon name="ellipsis-vertical" />
   </button>
   <ul class="nav-link-list" class:nav-link-list--hidden={navMenuHidden}>
-    <li class="nav-link">About</li>
-    <li class="nav-link">Disclaimer</li>
+    <li class="nav-link" on:click={() => (infoAboutHidden = !infoAboutHidden)}>
+      About
+    </li>
+    <li class="nav-link" class:info-about--hidden={infoAboutHidden}>
+      <About />
+    </li>
+    <li
+      class="nav-link"
+      on:click={() => (infoDisclaimerHidden = !infoDisclaimerHidden)}
+    >
+      Disclaimer
+    </li>
+    <li class="nav-link" class:info-disclaimer--hidden={infoDisclaimerHidden}>
+      <Disclaimer />
+    </li>
   </ul>
 </nav>
 
@@ -65,6 +82,7 @@
   .title {
     font-size: var(--font-lg);
     color: var(--main-on-primary-color);
+    font: sans-serif;
     font-weight: bold;
     flex: 1;
     margin: 0;
@@ -103,7 +121,12 @@
   .nav-link-list--hidden {
     display: none;
   }
-
+  .info-about--hidden {
+    display: none;
+  }
+  .info-disclaimer--hidden {
+    display: none;
+  }
   .nav-link {
     font-size: var(--font-lg);
     padding: var(--space-sm);
