@@ -37,6 +37,11 @@ tbody,
 tfoot {
   font-weight: normal;
 }
+
+main {
+  margin: var(--space-md);
+}
+
 :root {
   --main-bg-color: white;
   --main-primary-color: #4a4a4a;
@@ -142,6 +147,29 @@ tfoot {
   border-radius: 25px;
   text-align: center;
   position: relative;
+}
+
+
+@media screen and (min-width: 768px) {
+  main {
+    display: grid;
+    grid-template-columns: 1fr calc(768px - 2 * var(--space-md)) 1fr;
+  }
+  main > * {
+    grid-column: 2 / span 1;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  main {
+    grid-template-columns: 1fr calc(1024px - 2 * var(--space-md)) 1fr;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  main {
+    grid-template-columns: 1fr calc(1280px - 2 * var(--space-md)) 1fr;
+  }
 }
 
 @media screen and (max-width: 1200px) and (max-height: 1200px) {
