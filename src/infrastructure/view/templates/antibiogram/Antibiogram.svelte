@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
-  import type { WebTable } from '@/infrastructure/view/presenters/WebTablePresenter';
   import Table from '@/infrastructure/view/templates/table/Table.svelte';
   import NoTable from '@/infrastructure/view/templates/table/NoTable.svelte';
 
