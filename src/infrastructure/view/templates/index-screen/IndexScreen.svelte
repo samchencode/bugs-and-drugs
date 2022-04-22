@@ -19,9 +19,9 @@
   {#if vm.length === 0}
     <p>No results yet...</p>
   {:else}
-    <ul>
+    <ul class="institution-list">
       {#each vm as { place, intervals }}
-        <li>
+        <li class="institution-card">
           <Card
             title={place.split(' \u2212 ').shift() ?? ''}
             subtitle={place.split(' \u2212 ').pop() ?? ''}
@@ -48,10 +48,6 @@
 </main>
 
 <style>
-  main {
-    margin: var(--space-md);
-  }
-
   .link {
     color: inherit;
     text-decoration: inherit;
@@ -60,5 +56,44 @@
   .link:hover,
   .link:focus {
     background-color: var(--main-surface-emphasis-color);
+  }
+
+  @media screen and (min-width: 768px) {
+    .institution-list {
+      --gap: var(--space-md);
+      --columns: 2;
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fill,
+        calc((730px - (var(--columns) - 1) * var(--gap)) / var(--columns))
+      );
+      gap: var(--gap);
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .institution-list {
+      --gap: var(--space-md);
+      --columns: 3;
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fill,
+        calc((990px - (var(--columns) - 1) * var(--gap)) / var(--columns))
+      );
+      gap: var(--gap);
+    }
+  }
+
+  @media screen and (min-width: 1280px) {
+    .institution-list {
+      --gap: var(--space-md);
+      --columns: 3;
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fill,
+        calc((1240px - (var(--columns) - 1) * var(--gap)) / var(--columns))
+      );
+      gap: var(--gap);
+    }
   }
 </style>

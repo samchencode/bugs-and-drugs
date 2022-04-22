@@ -7,10 +7,15 @@
   $: ids = param?.split(',');
 </script>
 
-{#if !ids || ids.length === 0}
-  <p>No antibiogram selected...</p>
-{:else}
-  {#each ids as id}
-    <Antibiogram {id} />
-  {/each}
-{/if}
+<main>
+  {#if !ids || ids.length === 0}
+    <p>No antibiogram selected...</p>
+  {:else}
+    {#each ids as id}
+      <Antibiogram {id} />
+    {/each}
+  {/if}
+</main>
+
+<style>
+</style>

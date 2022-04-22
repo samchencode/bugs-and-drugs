@@ -31,7 +31,7 @@
     border-right: 1px solid black;
     max-height: 52px;
     width: min-content;
-    max-width: 400px;
+    max-width: 200px;
     z-index: 1;
     background-color: var(--main-bg-color);
   }
