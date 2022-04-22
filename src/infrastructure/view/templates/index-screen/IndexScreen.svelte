@@ -62,10 +62,11 @@
     .institution-list {
       --gap: var(--space-md);
       --columns: 2;
+      --w: calc(768px - 2 * var(--space-md));
       display: grid;
       grid-template-columns: repeat(
         auto-fill,
-        calc((730px - (var(--columns) - 1) * var(--gap)) / var(--columns))
+        calc((var(--w) - (var(--columns) - 1) * var(--gap)) / var(--columns))
       );
       gap: var(--gap);
     }
@@ -75,12 +76,7 @@
     .institution-list {
       --gap: var(--space-md);
       --columns: 3;
-      display: grid;
-      grid-template-columns: repeat(
-        auto-fill,
-        calc((990px - (var(--columns) - 1) * var(--gap)) / var(--columns))
-      );
-      gap: var(--gap);
+      --w: calc(1024px - 2 * var(--space-md));
     }
   }
 
@@ -88,12 +84,7 @@
     .institution-list {
       --gap: var(--space-md);
       --columns: 3;
-      display: grid;
-      grid-template-columns: repeat(
-        auto-fill,
-        calc((1240px - (var(--columns) - 1) * var(--gap)) / var(--columns))
-      );
-      gap: var(--gap);
+      --w: calc(1280px - 2 * var(--space-md));
     }
   }
 </style>
