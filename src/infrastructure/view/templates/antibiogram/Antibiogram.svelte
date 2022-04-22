@@ -5,7 +5,6 @@
   import type { WebTable } from '@/infrastructure/view/presenters/WebTablePresenter';
   import Table from '@/infrastructure/view/templates/table/Table.svelte';
   import NoTable from '@/infrastructure/view/templates/table/NoTable.svelte';
-  import { compute_rest_props } from 'svelte/internal';
 
   export let id: string;
 
