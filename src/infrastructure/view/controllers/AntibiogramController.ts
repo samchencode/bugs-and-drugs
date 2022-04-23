@@ -14,6 +14,13 @@ class AntibiogramController {
     await this.#action.present(presenter, id);
     return presenter.buildViewModel();
   }
+
+  async showMany(ids: string[]) {
+    const promises = ids.map((id) => this.show(id));
+    const abgs = await Promise.all(promises);
+
+    return abgs;
+  }
 }
 
 export default AntibiogramController;

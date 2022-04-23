@@ -24,4 +24,28 @@ describe('Table Controller', () => {
       expect(table.grid.length).toBe(3);
     });
   });
+
+  it('should present a list of tables given list of id', () => {
+    return controller
+      .showMany(['0', '2'])
+      .then(([antibiogram0, antibiogram2]) => {
+        expect(antibiogram0).not.toBeNull();
+        expect(antibiogram2).not.toBeNull();
+        if (!antibiogram0 || !antibiogram2) throw Error;
+
+        const { table: table0 } = antibiogram0;
+        expect(table0.grid).toBeDefined();
+        expect(table0.rowHeaders).toBeDefined();
+        expect(table0.columnHeaders).toBeDefined();
+
+        expect(table0.grid.length).toBe(3);
+
+        const { table: table1 } = antibiogram2;
+        expect(table1.grid).toBeDefined();
+        expect(table1.rowHeaders).toBeDefined();
+        expect(table1.columnHeaders).toBeDefined();
+
+        expect(table1.grid.length).toBe(4);
+      });
+  });
 });

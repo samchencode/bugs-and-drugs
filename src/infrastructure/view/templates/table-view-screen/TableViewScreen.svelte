@@ -5,31 +5,22 @@
   import { querystring } from 'svelte-spa-router';
   export const params: {} = {};
 
-  function getAntibiograms(ids: string[]) {
-    const c = getContext<AntibiogramController>('antibiogramController');
-    return ids.map((id) => c.show(id));
-  }
+  const controller = getContext<AntibiogramController>('antibiogramController');
 
   $: param = new URLSearchParams($querystring).get('ids');
   $: ids = param?.split(',');
-  $: abgs = ids && Promise.all(getAntibiograms(ids));
 </script>
 
 <main>
-  {#if !ids || (ids.length === 0 && abgs)}
+  {#if !ids || ids.length === 0}
     <p>No antibiogram selected...</p>
   {:else}
-    {#await abgs}
+    {#await controller.showMany(ids)}
       <p>Loading antibiograms</p>
     {:then vms}
-      {#if vms}
-        {#each vms as vm}
-          <Antibiogram {vm} />
-        {/each}
-      {/if}
+      {#each vms as vm}
+        <Antibiogram {vm} />
+      {/each}
     {/await}
   {/if}
 </main>
-
-<style>
-</style>
