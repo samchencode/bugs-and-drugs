@@ -1,8 +1,6 @@
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
 import AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
-import WebAntibiogramPresenter from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
-import WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
 
 describe('Table Controller', () => {
   let controller: AntibiogramController;
@@ -10,9 +8,7 @@ describe('Table Controller', () => {
   beforeEach(() => {
     const repo = new FakeAntibiogramRepository();
     const action = new ShowAntibiogramAction(repo);
-    const tablePresenter = new WebTablePresenter();
-    const presenter = new WebAntibiogramPresenter(tablePresenter);
-    controller = new AntibiogramController(action, presenter);
+    controller = new AntibiogramController(action);
   });
 
   it('should present a specified table', () => {

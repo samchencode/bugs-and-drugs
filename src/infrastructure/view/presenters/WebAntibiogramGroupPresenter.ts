@@ -1,4 +1,5 @@
 import type Antibiogram from '@/domain/Antibiogram';
+import { SampleInfo } from '@/domain/Antibiogram';
 import type ValueObject from '@/domain/base/ValueObject';
 import type { AntibiogramGroupPresenter } from '@/domain/ports/AntibiogramGroupPresenter';
 
@@ -35,7 +36,7 @@ class WebAntibiogramGroupPresenter implements AntibiogramGroupPresenter {
         ([interval, data]) => ({
           interval: interval.toString(),
           groups: this.#group((d) => d.info, data).map(([si, data]) => ({
-            title: si.toString(),
+            title: !si.is(new SampleInfo([])) ? si.toString() : 'Antibiogram',
             antibiograms: data.map((abg) => ({
               gram: abg.gram.toString(),
               id: abg.id.getValue(),

@@ -86,8 +86,8 @@ describe('WebAntibiogramGroupPresenter', () => {
       expect(i0.groups).toEqual(expected);
       expect(i1.groups).toEqual(expected);
 
-      expect(i0.groups[0].title).toBe('');
-      expect(i1.groups[0].title).toBe('');
+      expect(i0.groups[0].title).toBe('Antibiogram');
+      expect(i1.groups[0].title).toBe('Antibiogram');
       expect(i1.groups[1].title).toBe('Inpatient Setting');
     });
   });

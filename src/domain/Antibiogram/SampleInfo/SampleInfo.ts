@@ -50,9 +50,10 @@ class SampleInfo extends ValueObject {
   }
 
   toString() {
-    return Array.from(this.#itemsByType.values())
-      .map((x) => x.toString())
-      .join('\n');
+    const values = this.itemsToArray();
+    return values.length > 0
+      ? values.map((x) => x.toString()).join('\n')
+      : 'No Sample Info Items';
   }
 
   #hasSameKeys(facts: Map<string, SampleInfoItem>): boolean {
