@@ -4,20 +4,15 @@ import WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresente
 
 class AntibiogramController {
   #action: ShowAntibiogramAction;
-  #presenter: WebAntibiogramPresenter;
 
-  constructor(
-    showAntibiogramAction: ShowAntibiogramAction,
-    webAntibiogramPresenter: WebAntibiogramPresenter
-  ) {
+  constructor(showAntibiogramAction: ShowAntibiogramAction) {
     this.#action = showAntibiogramAction;
-    this.#presenter = new WebAntibiogramPresenter(new WebTablePresenter());
   }
 
   async show(id: string) {
-    console.log(id, this.#presenter);
-    await this.#action.present(this.#presenter, id);
-    return this.#presenter.buildViewModel();
+    const presenter = new WebAntibiogramPresenter(new WebTablePresenter());
+    await this.#action.present(presenter, id);
+    return presenter.buildViewModel();
   }
 }
 
