@@ -5023,213 +5023,6 @@ var app = (function () {
       return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
   }
 
-  var _WebAntibiogramPresenter_tablePresenter, _WebAntibiogramPresenter_abg;
-  class WebAntibiogramPresenter {
-      constructor(webTablePresenter) {
-          _WebAntibiogramPresenter_tablePresenter.set(this, void 0);
-          _WebAntibiogramPresenter_abg.set(this, null);
-          __classPrivateFieldSet(this, _WebAntibiogramPresenter_tablePresenter, webTablePresenter, "f");
-      }
-      setData(data) {
-          __classPrivateFieldGet(this, _WebAntibiogramPresenter_tablePresenter, "f").setData(data.table);
-          __classPrivateFieldSet(this, _WebAntibiogramPresenter_abg, data.antibiogram, "f");
-      }
-      buildViewModel() {
-          const table = __classPrivateFieldGet(this, _WebAntibiogramPresenter_tablePresenter, "f").buildViewModel();
-          if (!__classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f") || !table)
-              return null;
-          return {
-              table,
-              antibiogramId: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").id.getValue(),
-              region: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").place.getState(),
-              institution: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").place.getInstitution(),
-              publishedAt: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").interval.publishedAtToString(),
-              expiresAt: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").interval.expiresAtToString(),
-              gram: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").gram.toString(),
-              info: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").info.toString(),
-          };
-      }
-  }
-  _WebAntibiogramPresenter_tablePresenter = new WeakMap(), _WebAntibiogramPresenter_abg = new WeakMap();
-
-  var _WebTableElement_highlighted, _WebTableElement_active, _WebTableElement_value, _WebTableElement_tooltip;
-  class WebTableElement {
-      constructor(id, cell) {
-          _WebTableElement_highlighted.set(this, false);
-          _WebTableElement_active.set(this, false);
-          _WebTableElement_value.set(this, void 0);
-          _WebTableElement_tooltip.set(this, void 0);
-          this.id = id;
-          __classPrivateFieldSet(this, _WebTableElement_value, cell.getValue(), "f");
-          __classPrivateFieldSet(this, _WebTableElement_tooltip, cell.getTooltip().toString(), "f");
-      }
-      getHighlighted() {
-          return __classPrivateFieldGet(this, _WebTableElement_highlighted, "f");
-      }
-      getActive() {
-          return __classPrivateFieldGet(this, _WebTableElement_active, "f");
-      }
-      toggleActive() {
-          __classPrivateFieldSet(this, _WebTableElement_active, !__classPrivateFieldGet(this, _WebTableElement_active, "f"), "f");
-      }
-      toggleHighlighted() {
-          __classPrivateFieldSet(this, _WebTableElement_highlighted, !__classPrivateFieldGet(this, _WebTableElement_highlighted, "f"), "f");
-      }
-      setActive() {
-          __classPrivateFieldSet(this, _WebTableElement_active, true, "f");
-      }
-      unsetActive() {
-          __classPrivateFieldSet(this, _WebTableElement_active, false, "f");
-      }
-      highlight() {
-          __classPrivateFieldSet(this, _WebTableElement_highlighted, true, "f");
-      }
-      unHighlight() {
-          __classPrivateFieldSet(this, _WebTableElement_highlighted, false, "f");
-      }
-      getValue() {
-          return __classPrivateFieldGet(this, _WebTableElement_value, "f");
-      }
-      getTooltip() {
-          return __classPrivateFieldGet(this, _WebTableElement_tooltip, "f");
-      }
-  }
-  _WebTableElement_highlighted = new WeakMap(), _WebTableElement_active = new WeakMap(), _WebTableElement_value = new WeakMap(), _WebTableElement_tooltip = new WeakMap();
-
-  var _WebRowHeader_isCollapsed, _WebRowHeader_inGroup, _WebRowHeader_group, _WebRowHeader_firstOfGroup;
-  class WebRowHeader extends WebTableElement {
-      constructor(id, cell, group) {
-          super(id, cell);
-          _WebRowHeader_isCollapsed.set(this, void 0);
-          _WebRowHeader_inGroup.set(this, void 0);
-          _WebRowHeader_group.set(this, void 0);
-          _WebRowHeader_firstOfGroup.set(this, void 0);
-          __classPrivateFieldSet(this, _WebRowHeader_group, group, "f");
-          __classPrivateFieldSet(this, _WebRowHeader_inGroup, group !== null, "f");
-          __classPrivateFieldSet(this, _WebRowHeader_isCollapsed, group === null || group === void 0 ? void 0 : group.isCollapsed(), "f");
-          __classPrivateFieldSet(this, _WebRowHeader_firstOfGroup, id === (group === null || group === void 0 ? void 0 : group.getRange()[0]), "f");
-      }
-      isCollapsed() {
-          return __classPrivateFieldGet(this, _WebRowHeader_isCollapsed, "f");
-      }
-      inGroup() {
-          return __classPrivateFieldGet(this, _WebRowHeader_inGroup, "f");
-      }
-      getGroup() {
-          return __classPrivateFieldGet(this, _WebRowHeader_group, "f");
-      }
-      isFirstOfGroup() {
-          return __classPrivateFieldGet(this, _WebRowHeader_firstOfGroup, "f");
-      }
-  }
-  _WebRowHeader_isCollapsed = new WeakMap(), _WebRowHeader_inGroup = new WeakMap(), _WebRowHeader_group = new WeakMap(), _WebRowHeader_firstOfGroup = new WeakMap();
-
-  var _WebTable_instances, _WebTable_highlightColumn, _WebTable_unhighlightColumn, _WebTable_highlightRow, _WebTable_unhighlightRow;
-  class WebTable {
-      constructor(table) {
-          _WebTable_instances.add(this);
-          this.grid = table
-              .getCells()
-              .map((r) => r.map((c, i) => new WebTableElement(i, c)));
-          this.rowHeaders = table
-              .getRows()
-              .map((r, i) => new WebRowHeader(i, r.getLabel(), r.getGroup()));
-          this.columnHeaders = table
-              .getColumnLabels()
-              .map((l, i) => new WebTableElement(i, l));
-      }
-      highlightColumn(i) {
-          this.columnHeaders[i].setActive();
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightColumn).call(this, i);
-      }
-      unhighlightColumn(i) {
-          this.columnHeaders[i].unsetActive();
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightColumn).call(this, i);
-      }
-      highlightCell(i, j) {
-          this.grid[i][j].setActive();
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightRow).call(this, i);
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightColumn).call(this, j);
-      }
-      unhighlightCell(i, j) {
-          this.grid[i][j].unsetActive();
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightRow).call(this, i);
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightColumn).call(this, j);
-      }
-      highlightRow(i) {
-          this.rowHeaders[i].setActive();
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightRow).call(this, i);
-      }
-      unhighlightRow(i) {
-          this.rowHeaders[i].unsetActive();
-          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightRow).call(this, i);
-      }
-  }
-  _WebTable_instances = new WeakSet(), _WebTable_highlightColumn = function _WebTable_highlightColumn(i) {
-      this.grid.forEach((row) => {
-          row[i].highlight();
-      });
-      this.columnHeaders[i].highlight();
-  }, _WebTable_unhighlightColumn = function _WebTable_unhighlightColumn(i) {
-      this.grid.forEach((row) => {
-          row[i].unHighlight();
-      });
-      this.columnHeaders[i].unHighlight();
-  }, _WebTable_highlightRow = function _WebTable_highlightRow(i) {
-      this.grid[i].forEach((cell) => {
-          cell.highlight();
-      });
-      this.rowHeaders[i].highlight();
-  }, _WebTable_unhighlightRow = function _WebTable_unhighlightRow(i) {
-      this.grid[i].forEach((cell) => {
-          cell.unHighlight();
-      });
-      this.rowHeaders[i].unHighlight();
-  };
-
-  var _WebTablePresenter_table;
-  class WebTablePresenter {
-      constructor() {
-          _WebTablePresenter_table.set(this, null);
-      }
-      setData(t) {
-          __classPrivateFieldSet(this, _WebTablePresenter_table, t, "f");
-      }
-      buildViewModel() {
-          if (!__classPrivateFieldGet(this, _WebTablePresenter_table, "f"))
-              return null;
-          return new WebTable(__classPrivateFieldGet(this, _WebTablePresenter_table, "f"));
-      }
-  }
-  _WebTablePresenter_table = new WeakMap();
-
-  var _AntibiogramController_instances, _AntibiogramController_action, _AntibiogramController_sortAntibiograms;
-  class AntibiogramController {
-      constructor(showAntibiogramAction) {
-          _AntibiogramController_instances.add(this);
-          _AntibiogramController_action.set(this, void 0);
-          __classPrivateFieldSet(this, _AntibiogramController_action, showAntibiogramAction, "f");
-      }
-      show(id) {
-          return __awaiter(this, void 0, void 0, function* () {
-              const presenter = new WebAntibiogramPresenter(new WebTablePresenter());
-              yield __classPrivateFieldGet(this, _AntibiogramController_action, "f").present(presenter, id);
-              return presenter.buildViewModel();
-          });
-      }
-      showMany(ids) {
-          return __awaiter(this, void 0, void 0, function* () {
-              const promises = ids.map((id) => this.show(id));
-              const abgs = yield Promise.all(promises);
-              return __classPrivateFieldGet(this, _AntibiogramController_instances, "m", _AntibiogramController_sortAntibiograms).call(this, abgs);
-          });
-      }
-  }
-  _AntibiogramController_action = new WeakMap(), _AntibiogramController_instances = new WeakSet(), _AntibiogramController_sortAntibiograms = function _AntibiogramController_sortAntibiograms(abgs) {
-      abgs.sort((v1, v2) => (v1 && v2 ? ((v1 === null || v1 === void 0 ? void 0 : v1.gram) > (v2 === null || v2 === void 0 ? void 0 : v2.gram) ? 1 : -1) : 0));
-      return abgs;
-  };
-
   class Entity {
       constructor(id) {
           this.id = id;
@@ -5967,6 +5760,216 @@ var app = (function () {
           this.message = 'Invalid sensitivity value: ' + inputValue;
       }
   }
+
+  var _WebAntibiogramPresenter_instances, _WebAntibiogramPresenter_tablePresenter, _WebAntibiogramPresenter_abg, _WebAntibiogramPresenter_makeSampleInfoString;
+  class WebAntibiogramPresenter {
+      constructor(webTablePresenter) {
+          _WebAntibiogramPresenter_instances.add(this);
+          _WebAntibiogramPresenter_tablePresenter.set(this, void 0);
+          _WebAntibiogramPresenter_abg.set(this, null);
+          __classPrivateFieldSet(this, _WebAntibiogramPresenter_tablePresenter, webTablePresenter, "f");
+      }
+      setData(data) {
+          __classPrivateFieldGet(this, _WebAntibiogramPresenter_tablePresenter, "f").setData(data.table);
+          __classPrivateFieldSet(this, _WebAntibiogramPresenter_abg, data.antibiogram, "f");
+      }
+      buildViewModel() {
+          const table = __classPrivateFieldGet(this, _WebAntibiogramPresenter_tablePresenter, "f").buildViewModel();
+          if (!__classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f") || !table)
+              return null;
+          return {
+              table,
+              antibiogramId: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").id.getValue(),
+              region: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").place.getState(),
+              institution: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").place.getInstitution(),
+              publishedAt: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").interval.publishedAtToString(),
+              expiresAt: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").interval.expiresAtToString(),
+              gram: __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").gram.toString(),
+              info: __classPrivateFieldGet(this, _WebAntibiogramPresenter_instances, "m", _WebAntibiogramPresenter_makeSampleInfoString).call(this, __classPrivateFieldGet(this, _WebAntibiogramPresenter_abg, "f").info),
+          };
+      }
+  }
+  _WebAntibiogramPresenter_tablePresenter = new WeakMap(), _WebAntibiogramPresenter_abg = new WeakMap(), _WebAntibiogramPresenter_instances = new WeakSet(), _WebAntibiogramPresenter_makeSampleInfoString = function _WebAntibiogramPresenter_makeSampleInfoString(info) {
+      return !info.is(new SampleInfo([])) ? info.toString() : 'Antibiogram';
+  };
+
+  var _WebTableElement_highlighted, _WebTableElement_active, _WebTableElement_value, _WebTableElement_tooltip;
+  class WebTableElement {
+      constructor(id, cell) {
+          _WebTableElement_highlighted.set(this, false);
+          _WebTableElement_active.set(this, false);
+          _WebTableElement_value.set(this, void 0);
+          _WebTableElement_tooltip.set(this, void 0);
+          this.id = id;
+          __classPrivateFieldSet(this, _WebTableElement_value, cell.getValue(), "f");
+          __classPrivateFieldSet(this, _WebTableElement_tooltip, cell.getTooltip().toString(), "f");
+      }
+      getHighlighted() {
+          return __classPrivateFieldGet(this, _WebTableElement_highlighted, "f");
+      }
+      getActive() {
+          return __classPrivateFieldGet(this, _WebTableElement_active, "f");
+      }
+      toggleActive() {
+          __classPrivateFieldSet(this, _WebTableElement_active, !__classPrivateFieldGet(this, _WebTableElement_active, "f"), "f");
+      }
+      toggleHighlighted() {
+          __classPrivateFieldSet(this, _WebTableElement_highlighted, !__classPrivateFieldGet(this, _WebTableElement_highlighted, "f"), "f");
+      }
+      setActive() {
+          __classPrivateFieldSet(this, _WebTableElement_active, true, "f");
+      }
+      unsetActive() {
+          __classPrivateFieldSet(this, _WebTableElement_active, false, "f");
+      }
+      highlight() {
+          __classPrivateFieldSet(this, _WebTableElement_highlighted, true, "f");
+      }
+      unHighlight() {
+          __classPrivateFieldSet(this, _WebTableElement_highlighted, false, "f");
+      }
+      getValue() {
+          return __classPrivateFieldGet(this, _WebTableElement_value, "f");
+      }
+      getTooltip() {
+          return __classPrivateFieldGet(this, _WebTableElement_tooltip, "f");
+      }
+  }
+  _WebTableElement_highlighted = new WeakMap(), _WebTableElement_active = new WeakMap(), _WebTableElement_value = new WeakMap(), _WebTableElement_tooltip = new WeakMap();
+
+  var _WebRowHeader_isCollapsed, _WebRowHeader_inGroup, _WebRowHeader_group, _WebRowHeader_firstOfGroup;
+  class WebRowHeader extends WebTableElement {
+      constructor(id, cell, group) {
+          super(id, cell);
+          _WebRowHeader_isCollapsed.set(this, void 0);
+          _WebRowHeader_inGroup.set(this, void 0);
+          _WebRowHeader_group.set(this, void 0);
+          _WebRowHeader_firstOfGroup.set(this, void 0);
+          __classPrivateFieldSet(this, _WebRowHeader_group, group, "f");
+          __classPrivateFieldSet(this, _WebRowHeader_inGroup, group !== null, "f");
+          __classPrivateFieldSet(this, _WebRowHeader_isCollapsed, group === null || group === void 0 ? void 0 : group.isCollapsed(), "f");
+          __classPrivateFieldSet(this, _WebRowHeader_firstOfGroup, id === (group === null || group === void 0 ? void 0 : group.getRange()[0]), "f");
+      }
+      isCollapsed() {
+          return __classPrivateFieldGet(this, _WebRowHeader_isCollapsed, "f");
+      }
+      inGroup() {
+          return __classPrivateFieldGet(this, _WebRowHeader_inGroup, "f");
+      }
+      getGroup() {
+          return __classPrivateFieldGet(this, _WebRowHeader_group, "f");
+      }
+      isFirstOfGroup() {
+          return __classPrivateFieldGet(this, _WebRowHeader_firstOfGroup, "f");
+      }
+  }
+  _WebRowHeader_isCollapsed = new WeakMap(), _WebRowHeader_inGroup = new WeakMap(), _WebRowHeader_group = new WeakMap(), _WebRowHeader_firstOfGroup = new WeakMap();
+
+  var _WebTable_instances, _WebTable_highlightColumn, _WebTable_unhighlightColumn, _WebTable_highlightRow, _WebTable_unhighlightRow;
+  class WebTable {
+      constructor(table) {
+          _WebTable_instances.add(this);
+          this.grid = table
+              .getCells()
+              .map((r) => r.map((c, i) => new WebTableElement(i, c)));
+          this.rowHeaders = table
+              .getRows()
+              .map((r, i) => new WebRowHeader(i, r.getLabel(), r.getGroup()));
+          this.columnHeaders = table
+              .getColumnLabels()
+              .map((l, i) => new WebTableElement(i, l));
+      }
+      highlightColumn(i) {
+          this.columnHeaders[i].setActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightColumn).call(this, i);
+      }
+      unhighlightColumn(i) {
+          this.columnHeaders[i].unsetActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightColumn).call(this, i);
+      }
+      highlightCell(i, j) {
+          this.grid[i][j].setActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightRow).call(this, i);
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightColumn).call(this, j);
+      }
+      unhighlightCell(i, j) {
+          this.grid[i][j].unsetActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightRow).call(this, i);
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightColumn).call(this, j);
+      }
+      highlightRow(i) {
+          this.rowHeaders[i].setActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_highlightRow).call(this, i);
+      }
+      unhighlightRow(i) {
+          this.rowHeaders[i].unsetActive();
+          __classPrivateFieldGet(this, _WebTable_instances, "m", _WebTable_unhighlightRow).call(this, i);
+      }
+  }
+  _WebTable_instances = new WeakSet(), _WebTable_highlightColumn = function _WebTable_highlightColumn(i) {
+      this.grid.forEach((row) => {
+          row[i].highlight();
+      });
+      this.columnHeaders[i].highlight();
+  }, _WebTable_unhighlightColumn = function _WebTable_unhighlightColumn(i) {
+      this.grid.forEach((row) => {
+          row[i].unHighlight();
+      });
+      this.columnHeaders[i].unHighlight();
+  }, _WebTable_highlightRow = function _WebTable_highlightRow(i) {
+      this.grid[i].forEach((cell) => {
+          cell.highlight();
+      });
+      this.rowHeaders[i].highlight();
+  }, _WebTable_unhighlightRow = function _WebTable_unhighlightRow(i) {
+      this.grid[i].forEach((cell) => {
+          cell.unHighlight();
+      });
+      this.rowHeaders[i].unHighlight();
+  };
+
+  var _WebTablePresenter_table;
+  class WebTablePresenter {
+      constructor() {
+          _WebTablePresenter_table.set(this, null);
+      }
+      setData(t) {
+          __classPrivateFieldSet(this, _WebTablePresenter_table, t, "f");
+      }
+      buildViewModel() {
+          if (!__classPrivateFieldGet(this, _WebTablePresenter_table, "f"))
+              return null;
+          return new WebTable(__classPrivateFieldGet(this, _WebTablePresenter_table, "f"));
+      }
+  }
+  _WebTablePresenter_table = new WeakMap();
+
+  var _AntibiogramController_instances, _AntibiogramController_action, _AntibiogramController_sortAntibiograms;
+  class AntibiogramController {
+      constructor(showAntibiogramAction) {
+          _AntibiogramController_instances.add(this);
+          _AntibiogramController_action.set(this, void 0);
+          __classPrivateFieldSet(this, _AntibiogramController_action, showAntibiogramAction, "f");
+      }
+      show(id) {
+          return __awaiter(this, void 0, void 0, function* () {
+              const presenter = new WebAntibiogramPresenter(new WebTablePresenter());
+              yield __classPrivateFieldGet(this, _AntibiogramController_action, "f").present(presenter, id);
+              return presenter.buildViewModel();
+          });
+      }
+      showMany(ids) {
+          return __awaiter(this, void 0, void 0, function* () {
+              const promises = ids.map((id) => this.show(id));
+              const abgs = yield Promise.all(promises);
+              return __classPrivateFieldGet(this, _AntibiogramController_instances, "m", _AntibiogramController_sortAntibiograms).call(this, abgs);
+          });
+      }
+  }
+  _AntibiogramController_action = new WeakMap(), _AntibiogramController_instances = new WeakSet(), _AntibiogramController_sortAntibiograms = function _AntibiogramController_sortAntibiograms(abgs) {
+      abgs.sort((v1, v2) => (v1 && v2 ? ((v1 === null || v1 === void 0 ? void 0 : v1.gram) > (v2 === null || v2 === void 0 ? void 0 : v2.gram) ? 1 : -1) : 0));
+      return abgs;
+  };
 
   var _WebAntibiogramGroupPresenter_instances, _WebAntibiogramGroupPresenter_data, _WebAntibiogramGroupPresenter_group, _WebAntibiogramGroupPresenter_findUnique;
   class WebAntibiogramGroupPresenter {
