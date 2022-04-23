@@ -20,8 +20,8 @@ describe('AntibiogramGroupController', () => {
       expect(result[1].place).toBe('Gotham City \u2212 NY');
       expect(result[0].intervals[0].interval).toBe('Mar 2019 \u2212 Feb 2020');
       expect(result[1].intervals[0].interval).toBe('Jan 2020 \u2212 Jan 2021');
-      expect(result[0].intervals[0].groups[0].title).toBe('');
-      expect(result[1].intervals[0].groups[0].title).toBe('');
+      expect(result[0].intervals[0].groups[0].title).toBe('No Metadata');
+      expect(result[1].intervals[0].groups[0].title).toBe('No Metadata');
       expect(result[1].intervals[0].groups[1].title).toBe('Inpatient Setting');
       expect(result[0].intervals[0].groups[0].antibiograms[0].gram).toBe(
         'Gram Positive and Negative'
