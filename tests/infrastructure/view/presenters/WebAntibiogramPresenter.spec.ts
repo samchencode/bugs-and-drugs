@@ -67,5 +67,16 @@ describe('WebAntibiogramPresenter', () => {
       const vm = presenter.buildViewModel()!;
       expect(vm.info).toBe('Inpatient Setting');
     });
+
+    it('should replace empty SI with the word "Antibiogram"', () => {
+      const antibiogram = FakeAntibiogramRepository.fakeAntibiograms[0];
+      const table = build(antibiogram);
+      presenter = new WebAntibiogramPresenter(tablePresenter);
+      presenter.setData({ antibiogram, table });
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const vm = presenter.buildViewModel()!;
+      expect(vm.info).toBe('Antibiogram');
+    });
   });
 });
