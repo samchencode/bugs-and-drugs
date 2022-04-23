@@ -1,7 +1,4 @@
 dist/
 node_modules/
-public/build/
-public/data/
-docs/
 
 .DS_Store
