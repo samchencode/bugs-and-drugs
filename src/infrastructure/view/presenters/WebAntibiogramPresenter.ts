@@ -1,3 +1,4 @@
+import { SampleInfo } from '@/domain/Antibiogram';
 import type Antibiogram from '@/domain/Antibiogram';
 import type {
   AntibiogramData,
@@ -42,8 +43,12 @@ class WebAntibiogramPresenter implements AntibiogramPresenter {
       publishedAt: this.#abg.interval.publishedAtToString(),
       expiresAt: this.#abg.interval.expiresAtToString(),
       gram: this.#abg.gram.toString(),
-      info: this.#abg.info.toString(),
+      info: this.#makeSampleInfoString(this.#abg.info),
     };
+  }
+
+  #makeSampleInfoString(info: SampleInfo) {
+    return !info.is(new SampleInfo([])) ? info.toString() : 'Antibiogram';
   }
 }
 
