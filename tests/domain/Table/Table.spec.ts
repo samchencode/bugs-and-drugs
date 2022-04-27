@@ -556,6 +556,52 @@ describe('Table', () => {
       ]);
       expect(values).toEqual(expectedValues);
     });
+
+    it('should sort rows given sort order', () => {
+      const order = {
+        rows: ['r4', 'r2', 'r3'],
+      };
+
+      const table = makeTable(data, { labels, order });
+
+      const labelStrings = table.getRowLabels().map((l) => l.toString());
+      expect(labelStrings).toEqual(['r4', 'r2', 'r3', 'r1']);
+
+      const dataStrings = table.getCells().map((r) => r[0].toString());
+      expect(dataStrings).toEqual(['100', '40', '70', '10']);
+    });
+
+    it('should sort columns given sort order', () => {
+      const order = {
+        columns: ['c2', 'c1', 'c3'],
+      };
+
+      const table = makeTable(data, { labels, order });
+
+      const labelStrings = table.getColumnLabels().map((l) => l.toString());
+      expect(labelStrings).toEqual(['c2', 'c1', 'c3']);
+
+      const dataStrings = table.getCells()[0].map((c) => c.toString());
+      expect(dataStrings).toEqual(['20', '10', '30']);
+    });
+
+    it('should sort both rows & columns given sort order', () => {
+      const order = {
+        rows: ['r4', 'r2', 'r3'],
+        columns: ['c2', 'c1', 'c3'],
+      };
+
+      const table = makeTable(data, { labels, order });
+
+      const rowLabelStrings = table.getRowLabels().map((l) => l.toString());
+      expect(rowLabelStrings).toEqual(['r4', 'r2', 'r3', 'r1']);
+
+      const colLabelStrings = table.getColumnLabels().map((l) => l.toString());
+      expect(colLabelStrings).toEqual(['c2', 'c1', 'c3']);
+
+      const dataStrings = table.getCells()[0].map((c) => c.toString());
+      expect(dataStrings).toEqual(['110', '100', '120']);
+    });
   });
 });
 

@@ -9,6 +9,10 @@ interface TableParams {
   groups: {
     rows: Group[];
   };
+  order: {
+    rows?: string[];
+    columns?: string[];
+  };
 }
 
 export type { TableParams };
