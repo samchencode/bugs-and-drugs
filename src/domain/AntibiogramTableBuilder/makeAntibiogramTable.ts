@@ -72,8 +72,13 @@ function makeAntibiogramTable(abg: Antibiogram) {
 }
 
 function makeCompositeAntibiogramTable(abg1: Antibiogram, abg2: Antibiogram) {
-  const table1 = makeAntibiogramTable(abg1);
-  const table2 = makeAntibiogramTable(abg2);
+  const abgs = [abg1, abg2].sort((a1, a2) => {
+    if (a1.gram.toString() < a2.gram.toString()) return -1;
+    if (a1.gram.toString() > a2.gram.toString()) return 1;
+    return 0;
+  });
+  const table1 = makeAntibiogramTable(abgs[0]);
+  const table2 = makeAntibiogramTable(abgs[1]);
   return table1.merge(table2);
 }
 
