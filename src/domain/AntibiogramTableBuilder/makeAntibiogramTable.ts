@@ -67,9 +67,17 @@ function makeAntibiogramTable(abg: Antibiogram) {
     labels: { rows: rowLabels, columns: columnLabels },
     order: {
       rows: metadata.get(RowOrder.slug)?.getValue(),
-      columns: metadata.get(ColumnOrder.slug)?.getValue(),
     },
   });
 }
 
-export default makeAntibiogramTable;
+function makeCompositeAntibiogramTable(abg1: Antibiogram, abg2: Antibiogram) {
+  const table1 = makeAntibiogramTable(abg1);
+  const table2 = makeAntibiogramTable(abg2);
+  return table1.merge(table2);
+}
+
+export default function (abg1: Antibiogram, abg2?: Antibiogram) {
+  if (abg2) return makeCompositeAntibiogramTable(abg1, abg2);
+  return makeAntibiogramTable(abg1);
+}
