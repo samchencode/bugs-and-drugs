@@ -63,6 +63,15 @@ class TableFacade {
     return this.#table.getColumnLabels();
   }
 
+  getBase() {
+    return this.#table;
+  }
+
+  merge(table: TableFacade): TableFacade {
+    const newTable = this.#table.merge(table.getBase());
+    return new TableFacade(newTable);
+  }
+
   #collapseRowGroup(old: Group) {
     const rowGroups = this.#table.getRowGroups();
     const newGroups = rowGroups.filter((g) => !g.is(old));

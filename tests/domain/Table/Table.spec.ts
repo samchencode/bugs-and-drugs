@@ -271,6 +271,30 @@ describe('Table', () => {
         labels.columns.map((x) => x.toString())
       );
     });
+
+    it('should merge two tables by row and column names', () => {
+      const data = [
+        [new D(130), new D(140), new D(150), new D(160)],
+        [new D(170), new D(180), new D(190), new D(200)],
+      ];
+
+      const labels = {
+        columns: [new L('c1'), new L('c3'), new L('c4'), new L('c5')],
+        rows: [new L('r1'), new L('r5')],
+      };
+
+      const tableToMerge = makeTable(data, { labels });
+      const mergedTable = table.merge(tableToMerge);
+
+      expect(mergedTable.getShape()).toEqual([5, 5]);
+
+      const cells = mergedTable
+        .getCells()
+        .map((r) => r.map((c) => c.toString()));
+
+      expect(cells[0]).toEqual(['130', '20', '140', '150', '160']);
+      expect(cells[4]).toEqual(['170', 'NA', '180', '190', '200']);
+    });
   });
 
   describe('row, column, group facades', () => {

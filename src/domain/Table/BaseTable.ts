@@ -7,6 +7,7 @@ import {
 import type { Table } from '@/domain/Table/Table';
 import type { TableParams } from '@/domain/Table/TableParams';
 import type { Group } from '@/domain/Table/Group';
+import CompositeTable from '@/domain/Table/CompositeTable';
 
 class BaseTable<T extends Cell> implements Table<T> {
   #data: T[][];
@@ -52,6 +53,10 @@ class BaseTable<T extends Cell> implements Table<T> {
       ...params,
     };
     return new BaseTable<T>(this.#data, newParams);
+  }
+
+  merge(table: Table<T>): Table<T> {
+    return new CompositeTable(this, table);
   }
 }
 

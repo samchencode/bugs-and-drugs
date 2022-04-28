@@ -1,4 +1,5 @@
 import type Cell from '@/domain/Table/Cell';
+import CompositeTable from '@/domain/Table/CompositeTable';
 import type { Group } from '@/domain/Table/Group';
 import type Label from '@/domain/Table/Label';
 import type { Table } from '@/domain/Table/Table';
@@ -54,6 +55,10 @@ class Ordered<T extends Cell> implements TableDecorator<T> {
       ...this.#params,
       ...params.order,
     });
+  }
+
+  merge(table: Table<T>): Table<T> {
+    return new CompositeTable(this, table);
   }
 }
 
