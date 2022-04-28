@@ -1,11 +1,15 @@
 import {
   AntibiogramId,
+  ColumnOrder,
+  Footnotes,
   GramValues,
   IntegerNumberOfIsolates,
   Interval,
+  Metadata,
   OrganismValue,
   Place,
   Routes,
+  RowOrder,
   SampleInfo,
   SensitivityValue,
   Settings,
@@ -13,6 +17,7 @@ import {
   Sources,
   type Route,
 } from '@/domain/Antibiogram';
+import type { MetadataJson } from '@/infrastructure/persistence/file/MetadataJson';
 
 // IDEA: make this into an abstract factory specific to the shape of the data csv
 // IDEA: or atlas csv in case I change csv shape / columns later
@@ -74,3 +79,14 @@ export const interval = (start: string, stop: string) => {
 };
 
 export const id = (id: string) => new AntibiogramId(id);
+
+export const metadata = (metadata: MetadataJson) => {
+  const constructors = {
+    [RowOrder.slug]: RowOrder,
+    [ColumnOrder.slug]: ColumnOrder,
+    [Footnotes.slug]: Footnotes,
+  };
+
+  const entries = Object.entries(metadata) as [keyof MetadataJson, string[]][];
+  return new Metadata(entries.map(([k, v]) => new constructors[k](v)));
+};

@@ -2,7 +2,7 @@ import { Module } from 'didi';
 import svelte from '@/di/svelte';
 import AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
 import AntibiogramGroupController from '@/infrastructure/view/controllers/AntibiogramGroupController';
-import CsvAntibiogramRepository from '@/infrastructure/persistence/csv/CsvAntibiogramRepository';
+import FileAntibiogramRepository from '@/infrastructure/persistence/file/FileAntibiogramRepository';
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
 import IndexAntibiogramAction from '@/application/IndexAntibiogramAction';
 import WebFileSystem from '@/infrastructure/filesystem/web/WebFileSystem';
@@ -16,7 +16,7 @@ dependencies.type('indexAntibiogramGroupsAction', IndexAntibiogramAction);
 
 // * ADAPTERS
 // * - Repositories
-dependencies.type('antibiogramRepository', CsvAntibiogramRepository);
+dependencies.type('antibiogramRepository', FileAntibiogramRepository);
 dependencies.type('filesystem', WebFileSystem);
 // * - Controllers
 dependencies.type('antibiogramController', AntibiogramController);

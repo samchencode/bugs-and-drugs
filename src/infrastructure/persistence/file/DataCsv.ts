@@ -1,4 +1,4 @@
-import Csv from '@/infrastructure/persistence/csv/Csv';
+import Csv from '@/infrastructure/persistence/file/Csv';
 
 export enum DataRequiredFields {
   organism_name = 'organism_name',

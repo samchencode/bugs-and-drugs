@@ -3,6 +3,7 @@ import {
   GramValues,
   IntegerNumberOfIsolates,
   Interval,
+  Metadata,
   OrganismValue,
   Place,
   Routes,
@@ -14,7 +15,7 @@ import {
 } from '@/domain/Antibiogram';
 import type { File } from '@/infrastructure/filesystem/File';
 import type { FileSystem } from '@/infrastructure/filesystem/FileSystem';
-import CsvAntibiogramRepository from '@/infrastructure/persistence/csv/CsvAntibiogramRepository';
+import FileAntibiogramRepository from '@/infrastructure/persistence/file/FileAntibiogramRepository';
 
 describe('CsvAntibiogramRepository', () => {
   const fakeFileFactory: (
@@ -40,20 +41,20 @@ describe('CsvAntibiogramRepository', () => {
         })
       );
 
-      const repo = new CsvAntibiogramRepository(fs);
+      const repo = new FileAntibiogramRepository(fs);
       expect(repo).toBeDefined();
     });
   });
 
   describe('behavior', () => {
-    let repo: CsvAntibiogramRepository;
+    let repo: FileAntibiogramRepository;
 
     const fs = fakeFileSystem(
       fakeFileFactory({
         'atlas.csv':
-          'region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gram,csv\n' +
-          'Gotham City,Hospital,202001,202101,1,#N/A,positive,1.csv\n' +
-          'Gotham City,Hospital,202001,202101,2,#N/A,negative,2.csv\n',
+          'region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gram,csv,metadata\n' +
+          'Gotham City,Hospital,202001,202101,1,#N/A,positive,1.csv,meta.json\n' +
+          'Gotham City,Hospital,202001,202101,2,#N/A,negative,2.csv,\n',
         '1.csv':
           'organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info\n' +
           'Rhea americana,nelfinavir mesylate,#N/A,919,90,urine\n' +
@@ -97,7 +98,8 @@ describe('CsvAntibiogramRepository', () => {
           'Butorides striatus,Torsemide,PO,938,69,non-urine\n' +
           'Phalacrocorax albiventer,OXYMETAZOLINE HYDROCHLORIDE,IV,200,69,non-urine\n' +
           'Climacteris melanura,ondansetron hydrochloride,IV,512,49,"inpatient,urine"\n' +
-          'Perameles nasuta,Sodium fluoride,#N/A,340,14,"inpatient,urine"', // without trailing new-line
+          'Perameles nasuta,Sodium fluoride,#N/A,340,14,"inpatient,urine"', // without trailing new-line,
+        'meta.json': '{"footnotes":["hello world"]}',
       })
     );
 
@@ -109,7 +111,7 @@ describe('CsvAntibiogramRepository', () => {
       return await Promise.all([getId('1'), getId('2')]);
     }
 
-    beforeEach(() => (repo = new CsvAntibiogramRepository(fs)));
+    beforeEach(() => (repo = new FileAntibiogramRepository(fs)));
 
     it('should parse csv and create antibiogram with proper data', () =>
       getBoth().then(([abg1, abg2]) => {
@@ -177,6 +179,15 @@ describe('CsvAntibiogramRepository', () => {
       repo.getAll().then((abgs) => {
         expect(abgs[0].id.is(new AntibiogramId('1'))).toBe(true);
         expect(abgs[1].id.is(new AntibiogramId('2'))).toBe(true);
+      }));
+
+    it('should load the metadata file when it exists', () =>
+      repo.getAll().then(([abg1, abg2]) => {
+        expect(abg1.metadata.is(new Metadata([]))).toBe(false);
+        expect(abg1.metadata.get('footnotes')?.getValue()).toEqual([
+          'hello world',
+        ]);
+        expect(abg2.metadata.is(new Metadata([]))).toBe(true);
       }));
   });
 });

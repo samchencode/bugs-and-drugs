@@ -1,7 +1,7 @@
 import parseCsv, {
   type RowArray,
-} from '@/infrastructure/persistence/csv/parseCsv';
-import validate from '@/infrastructure/persistence/csv/validate';
+} from '@/infrastructure/persistence/file/parseCsv';
+import validate from '@/infrastructure/persistence/file/validate';
 
 type Row<Required extends string, Nullable extends string> = {
   [key in Required]: string;

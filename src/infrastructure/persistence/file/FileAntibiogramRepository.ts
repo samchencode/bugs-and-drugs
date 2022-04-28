@@ -7,12 +7,13 @@ import type { FileSystem } from '@/infrastructure/filesystem/FileSystem';
 import type {
   AtlasRow,
   AtlasRowArray,
-} from '@/infrastructure/persistence/csv/AtlasCsv';
-import AtlasCsv from '@/infrastructure/persistence/csv/AtlasCsv';
-import DataCsv from '@/infrastructure/persistence/csv/DataCsv';
-import * as f from '@/infrastructure/persistence/csv/antibiogramAttributeFactories';
+} from '@/infrastructure/persistence/file/AtlasCsv';
+import AtlasCsv from '@/infrastructure/persistence/file/AtlasCsv';
+import DataCsv from '@/infrastructure/persistence/file/DataCsv';
+import * as f from '@/infrastructure/persistence/file/antibiogramAttributeFactories';
+import type { MetadataJson } from '@/infrastructure/persistence/file/MetadataJson';
 
-class CsvAntibiogramRepository implements AntibiogramRepository {
+class FileAntibiogramRepository implements AntibiogramRepository {
   #fs: FileSystem;
   #atlas: AtlasRowArray | null = null;
 
@@ -33,16 +34,21 @@ class CsvAntibiogramRepository implements AntibiogramRepository {
     });
     if (!meta)
       throw new Error('Unable to find antibiogram with id of ' + id.getValue());
-    return this.#getByMeta(meta);
+    return this.#getByAtlasRow(meta);
   }
 
   async getAll(): Promise<Antibiogram[]> {
     if (!this.#atlas) this.#atlas = await this.#loadAtlas();
-    return Promise.all(this.#atlas.map((meta) => this.#getByMeta(meta)));
+    return Promise.all(this.#atlas.map((meta) => this.#getByAtlasRow(meta)));
   }
 
-  async #getByMeta(meta: AtlasRow) {
-    const csv = await this.#fs.getDataFile(meta['csv']).getContents();
+  async #getByAtlasRow(atlasRow: AtlasRow) {
+    const csv = await this.#fs.getDataFile(atlasRow['csv']).getContents();
+    const metadata =
+      atlasRow['metadata'] &&
+      (JSON.parse(
+        await this.#fs.getDataFile(atlasRow['metadata']).getContents()
+      ) as MetadataJson);
     const data = new DataCsv(csv).parse().map(
       (r) =>
         new SensitivityData({
@@ -56,21 +62,24 @@ class CsvAntibiogramRepository implements AntibiogramRepository {
           sampleInfo: r['sample_info'] ? f.info(r['sample_info']) : undefined,
         })
     );
-    const id = f.id(meta['antibiogram_id']);
+    const id = f.id(atlasRow['antibiogram_id']);
 
     return new Antibiogram(id, data, {
-      info: meta['sample_info'] ? f.info(meta['sample_info']) : undefined,
-      gram: meta['gram'] ? f.gram(meta['gram']) : undefined,
+      info: atlasRow['sample_info']
+        ? f.info(atlasRow['sample_info'])
+        : undefined,
+      gram: atlasRow['gram'] ? f.gram(atlasRow['gram']) : undefined,
       place:
-        meta['region'] && meta['institution']
-          ? f.place(meta['region'], meta['institution'])
+        atlasRow['region'] && atlasRow['institution']
+          ? f.place(atlasRow['region'], atlasRow['institution'])
           : undefined,
       interval:
-        meta['year_month_start'] && meta['year_month_end']
-          ? f.interval(meta['year_month_start'], meta['year_month_end'])
+        atlasRow['year_month_start'] && atlasRow['year_month_end']
+          ? f.interval(atlasRow['year_month_start'], atlasRow['year_month_end'])
           : undefined,
+      metadata: metadata ? f.metadata(metadata) : undefined,
     });
   }
 }
 
-export default CsvAntibiogramRepository;
+export default FileAntibiogramRepository;
