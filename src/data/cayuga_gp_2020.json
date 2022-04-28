@@ -1,0 +1,30 @@
+{
+  "column-order": [
+    "AMPICILLIN",
+    "CEFTRIAXONE",
+    "CEFOTAXIME",
+    "AUGMENTIN",
+    "AZITHROMYCIN",
+    "CEFACLOR",
+    "CEFUROXIME",
+    "CLINDAMYCIN",
+    "ERYTHROMYCIN",
+    "GENTAMICIN",
+    "LEVOFLOXACIN",
+    "OXACILLIN",
+    "PENICILLIN",
+    "TETRACYCLINE",
+    "VANCOMYCIN",
+    "NITROFURANTOIN",
+    "TRIMETH/SULFA"
+  ],
+  "row-order": [
+    "Enterococcus faecium",
+    "Enterococcus faecalis",
+    "Staph aureus(total)",
+    "MRSA",
+    "non-MRSA",
+    "Beta Strep, Grp B",
+    "Strep pneumoniae"
+  ]
+}

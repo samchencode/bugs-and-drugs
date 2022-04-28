@@ -1,0 +1,33 @@
+{
+  "column-order": [
+    "Nitrofurantoin--Urine use only",
+    "Tetracycline",
+    "Levofloxacin",
+    "Ceftriaxone",
+    "Ciprofloxacin",
+    "Gentamicin",
+    "Cefazolin",
+    "Clindamycin",
+    "Cefepime",
+    "Vancomycin",
+    "Ceftazidime",
+    "Piperacillin/tazobactam",
+    "Meropenem",
+    "Penicillin",
+    "Oxacillin",
+    "Trimethroprim/sulfamethoxazole",
+    "Ampicillin",
+    "Erythromycin"
+  ],
+  "row-order": [
+    "E. COLI",
+    "PSEUDOMONAS AERUGINOSA",
+    "KLEB.PNEUMO.",
+    "PROTEUS MIRABILIS",
+    "ACINETOBACTER BAUMANNII",
+    "ENTEROBACTER CLOACAE",
+    "MORGANELLA MORGANII",
+    "S. MALTOPHILIA (Inpt + Outpt)",
+    "HAEMOPHILUS INFLUENZAE (Inpt +Outpt)"
+  ]
+}

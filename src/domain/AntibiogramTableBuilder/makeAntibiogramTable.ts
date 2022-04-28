@@ -1,4 +1,5 @@
 import type Antibiogram from '@/domain/Antibiogram';
+import { ColumnOrder, RowOrder } from '@/domain/Antibiogram';
 import CellInfo from '@/domain/AntibiogramTableBuilder/CellInfo';
 import type ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
 import ColumnInfoAssembler from '@/domain/AntibiogramTableBuilder/ColumnInfoAssembler';
@@ -60,8 +61,14 @@ function makeAntibiogramTable(abg: Antibiogram) {
     factory.makeEmptyMatrix(nRow, nCol)
   );
 
+  const { metadata } = abg;
+
   return makeTable(matrix, {
     labels: { rows: rowLabels, columns: columnLabels },
+    order: {
+      rows: metadata.get(RowOrder.slug)?.getValue(),
+      columns: metadata.get(ColumnOrder.slug)?.getValue(),
+    },
   });
 }
 

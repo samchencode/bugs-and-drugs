@@ -1,0 +1,31 @@
+{
+  "column-order": [
+    "Nitrofurantoin--Urine only",
+    "Tetracycline",
+    "Levofloxacin",
+    "Ceftriaxone",
+    "Ciprofloxacin",
+    "Gentamicin",
+    "Cefazolin",
+    "Clindamycin",
+    "Cefepime",
+    "Vancomycin",
+    "Ceftazidime",
+    "Piperacillin/tazobactam",
+    "Meropenem",
+    "Penicillin",
+    "Oxacillin",
+    "Trimethroprim/sulfamethoxazole",
+    "Ampicillin",
+    "Erythromycin",
+    "AMPICILLIN SULBACTAM"
+  ],
+  "row-order": [
+    "ENTEROCOCCUS FAECALIS",
+    "ENTEROCOCCUS FAECIUM",
+    "COAGULASE NEG. STAPH",
+    "MRSA",
+    "MSSA",
+    "STREP. PNEUMONIAE (All)"
+  ]
+}

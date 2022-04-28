@@ -1,0 +1,23 @@
+{
+  "column-order": [
+    "AMOX/CLAV",
+    "AMPICILLIN",
+    "AZTREONAM",
+    "CEFAZOLIN",
+    "CEFTRIAXONE",
+    "CEFIPIME",
+    "CIPROFLOXACIN",
+    "GENTAMICIN",
+    "IMIPENIM",
+    "LEVOFLOXACIN",
+    "MEROPENEM",
+    "NITROFURANTOIN",
+    "PIP/TAZOBACTAM",
+    "TRIMETH/SUFLA"
+  ],
+  "row-order": [
+    "Escherichia coli",
+    "Klebsiella pneumoniae",
+    "Proteus mirabilis"
+  ]
+}
