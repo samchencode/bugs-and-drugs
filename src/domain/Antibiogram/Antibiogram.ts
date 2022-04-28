@@ -14,12 +14,14 @@ import {
   type default as Interval,
   DefaultInterval,
 } from '@/domain/Antibiogram/Interval';
+import Metadata from '@/domain/Antibiogram/Metadata';
 
 interface AntibiogramParams {
   info: SampleInfo;
   gram: GramValue;
   place: Place;
   interval: Interval;
+  metadata: Metadata;
 }
 
 class Antibiogram extends Entity {
@@ -30,6 +32,7 @@ class Antibiogram extends Entity {
   gram: GramValue;
   place: Place;
   interval: Interval;
+  metadata: Metadata;
 
   constructor(
     id: AntibiogramId,
@@ -48,6 +51,7 @@ class Antibiogram extends Entity {
     this.gram = params?.gram ?? GramValues.UNSPECIFIED;
     this.place = params?.place ?? new UnknownPlace();
     this.interval = params?.interval ?? new DefaultInterval();
+    this.metadata = params?.metadata ?? new Metadata([]);
   }
 
   isEmpty() {

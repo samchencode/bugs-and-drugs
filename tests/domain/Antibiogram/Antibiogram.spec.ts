@@ -9,6 +9,8 @@ import Antibiogram, {
   Settings,
   GramValues as G,
   Interval,
+  Metadata,
+  Footnotes,
 } from '@/domain/Antibiogram';
 import Place from '@/domain/Antibiogram/Place';
 
@@ -69,6 +71,14 @@ describe('Antibiogram', () => {
 
       expect(publishedAt.getFullYear()).toBe(2020);
       expect(expiresAt.getFullYear()).toBe(2021);
+    });
+
+    it('should create antibiogram with metadata', () => {
+      const antibiogram = new Antibiogram(id, data, {
+        metadata: new Metadata([new Footnotes(['my footnote'])]),
+      });
+      const result = antibiogram.metadata.get('footnotes')?.getValue();
+      expect(result).toEqual(['my footnote']);
     });
   });
 
