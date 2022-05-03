@@ -1,4 +1,5 @@
 import type Cell from '@/domain/Table/Cell';
+import { EmptyCell } from '@/domain/Table/Cell';
 import CompositeTable from '@/domain/Table/CompositeTable';
 import type { Group } from '@/domain/Table/Group';
 import Label from '@/domain/Table/Label/Label';
@@ -8,26 +9,34 @@ import type { TableParams } from '@/domain/Table/TableParams';
 
 class Labeled<T extends Cell> implements TableDecorator<T> {
   #table: Table<T>;
-  #label: string;
+  #label: TableParams['label'];
+  #makeEmptyCell: () => T = defaultMakeEmptyCell;
 
-  constructor(table: Table<T>, label: string) {
+  constructor(
+    table: Table<T>,
+    label: TableParams['label'],
+    makeEmptyCell: () => T = defaultMakeEmptyCell
+  ) {
     this.#table = table;
     this.#label = label;
+    this.#makeEmptyCell = makeEmptyCell;
   }
 
   getData(): T[][] {
-    let data = this.#table.getData();
-    if (this.#label) data = data.splice(0, 0, new Array(data[0].length));
+    const data = this.#table.getData().slice();
+    data.splice(0, 0, new Array(data[0].length).fill(this.#makeEmptyCell()));
     return data;
   }
 
   getShape(): [number, number] {
-    return this.#table.getShape();
+    const [r, c] = this.#table.getShape();
+    return [r + 1, c]; //add one row for the label
   }
 
   getRowLabels(): Label[] {
     const labels = this.#table.getRowLabels();
-    return labels.splice(0, 0, new Label(this.#label));
+    labels.splice(0, 0, new Label(this.#label));
+    return labels;
   }
 
   getColumnLabels(): Label[] {
@@ -47,6 +56,9 @@ class Labeled<T extends Cell> implements TableDecorator<T> {
   merge(table: Table<T>): Table<T> {
     return new CompositeTable(this, table);
   }
+}
+function defaultMakeEmptyCell<T extends Cell>(): T {
+  return new EmptyCell() as T;
 }
 
 export default Labeled;

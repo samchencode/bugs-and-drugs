@@ -6,6 +6,7 @@ import BaseTable from '@/domain/Table/BaseTable';
 import type { Table as TableInterface } from '@/domain/Table/Table';
 import { RowCollapsible, Ordered } from '@/domain/Table/TableDecorator';
 import Table from '@/domain/Table/Facade';
+import Labeled from '@/domain/Table/TableDecorator/Labeled/Labeled';
 
 function makeTable<T extends Cell>(
   data: T[][],
@@ -15,6 +16,7 @@ function makeTable<T extends Cell>(
   let table: TableInterface<T> = new BaseTable(data, params);
   table = new RowCollapsible(table);
   if (params?.order) table = new Ordered(table, params.order);
+  if (params?.label) table = new Labeled(table, params.label);
   return new Table(table);
 }
 

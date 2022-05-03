@@ -13,6 +13,7 @@ interface TableParams {
     rows?: string[];
     columns?: string[];
   };
+  label: string;
 }
 
 export type { TableParams };

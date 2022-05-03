@@ -8,6 +8,8 @@ import {
 } from '@/domain/Table';
 import type { Table } from '@/domain/Table';
 import type { AlertLevel } from '@/domain/Table/AlertLevel';
+import BaseTable from '@/domain/Table/BaseTable';
+import Labeled from '@/domain/Table/TableDecorator/Labeled/Labeled';
 
 describe('Table', () => {
   class D extends Cell {
@@ -625,6 +627,44 @@ describe('Table', () => {
 
       const dataStrings = table.getCells()[0].map((c) => c.toString());
       expect(dataStrings).toEqual(['110', '100', '120']);
+    });
+  });
+
+  describe('Labeled Table', () => {
+    it('should insert a given table label in the first row label position', () => {
+      const label = 'Gram Negative';
+      const data = [
+        [new D(10), new D(20), new D(30)],
+        [new D(40), new D(50), new D(60)],
+        [new D(70), new D(80), new D(90)],
+      ];
+      const labels = {
+        columns: [new L('c1'), new L('c2'), new L('c3')],
+        rows: [new L('r1'), new L('r2'), new L('r3')],
+      };
+      const table = makeTable(data, { labels, label });
+      expect(table.getRowLabels()[0].toString()).toEqual(label);
+    });
+
+    it('should insert an empty array in the first row of table data when a label is given', () => {
+      const label = 'Gram Negative';
+      const data = [
+        [new D(10), new D(20), new D(30)],
+        [new D(40), new D(50), new D(60)],
+        [new D(70), new D(80), new D(90)],
+      ];
+      const labels = {
+        columns: [new L('c1'), new L('c2'), new L('c3')],
+        rows: [new L('r1'), new L('r2'), new L('r3')],
+      };
+
+      const table = makeTable(data, { labels, label });
+      expect(table.getShape()).toEqual([4, 3]);
+      const firstRow = table.getCells()[0].map((cell) => {
+        return cell.toString();
+      });
+      expect(table.getShape()).toEqual([4, 3]);
+      expect(firstRow).toEqual(['NA', 'NA', 'NA']);
     });
   });
 });
