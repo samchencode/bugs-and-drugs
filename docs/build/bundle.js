@@ -6855,8 +6855,8 @@ var app = (function () {
           __classPrivateFieldSet(this, _SortBehavior_mapping, originalOrder
               .slice()
               .sort((o1, o2) => {
-              const idx1 = newOrder.findIndex((o) => o.match(o1));
-              const idx2 = newOrder.findIndex((o) => o.match(o2));
+              const idx1 = newOrder.findIndex((o) => o1.match(o));
+              const idx2 = newOrder.findIndex((o) => o2.match(o));
               if (idx1 < 0)
                   return 1;
               if (idx2 < 0)
