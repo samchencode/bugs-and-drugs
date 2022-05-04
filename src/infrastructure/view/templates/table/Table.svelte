@@ -19,7 +19,7 @@
 </script>
 
 <div class="table-container">
-  <table class="antibiogram-table">
+  <table class="antibiogram-table" rules="none">
     <thead>
       <tr>
         <EmptyCorner />

@@ -36,6 +36,8 @@ thead,
 tbody,
 tfoot {
   font-weight: normal;
+  border: none;
+  border-collapse: collapse;
 }
 
 main {
@@ -53,6 +55,7 @@ main {
   --main-surface-color: white;
   --main-on-surface-color: black;
   --main-surface-emphasis-color: #ccc;
+  --warn-color: #fffce8;
   --table-padding: 15px;
   --table-font-size: 15px;
   --table-heading-size: 140px;

@@ -23,7 +23,6 @@
     border-bottom: 1px solid #cccccc;
     border-left: 1px solid #cccccc;
     padding: var(--table-padding);
-    background-color: var(--main-bg-color);
   }
   .highlighted {
     background-color: var(--main-on-emphasis-color);

@@ -33,7 +33,6 @@
     width: min-content;
     max-width: 200px;
     z-index: 1;
-    background-color: var(--main-bg-color);
   }
 
   .organism-name {

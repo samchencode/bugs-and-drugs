@@ -4,11 +4,14 @@ import {
   Tooltip,
   EmptyCell,
   type LabelParams,
+  type AlertLevel,
+  AlertLevels,
 } from '@/domain/Table';
 import type RowInfo from '@/domain/AntibiogramTableBuilder/RowInfo';
 import type CellInfo from '@/domain/AntibiogramTableBuilder/CellInfo';
 import type ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
 import { Routes } from '@/domain/Antibiogram';
+import { IntegerNumberOfIsolates } from '@/domain/Antibiogram/NumberOfIsolates';
 
 class TableElementFactory {
   makeCell(c: CellInfo) {
@@ -18,20 +21,32 @@ class TableElementFactory {
     return new FilledCell(value);
   }
 
-  makeLabel(text: string, tooltipText?: string) {
+  makeLabel(text: string, tooltip?: Tooltip, alert?: AlertLevel) {
     const params: Partial<LabelParams> = {};
-    if (tooltipText) params.tooltip = new Tooltip(tooltipText);
+    if (tooltip) params.tooltip = tooltip;
+    if (alert) params.alert = alert;
+
     return new Label(text, params);
   }
 
   makeRowLabel(r: RowInfo) {
+    const isolates = r.data[0].getIsolates();
+    let hasEnoughIsolates = false;
+    let alert = AlertLevels.NONE;
+    if (isolates instanceof IntegerNumberOfIsolates) {
+      hasEnoughIsolates = isolates.isEnough();
+    }
+
     const tooltips = r.info
       .itemsToArray()
       .map((si) => new Tooltip(si.toString()));
     tooltips.push(new Tooltip(`${r.isolates} Isolates`));
-    const tooltip = new Tooltip(tooltips);
+    if (!hasEnoughIsolates) {
+      tooltips.push(new Tooltip('\u26a0 low or unknown number of isolates'));
+      alert = AlertLevels.WARN;
+    }
     const labelText = `${r.organism.getName()}`;
-    return this.makeLabel(labelText, tooltip.toString());
+    return this.makeLabel(labelText, new Tooltip(tooltips), alert);
   }
 
   makeColumnLabel(c: ColumnInfo) {
@@ -42,11 +57,11 @@ class TableElementFactory {
       .join(', ');
 
     const si = c.info.itemsToArray();
-    const tooltipLines = [si, route]
+    const tooltips = [si, route]
       .map((s) => '' + s)
       .filter((s) => s !== '')
-      .join('\n');
-    return this.makeLabel(c.antibiotic.getName(), tooltipLines);
+      .map((s) => new Tooltip(s));
+    return this.makeLabel(c.antibiotic.getName(), new Tooltip(tooltips));
   }
 
   makeEmptyMatrix(nRow: number, nCol: number): EmptyCell[][] {
