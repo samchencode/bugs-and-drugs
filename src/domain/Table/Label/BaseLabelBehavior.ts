@@ -27,6 +27,8 @@ abstract class BaseLabelBehavior extends Cell {
   getAlertLevel(): AlertLevel {
     return this.getCell().getAlertLevel();
   }
+
+  abstract isBold(): boolean;
 }
 
 export default BaseLabelBehavior;

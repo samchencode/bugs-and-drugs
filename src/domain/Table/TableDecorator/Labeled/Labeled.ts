@@ -35,7 +35,7 @@ class Labeled<T extends Cell> implements TableDecorator<T> {
 
   getRowLabels(): Label[] {
     const labels = this.#table.getRowLabels();
-    labels.splice(0, 0, new Label(this.#label));
+    labels.splice(0, 0, new Label(this.#label, { bold: true }));
     return labels;
   }
 

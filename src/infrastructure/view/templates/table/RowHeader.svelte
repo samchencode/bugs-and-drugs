@@ -15,7 +15,7 @@
   on:blur
   on:mouseout
 >
-  <div class="organism-name ">
+  <div class="organism-name" class:bold={rowHeader.isBold()}>
     {rowHeader.getValue()}
   </div>
   <ToolTip tooltip={rowHeader.getTooltip()} />
@@ -40,6 +40,10 @@
     font-size: var(--table-font-size);
     display: inline-block;
     position: relative;
+  }
+
+  .bold {
+    font-weight: 900;
   }
 
   .highlighted {

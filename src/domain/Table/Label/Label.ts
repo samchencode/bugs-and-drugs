@@ -33,6 +33,10 @@ class Label extends Cell {
   getAlertLevel(): AlertLevel {
     return this.#label.getAlertLevel();
   }
+
+  isBold(): boolean {
+    return this.#label.isBold();
+  }
 }
 
 export default Label;
