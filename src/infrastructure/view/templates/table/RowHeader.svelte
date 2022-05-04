@@ -37,7 +37,6 @@
   }
 
   .organism-name {
-    font-weight: bold;
     font-size: var(--table-font-size);
     display: inline-block;
     position: relative;

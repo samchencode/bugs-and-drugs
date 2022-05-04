@@ -12,11 +12,7 @@
   on:blur
   on:mouseout
 >
-  {#if cell.getValue() == 'NA'}
-    -
-  {:else}
-    {cell.getValue()}
-  {/if}
+  {cell.getValue()}
   <ToolTip tooltip={cell.getTooltip()} />
 </td>
 

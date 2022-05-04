@@ -12,6 +12,8 @@ import {
   type Group,
   type Range,
 } from '@/domain/Table/Group';
+import Labeled from '@/domain/Table/TableDecorator/Labeled/Labeled';
+import { Ordered } from '@/domain/Table/TableDecorator';
 
 class TableFacade {
   #table: Table<Cell>;
@@ -67,8 +69,21 @@ class TableFacade {
     return this.#table;
   }
 
-  merge(table: TableFacade): TableFacade {
-    const newTable = this.#table.merge(table.getBase());
+  merge(
+    table: TableFacade,
+    theirSubheader?: string,
+    ourSubheader?: string,
+    params?: Partial<TableParams>
+  ): TableFacade {
+    let theirTable = table.getBase();
+    if (theirSubheader) theirTable = new Labeled(theirTable, theirSubheader);
+
+    let ourTable = this.#table;
+    if (ourSubheader) ourTable = new Labeled(ourTable, ourSubheader);
+
+    let newTable = ourTable.merge(theirTable);
+    if (params?.order) newTable = new Ordered(newTable, params.order);
+
     return new TableFacade(newTable);
   }
 

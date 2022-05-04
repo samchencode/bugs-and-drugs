@@ -1,5 +1,5 @@
 import type Antibiogram from '@/domain/Antibiogram';
-import { RowOrder } from '@/domain/Antibiogram';
+import { ColumnOrder, RowOrder } from '@/domain/Antibiogram';
 import CellInfo from '@/domain/AntibiogramTableBuilder/CellInfo';
 import type ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
 import ColumnInfoAssembler from '@/domain/AntibiogramTableBuilder/ColumnInfoAssembler';
@@ -79,7 +79,16 @@ function makeCompositeAntibiogramTable(abg1: Antibiogram, abg2: Antibiogram) {
   });
   const table1 = makeAntibiogramTable(abgs[0]);
   const table2 = makeAntibiogramTable(abgs[1]);
-  return table1.merge(table2);
+  return table1.merge(
+    table2,
+    abgs[1].gram.toString(),
+    abgs[0].gram.toString(),
+    {
+      order: {
+        columns: abg1.metadata.get(ColumnOrder.slug)?.getValue(),
+      },
+    }
+  );
 }
 
 export default function (abg1: Antibiogram, abg2?: Antibiogram) {

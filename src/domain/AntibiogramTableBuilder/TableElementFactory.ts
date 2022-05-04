@@ -28,8 +28,9 @@ class TableElementFactory {
     const tooltips = r.info
       .itemsToArray()
       .map((si) => new Tooltip(si.toString()));
+    tooltips.push(new Tooltip(`${r.isolates} Isolates`));
     const tooltip = new Tooltip(tooltips);
-    const labelText = `${r.organism.getName()} (${r.isolates})`;
+    const labelText = `${r.organism.getName()}`;
     return this.makeLabel(labelText, tooltip.toString());
   }
 

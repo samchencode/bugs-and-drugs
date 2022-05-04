@@ -9,7 +9,7 @@ class WebTableElement {
 
   constructor(id: number, cell: Cell) {
     this.id = id;
-    this.#value = cell.getValue();
+    this.#value = cell.getValue() === 'NA' ? '\u00a0' : cell.getValue();
     this.#tooltip = cell.getTooltip().toString();
   }
 

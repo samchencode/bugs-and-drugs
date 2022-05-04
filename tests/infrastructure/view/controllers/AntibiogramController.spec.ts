@@ -1,4 +1,5 @@
 import ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
+import ShowGramPositiveAndNegativeAntibiogramAction from '@/application/ShowGramPositiveAndNegativeAntibiogramAction';
 import FakeAntibiogramRepository from '@/infrastructure/persistence/fake/FakeAntibiogramRepository';
 import AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
 
@@ -8,7 +9,8 @@ describe('Table Controller', () => {
   beforeEach(() => {
     const repo = new FakeAntibiogramRepository();
     const action = new ShowAntibiogramAction(repo);
-    controller = new AntibiogramController(action);
+    const action2 = new ShowGramPositiveAndNegativeAntibiogramAction(repo);
+    controller = new AntibiogramController(action, action2);
   });
 
   it('should present a specified table', () => {
@@ -22,6 +24,20 @@ describe('Table Controller', () => {
       expect(table.columnHeaders).toBeDefined();
 
       expect(table.grid.length).toBe(3);
+    });
+  });
+
+  it('should present g+ and g- abgs in one table', () => {
+    return controller.showComposite('0', '2').then((abg) => {
+      expect(abg).not.toBeNull();
+      if (!abg) throw Error;
+
+      const { table } = abg;
+      expect(table.grid.length).toBe(9);
+
+      const labels = table.rowHeaders.map((l) => l.getValue());
+      expect(labels[0]).toBe('Gram Positive');
+      expect(labels[5]).toBe('Gram Positive and Negative');
     });
   });
 

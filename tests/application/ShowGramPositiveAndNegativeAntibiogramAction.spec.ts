@@ -12,9 +12,13 @@ describe('ShowAntibiogramAction', () => {
     action = new ShowGramPositiveAndNegativeAntibiogramAction(repo);
   });
 
-  it('should show antibiogram as table', () => {
+  it('should show two antibiogram on one table separated by header with gram value', () => {
     return action.execute('0', '2').then(({ table }) => {
-      expect(table.getCells().length).toBe(7);
+      expect(table.getCells().length).toBe(9);
+
+      const labels = table.getRowLabels().map((l) => l.toString());
+      expect(labels[0]).toBe('Gram Positive');
+      expect(labels[5]).toBe('Gram Positive and Negative');
     });
   });
 

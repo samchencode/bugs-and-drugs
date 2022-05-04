@@ -51,6 +51,15 @@ describe('make table using antibiogram', () => {
         expect.arrayContaining([expect.any(Array)])
       );
     });
+
+    it('creates table using G+ and G- antibiogram', () => {
+      const table = build(abg1, abg2);
+      expect(table.getCells().length).toBe(9);
+
+      const labels = table.getRowLabels().map((l) => l.toString());
+      expect(labels[0]).toBe('Gram Positive');
+      expect(labels[5]).toBe('Gram Positive and Negative');
+    });
   });
 
   describe('behavior', () => {

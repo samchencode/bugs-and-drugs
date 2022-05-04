@@ -1,19 +1,31 @@
 import type ShowAntibiogramAction from '@/application/ShowAntibiogramAction';
+import type ShowGramPositiveAndNegativeAntibiogramAction from '@/application/ShowGramPositiveAndNegativeAntibiogramAction';
 import WebAntibiogramPresenter, {
   type WebAntibiogram,
 } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
 import WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
 
 class AntibiogramController {
-  #action: ShowAntibiogramAction;
+  #showOne: ShowAntibiogramAction;
+  #showComposite: ShowGramPositiveAndNegativeAntibiogramAction;
 
-  constructor(showAntibiogramAction: ShowAntibiogramAction) {
-    this.#action = showAntibiogramAction;
+  constructor(
+    showAntibiogramAction: ShowAntibiogramAction,
+    showGramPositiveAndNegativeAntibiogramAction: ShowGramPositiveAndNegativeAntibiogramAction
+  ) {
+    this.#showOne = showAntibiogramAction;
+    this.#showComposite = showGramPositiveAndNegativeAntibiogramAction;
   }
 
   async show(id: string) {
     const presenter = new WebAntibiogramPresenter(new WebTablePresenter());
-    await this.#action.present(presenter, id);
+    await this.#showOne.present(presenter, id);
+    return presenter.buildViewModel();
+  }
+
+  async showComposite(id1: string, id2: string) {
+    const presenter = new WebAntibiogramPresenter(new WebTablePresenter());
+    await this.#showComposite.present(presenter, id1, id2);
     return presenter.buildViewModel();
   }
 
