@@ -14,6 +14,12 @@
 <main>
   {#if !ids || ids.length === 0}
     <p>No antibiogram selected...</p>
+  {:else if ids.length === 2}
+    {#await controller.showComposite(ids[0], ids[1])}
+      <p>Loading antibiograms</p>
+    {:then vm}
+      <Antibiogram {vm} />
+    {/await}
   {:else}
     {#await controller.showMany(ids)}
       <p>Loading antibiograms</p>

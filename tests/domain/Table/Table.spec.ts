@@ -271,6 +271,30 @@ describe('Table', () => {
         labels.columns.map((x) => x.toString())
       );
     });
+
+    it('should merge two tables by row and column names', () => {
+      const data = [
+        [new D(130), new D(140), new D(150), new D(160)],
+        [new D(170), new D(180), new D(190), new D(200)],
+      ];
+
+      const labels = {
+        columns: [new L('c1'), new L('c3'), new L('c4'), new L('c5')],
+        rows: [new L('r1'), new L('r5')],
+      };
+
+      const tableToMerge = makeTable(data, { labels });
+      const mergedTable = table.merge(tableToMerge);
+
+      expect(mergedTable.getShape()).toEqual([5, 5]);
+
+      const cells = mergedTable
+        .getCells()
+        .map((r) => r.map((c) => c.toString()));
+
+      expect(cells[0]).toEqual(['130', '20', '140', '150', '160']);
+      expect(cells[4]).toEqual(['170', 'NA', '180', '190', '200']);
+    });
   });
 
   describe('row, column, group facades', () => {
@@ -555,6 +579,90 @@ describe('Table', () => {
         data[4],
       ]);
       expect(values).toEqual(expectedValues);
+    });
+
+    it('should sort rows given sort order', () => {
+      const order = {
+        rows: ['r4', 'r2', 'r3'],
+      };
+
+      const table = makeTable(data, { labels, order });
+
+      const labelStrings = table.getRowLabels().map((l) => l.toString());
+      expect(labelStrings).toEqual(['r4', 'r2', 'r3', 'r1']);
+
+      const dataStrings = table.getCells().map((r) => r[0].toString());
+      expect(dataStrings).toEqual(['100', '40', '70', '10']);
+    });
+
+    it('should sort columns given sort order', () => {
+      const order = {
+        columns: ['c2', 'c1', 'c3'],
+      };
+
+      const table = makeTable(data, { labels, order });
+
+      const labelStrings = table.getColumnLabels().map((l) => l.toString());
+      expect(labelStrings).toEqual(['c2', 'c1', 'c3']);
+
+      const dataStrings = table.getCells()[0].map((c) => c.toString());
+      expect(dataStrings).toEqual(['20', '10', '30']);
+    });
+
+    it('should sort both rows & columns given sort order', () => {
+      const order = {
+        rows: ['r4', 'r2', 'r3'],
+        columns: ['c2', 'c1', 'c3'],
+      };
+
+      const table = makeTable(data, { labels, order });
+
+      const rowLabelStrings = table.getRowLabels().map((l) => l.toString());
+      expect(rowLabelStrings).toEqual(['r4', 'r2', 'r3', 'r1']);
+
+      const colLabelStrings = table.getColumnLabels().map((l) => l.toString());
+      expect(colLabelStrings).toEqual(['c2', 'c1', 'c3']);
+
+      const dataStrings = table.getCells()[0].map((c) => c.toString());
+      expect(dataStrings).toEqual(['110', '100', '120']);
+    });
+  });
+
+  describe('Labeled Table', () => {
+    it('should insert a given table label in the first row label position', () => {
+      const label = 'Gram Negative';
+      const data = [
+        [new D(10), new D(20), new D(30)],
+        [new D(40), new D(50), new D(60)],
+        [new D(70), new D(80), new D(90)],
+      ];
+      const labels = {
+        columns: [new L('c1'), new L('c2'), new L('c3')],
+        rows: [new L('r1'), new L('r2'), new L('r3')],
+      };
+      const table = makeTable(data, { labels, label });
+      expect(table.getRowLabels()[0].toString()).toEqual(label);
+    });
+
+    it('should insert an empty array in the first row of table data when a label is given', () => {
+      const label = 'Gram Negative';
+      const data = [
+        [new D(10), new D(20), new D(30)],
+        [new D(40), new D(50), new D(60)],
+        [new D(70), new D(80), new D(90)],
+      ];
+      const labels = {
+        columns: [new L('c1'), new L('c2'), new L('c3')],
+        rows: [new L('r1'), new L('r2'), new L('r3')],
+      };
+
+      const table = makeTable(data, { labels, label });
+      expect(table.getShape()).toEqual([4, 3]);
+      const firstRow = table.getCells()[0].map((cell) => {
+        return cell.toString();
+      });
+      expect(table.getShape()).toEqual([4, 3]);
+      expect(firstRow).toEqual(['NA', 'NA', 'NA']);
     });
   });
 });

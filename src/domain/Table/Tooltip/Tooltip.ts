@@ -32,7 +32,9 @@ class Tooltip extends ValueObject {
   }
 
   protected isIdentical(t: Tooltip): boolean {
-    return this.#tooltip.is(t);
+    if (this.toString() !== t.toString()) return false;
+    if (!this.getAlertLevel().is(t.getAlertLevel())) return false;
+    return true;
   }
 }
 

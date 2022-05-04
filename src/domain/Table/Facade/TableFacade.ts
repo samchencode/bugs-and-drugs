@@ -12,6 +12,7 @@ import {
   type Group,
   type Range,
 } from '@/domain/Table/Group';
+import { Ordered, Labeled } from '@/domain/Table/TableDecorator';
 
 class TableFacade {
   #table: Table<Cell>;
@@ -61,6 +62,28 @@ class TableFacade {
 
   getColumnLabels(): Label[] {
     return this.#table.getColumnLabels();
+  }
+
+  getBase() {
+    return this.#table;
+  }
+
+  merge(
+    table: TableFacade,
+    theirSubheader?: string,
+    ourSubheader?: string,
+    params?: Partial<TableParams>
+  ): TableFacade {
+    let theirTable = table.getBase();
+    if (theirSubheader) theirTable = new Labeled(theirTable, theirSubheader);
+
+    let ourTable = this.#table;
+    if (ourSubheader) ourTable = new Labeled(ourTable, ourSubheader);
+
+    let newTable = ourTable.merge(theirTable);
+    if (params?.order) newTable = new Ordered(newTable, params.order);
+
+    return new TableFacade(newTable);
   }
 
   #collapseRowGroup(old: Group) {

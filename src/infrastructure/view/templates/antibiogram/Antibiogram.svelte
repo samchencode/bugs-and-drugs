@@ -11,7 +11,10 @@
     <NoTable />
   {:else}
     <header class="header">
-      <h1 class="header-title">{vm.gram}</h1>
+      <h1 class="header-title">{vm.info}</h1>
+      <ul>
+        <li>{vm.publishedAt} {'\u2212'} {vm.expiresAt}</li>
+      </ul>
     </header>
     <Table table={vm.table} />
   {/if}
@@ -26,11 +29,12 @@
 
   .header {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: var(--space-md);
   }
 
   .header-title {
     font-size: var(--font-lg);
-    text-align: center;
   }
 </style>

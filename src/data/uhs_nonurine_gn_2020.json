@@ -1,0 +1,28 @@
+{
+  "column-order": [
+    "Ampicillin",
+    "Penicillin",
+    "Piperacillin-tazobactam",
+    "Oxacillin",
+    "Cefazolin",
+    "Ceftriaxone",
+    "Cefepime",
+    "Meropenem",
+    "Gentamicin",
+    "Tobramicin",
+    "Ciprofloxacin",
+    "Levofloxacin",
+    "Sulfamethox-trimethoprim",
+    "Erythromycin",
+    "Clindamycin",
+    "Tetracycline",
+    "Vancomycin"
+  ],
+  "row-order": [
+    "Enterobacter cloacae",
+    "Escherichia coli",
+    "Klebsiella pneumoniae",
+    "Proteus mirabilis",
+    "Pseudomonas aeruginosa"
+  ]
+}

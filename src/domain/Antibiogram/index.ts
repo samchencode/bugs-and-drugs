@@ -26,3 +26,9 @@ export {
 export { GramValues } from '@/domain/Antibiogram/GramValue';
 export { default as Interval } from '@/domain/Antibiogram/Interval';
 export { default as Place } from '@/domain/Antibiogram/Place';
+export {
+  Metadata,
+  Footnotes,
+  RowOrder,
+  ColumnOrder,
+} from '@/domain/Antibiogram/Metadata';

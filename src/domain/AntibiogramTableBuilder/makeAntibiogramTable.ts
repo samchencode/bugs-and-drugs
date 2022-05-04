@@ -1,4 +1,5 @@
 import type Antibiogram from '@/domain/Antibiogram';
+import { ColumnOrder, RowOrder } from '@/domain/Antibiogram';
 import CellInfo from '@/domain/AntibiogramTableBuilder/CellInfo';
 import type ColumnInfo from '@/domain/AntibiogramTableBuilder/ColumnInfo';
 import ColumnInfoAssembler from '@/domain/AntibiogramTableBuilder/ColumnInfoAssembler';
@@ -60,9 +61,37 @@ function makeAntibiogramTable(abg: Antibiogram) {
     factory.makeEmptyMatrix(nRow, nCol)
   );
 
+  const { metadata } = abg;
+
   return makeTable(matrix, {
     labels: { rows: rowLabels, columns: columnLabels },
+    order: {
+      rows: metadata.get(RowOrder.slug)?.getValue(),
+    },
   });
 }
 
-export default makeAntibiogramTable;
+function makeCompositeAntibiogramTable(abg1: Antibiogram, abg2: Antibiogram) {
+  const abgs = [abg1, abg2].sort((a1, a2) => {
+    if (a1.gram.toString() < a2.gram.toString()) return -1;
+    if (a1.gram.toString() > a2.gram.toString()) return 1;
+    return 0;
+  });
+  const table1 = makeAntibiogramTable(abgs[0]);
+  const table2 = makeAntibiogramTable(abgs[1]);
+  return table1.merge(
+    table2,
+    abgs[1].gram.toString(),
+    abgs[0].gram.toString(),
+    {
+      order: {
+        columns: abg1.metadata.get(ColumnOrder.slug)?.getValue(),
+      },
+    }
+  );
+}
+
+export default function (abg1: Antibiogram, abg2?: Antibiogram) {
+  if (abg2) return makeCompositeAntibiogramTable(abg1, abg2);
+  return makeAntibiogramTable(abg1);
+}

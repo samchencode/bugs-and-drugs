@@ -8,12 +8,14 @@ class FilledLabelBehavior extends BaseLabelBehavior {
   #title: string;
   #tooltip?: Tooltip;
   #alert?: AlertLevel;
+  #bold: boolean;
 
   constructor(title: string, params?: Partial<LabelParams>) {
     super();
     this.#title = title;
     this.#alert = params?.alert;
     this.#tooltip = params?.tooltip;
+    this.#bold = !!params?.bold;
   }
 
   protected makeCell() {
@@ -21,6 +23,9 @@ class FilledLabelBehavior extends BaseLabelBehavior {
       tooltip: this.#tooltip,
       alert: this.#alert,
     });
+  }
+  isBold(): boolean {
+    return this.#bold;
   }
 }
 

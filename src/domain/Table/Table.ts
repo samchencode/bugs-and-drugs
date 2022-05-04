@@ -10,6 +10,7 @@ interface Table<T extends Cell> {
   getColumnLabels(): Label[];
   getRowGroups(): Group[];
   clone(params: Partial<TableParams>): Table<T>;
+  merge(table: Table<T>): Table<T>;
 }
 
 export type { Table };

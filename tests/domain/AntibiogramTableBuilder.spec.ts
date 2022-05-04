@@ -28,11 +28,7 @@ describe('make table using antibiogram', () => {
       const rLabels = table.getRowLabels();
       const cLabels = table.getColumnLabels();
       expect(rLabels.map((x) => x.toString())).toEqual(
-        expect.arrayContaining([
-          'Klebsiella (unknown)',
-          'Pseudomonas (unknown)',
-          'Staph aureus (unknown)',
-        ])
+        expect.arrayContaining(['Klebsiella', 'Pseudomonas', 'Staph aureus'])
       );
       expect(cLabels.map((x) => x.toString())).toEqual(
         expect.arrayContaining(['Azithromycin', 'Ampicillin'])
@@ -50,6 +46,15 @@ describe('make table using antibiogram', () => {
       expect(table.getCells()).toEqual(
         expect.arrayContaining([expect.any(Array)])
       );
+    });
+
+    it('creates table using G+ and G- antibiogram', () => {
+      const table = build(abg1, abg2);
+      expect(table.getCells().length).toBe(9);
+
+      const labels = table.getRowLabels().map((l) => l.toString());
+      expect(labels[0]).toBe('Gram Positive');
+      expect(labels[5]).toBe('Gram Positive and Negative');
     });
   });
 
@@ -79,10 +84,10 @@ describe('make table using antibiogram', () => {
       const rows = table.getRows().map((r) => r.getLabel() + '');
       expect(rows).toEqual(
         expect.arrayContaining([
-          'Haemophilus influenza (500)',
-          'Haemophilus influenza (450)',
-          'Klebsiella (30)',
-          'Pseudomonas (30)',
+          'Haemophilus influenza',
+          'Haemophilus influenza',
+          'Klebsiella',
+          'Pseudomonas',
         ])
       );
     });

@@ -1,4 +1,4 @@
-import CsvMissingRequiredValueError from '@/infrastructure/persistence/csv/CsvMissingRequiredValueError';
+import CsvMissingRequiredValueError from '@/infrastructure/persistence/file/CsvMissingRequiredValueError';
 
 type Row<Required extends string> = {
   [key in Required]: string;
