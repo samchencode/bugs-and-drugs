@@ -23,7 +23,13 @@
     border-bottom: 1px solid #cccccc;
     border-left: 1px solid #cccccc;
     padding: var(--table-padding);
+    min-width: 52px;
   }
+
+  .sensitivity-data:first-of-type {
+    border-left: 0;
+  }
+
   .highlighted {
     background-color: var(--main-on-emphasis-color);
   }
