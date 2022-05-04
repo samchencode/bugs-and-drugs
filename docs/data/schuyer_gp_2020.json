@@ -1,0 +1,19 @@
+{
+  "column-order": [
+    "AMPICILLIN",
+    "CLINDAMYCIN",
+    "ERYTHROMYCIN",
+    "GENTAMICIN",
+    "LEVOFLOXACIN",
+    "OXACILLIN",
+    "TETRACYCLINE",
+    "VANCOMYCIN",
+    "NITROFURANTOIN",
+    "TRIMETH/SULFA"
+  ],
+  "row-order": [
+    "Enterococcus faecium",
+    "Enterococcus faecalis",
+    "Staph aureus(total)"
+  ]
+}
