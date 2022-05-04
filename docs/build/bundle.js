@@ -6855,8 +6855,8 @@ var app = (function () {
           __classPrivateFieldSet(this, _SortBehavior_mapping, originalOrder
               .slice()
               .sort((o1, o2) => {
-              const idx1 = newOrder.indexOf(o1);
-              const idx2 = newOrder.indexOf(o2);
+              const idx1 = newOrder.findIndex((o) => o.match(o1));
+              const idx2 = newOrder.findIndex((o) => o.match(o2));
               if (idx1 < 0)
                   return 1;
               if (idx2 < 0)
@@ -6886,8 +6886,12 @@ var app = (function () {
           _Ordered_params.set(this, void 0);
           __classPrivateFieldSet(this, _Ordered_table, table, "f");
           __classPrivateFieldSet(this, _Ordered_params, order, "f");
-          const columnLabels = table.getColumnLabels().map((l) => l.toString());
-          const rowLabels = table.getRowLabels().map((l) => l.toString());
+          const columnLabels = table
+              .getColumnLabels()
+              .map((l) => l.toString() + l.getTooltip().toString());
+          const rowLabels = table
+              .getRowLabels()
+              .map((l) => l.toString() + l.getTooltip().toString());
           __classPrivateFieldSet(this, _Ordered_rowBehavior, order.rows && new SortBehavior(order.rows, rowLabels), "f");
           __classPrivateFieldSet(this, _Ordered_columnBehavior, order.columns && new SortBehavior(order.columns, columnLabels), "f");
       }
