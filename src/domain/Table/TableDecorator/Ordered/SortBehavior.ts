@@ -5,8 +5,8 @@ class SortBehavior {
     this.#mapping = originalOrder
       .slice()
       .sort((o1, o2) => {
-        const idx1 = newOrder.indexOf(o1);
-        const idx2 = newOrder.indexOf(o2);
+        const idx1 = newOrder.findIndex((o) => o.match(o1));
+        const idx2 = newOrder.findIndex((o) => o.match(o2));
         if (idx1 < 0) return 1;
         if (idx2 < 0) return -1;
         return idx1 - idx2;
