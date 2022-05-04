@@ -8,8 +8,6 @@ import {
 } from '@/domain/Table';
 import type { Table } from '@/domain/Table';
 import type { AlertLevel } from '@/domain/Table/AlertLevel';
-import BaseTable from '@/domain/Table/BaseTable';
-import Labeled from '@/domain/Table/TableDecorator/Labeled/Labeled';
 
 describe('Table', () => {
   class D extends Cell {
