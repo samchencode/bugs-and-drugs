@@ -17,8 +17,12 @@ class Ordered<T extends Cell> implements TableDecorator<T> {
     this.#table = table;
     this.#params = order;
 
-    const columnLabels = table.getColumnLabels().map((l) => l.toString());
-    const rowLabels = table.getRowLabels().map((l) => l.toString());
+    const columnLabels = table
+      .getColumnLabels()
+      .map((l) => l.toString() + l.getTooltip().toString());
+    const rowLabels = table
+      .getRowLabels()
+      .map((l) => l.toString() + l.getTooltip().toString());
 
     this.#rowBehavior = order.rows && new SortBehavior(order.rows, rowLabels);
     this.#columnBehavior =
