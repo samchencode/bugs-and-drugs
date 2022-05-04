@@ -12,8 +12,7 @@ import {
   type Group,
   type Range,
 } from '@/domain/Table/Group';
-import Labeled from '@/domain/Table/TableDecorator/Labeled/Labeled';
-import { Ordered } from '@/domain/Table/TableDecorator';
+import { Ordered, Labeled } from '@/domain/Table/TableDecorator';
 
 class TableFacade {
   #table: Table<Cell>;

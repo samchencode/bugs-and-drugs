@@ -4,9 +4,12 @@ import type { TableParams } from '@/domain/Table/TableParams';
 import type Cell from '@/domain/Table/Cell';
 import BaseTable from '@/domain/Table/BaseTable';
 import type { Table as TableInterface } from '@/domain/Table/Table';
-import { RowCollapsible, Ordered } from '@/domain/Table/TableDecorator';
+import {
+  RowCollapsible,
+  Ordered,
+  Labeled,
+} from '@/domain/Table/TableDecorator';
 import Table from '@/domain/Table/Facade';
-import Labeled from '@/domain/Table/TableDecorator/Labeled/Labeled';
 
 function makeTable<T extends Cell>(
   data: T[][],
