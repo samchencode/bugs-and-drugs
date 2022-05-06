@@ -1,41 +1,41 @@
+import about from '@/infrastructure/view/templates/dialogues/about';
+import disclaimer from '@/infrastructure/view/templates/dialogues/disclaimer';
 import { writable, type Writable } from 'svelte/store';
 
 interface Modal {
   hidden: boolean;
   title: string;
   text: string;
-  hasInput: boolean;
-  input: string;
 }
 
 const modalStore: Writable<Modal> = writable({
   hidden: true,
   title: '',
   text: '',
-  hasInput: false,
-  input: '',
 });
 
-const { subscribe, set, update } = modalStore;
+const { subscribe, set } = modalStore;
 
-const setModal = (
-  hidden: boolean,
-  title: string,
-  text: string,
-  hasInput: boolean
-) => {
+const showModal = (title: string, text: string) =>
   set({
-    hidden: hidden,
+    hidden: false,
     title: title,
     text: text,
-    hasInput: hasInput,
-    input: '',
-  });
-};
-const closeModal = () =>
-  update(($modal) => {
-    $modal.hidden = true;
-    return $modal;
   });
 
-export const modal = { subscribe, setModal, closeModal };
+const showDisclaimer = () => showModal('Disclaimer', disclaimer);
+const showAbout = () => showModal('About Us', about);
+
+const hideModal = () =>
+  set({
+    hidden: true,
+    title: '',
+    text: '',
+  });
+
+export const modal = {
+  subscribe,
+  showDisclaimer,
+  showAbout,
+  hideModal,
+};

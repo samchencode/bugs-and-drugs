@@ -4,8 +4,6 @@
   import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
   import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
   import { modal } from '@/infrastructure/view/templates/modal/ModalStore';
-  import about from '@/infrastructure/view/templates/dialogues/about';
-  import disclaimer from '@/infrastructure/view/templates/dialogues/disclaimer';
 
   let vm: WebAntibiogram | null = null;
 
@@ -47,7 +45,7 @@
     <li
       class="nav-link"
       on:click={() => {
-        modal.setModal(false, 'About', about, false);
+        modal.showAbout();
         navMenuHidden = !navMenuHidden;
       }}
     >
@@ -56,7 +54,7 @@
     <li
       class="nav-link"
       on:click={() => {
-        modal.setModal(false, 'Disclaimer', disclaimer, false);
+        modal.showDisclaimer();
         navMenuHidden = !navMenuHidden;
       }}
     >

@@ -7,9 +7,7 @@
   <div
     class="dim-background"
     transition:fade
-    on:click={() => {
-      if (!$modal.hidden) modal.closeModal();
-    }}
+    on:click={() => !$modal.hidden && modal.hideModal()}
   />
   <div in:fade class="modal-container">
     <div class="modal-header">
@@ -22,9 +20,7 @@
     <h2
       name="close-outline"
       class="close-modal clickable"
-      on:click={() => {
-        modal.closeModal();
-      }}
+      on:click={() => modal.hideModal()}
     >
       CLOSE
     </h2>
