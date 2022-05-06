@@ -9,19 +9,15 @@
     transition:fade
     on:click={() => !$modal.hidden && modal.hideModal()}
   />
-  <div in:fade class="modal">
+  <div transition:fade class="modal">
     <div class="modal-header">
-      <h1 class="modal-header-text">{$modal.title}</h1>
+      <h1 class="modal-header-text">{$modal.header}</h1>
     </div>
     <p class="modal-text">
-      {$modal.text}
+      {$modal.body}
     </p>
-    <button
-      name="close-outline"
-      class="close-modal"
-      on:click={() => modal.hideModal()}
-    >
-      Close
+    <button class="close-modal" on:click={() => modal.hideModal()}>
+      {$modal.dismiss}
     </button>
   </div>
 {/if}
