@@ -1,7 +1,6 @@
 <script lang="ts">
   import { modal } from '@/infrastructure/view/templates/modal/ModalStore';
   import { fade } from 'svelte/transition';
-  modal.showAbout();
 </script>
 
 {#if !$modal.hidden}
