@@ -3,8 +3,8 @@
   import { link, location, querystring } from 'svelte-spa-router';
   import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
   import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
-  import About from '@/infrastructure/view/templates/General information/About.svelte';
-  import Disclaimer from '@/infrastructure/view/templates/General information/Disclaimer.svelte';
+  import { modal } from '@/infrastructure/view/templates/Modal/ModalStore';
+  import dialogues from '@/infrastructure/view/templates/Modal/Dialogues';
 
   let vm: WebAntibiogram | null = null;
 
@@ -17,8 +17,7 @@
   $: abgIds !== null && controller.show(abgIds[0]).then((abg) => (vm = abg));
 
   let navMenuHidden = true;
-  let infoAboutHidden = true;
-  let infoDisclaimerHidden = true;
+  let dialogue = new dialogues();
 </script>
 
 <nav>
@@ -45,20 +44,28 @@
     <ion-icon name="ellipsis-vertical" />
   </button>
   <ul class="nav-link-list" class:nav-link-list--hidden={navMenuHidden}>
-    <li class="nav-link" on:click={() => (infoAboutHidden = !infoAboutHidden)}>
+    <li
+      class="nav-link"
+      on:click={() => {
+        modal.setModal(false, 'About', dialogue.getAboutDialogue(), false);
+        navMenuHidden = !navMenuHidden;
+      }}
+    >
       About
-    </li>
-    <li class="nav-link" class:info-about--hidden={infoAboutHidden}>
-      <About />
     </li>
     <li
       class="nav-link"
-      on:click={() => (infoDisclaimerHidden = !infoDisclaimerHidden)}
+      on:click={() => {
+        modal.setModal(
+          false,
+          'Disclaimer',
+          dialogue.getDisclaimerDialogue(),
+          false
+        );
+        navMenuHidden = !navMenuHidden;
+      }}
     >
       Disclaimer
-    </li>
-    <li class="nav-link" class:info-disclaimer--hidden={infoDisclaimerHidden}>
-      <Disclaimer />
     </li>
   </ul>
 </nav>
@@ -119,12 +126,6 @@
   }
 
   .nav-link-list--hidden {
-    display: none;
-  }
-  .info-about--hidden {
-    display: none;
-  }
-  .info-disclaimer--hidden {
     display: none;
   }
   .nav-link {
