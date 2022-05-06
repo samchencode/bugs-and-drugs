@@ -4,8 +4,8 @@
   import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
   import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
   import { modal } from '@/infrastructure/view/templates/modal/ModalStore';
-  import about from '@/infrastructure/view/templates/modal/dialogues/About';
-  import disclaimer from '@/infrastructure/view/templates/modal/dialogues/disclaimer';
+  import about from '@/infrastructure/view/templates/dialogues/about';
+  import disclaimer from '@/infrastructure/view/templates/dialogues/disclaimer';
 
   let vm: WebAntibiogram | null = null;
 
