@@ -9,7 +9,7 @@
     transition:fade
     on:click={() => !$modal.hidden && modal.hideModal()}
   />
-  <div in:fade class="modal-container">
+  <div in:fade class="modal">
     <div class="modal-header">
       <h1 class="modal-header-text">{$modal.title}</h1>
     </div>
@@ -38,7 +38,8 @@
     z-index: 1000;
   }
 
-  .modal-container {
+  .modal {
+    --max-modal-height: calc(100vh - 2 * 48px);
     position: fixed;
     top: 50%;
     left: 50%;
@@ -66,7 +67,10 @@
     grid-row: 3 / span 1;
     grid-column: 2 / span 1;
     font-size: var(--font-md);
-    max-height: 60vh;
+    max-height: calc(
+      var(--max-modal-height) - 24px - 52px - 2 * var(--space-sm) -
+        var(--font-lg)
+    );
     overflow: auto;
     margin-bottom: var(--space-md);
   }
@@ -82,5 +86,11 @@
     justify-self: end;
     grid-column: -4 / span 2;
     grid-row: -2 / span 1;
+  }
+
+  @media screen and (min-width: 768px) {
+    .modal {
+      --max-modal-height: 560px;
+    }
   }
 </style>
