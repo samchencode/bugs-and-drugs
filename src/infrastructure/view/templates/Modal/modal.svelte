@@ -1,9 +1,16 @@
 <script lang="ts">
-  import { modal } from '@/infrastructure/view/templates/Modal/ModalStore';
+  import { modal } from '@/infrastructure/view/templates/modal/ModalStore';
   import { fade } from 'svelte/transition';
 </script>
 
 {#if !$modal.hidden}
+  <div
+    class="dim-background"
+    transition:fade
+    on:click={() => {
+      if (!$modal.hidden) modal.closeModal();
+    }}
+  />
   <div in:fade class="modal-container">
     <div class="modal-header">
       <h1 class="modal-header-text">{$modal.title}</h1>
@@ -25,14 +32,24 @@
 {/if}
 
 <style>
+  .dim-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 50%;
+    z-index: 500;
+  }
   .modal-container {
     display: grid;
-    grid-template-columns: 100px 100px 100px;
-    grid-template-rows: 52px auto 52x;
+    grid-template-columns: var(--modal-width);
+    grid-template-rows: 40px auto 52px;
     position: fixed;
     top: 10%;
     left: 50%;
-    z-index: 1;
+    z-index: 1000;
     background-color: white;
     border: 1px solid black;
     transform: translateX(-50%);
@@ -40,10 +57,8 @@
   }
   .modal-header {
     grid-row: 1;
-    grid-column: 1 / 4;
     text-align: left;
-    padding: 10px;
-    width: 100%;
+    padding-left: 24px;
   }
   .modal-header-text {
     font: sans-serif;
@@ -51,17 +66,18 @@
     font-size: var(--font-lg);
   }
   .close-modal {
-    grid-column: 3;
     grid-row: 3;
     text-align: right;
     padding: 10px;
     font-size: var(--font-lg);
   }
   .modal-text {
-    padding: 10px;
+    padding-left: 24px;
+    padding-right: 24px;
     grid-row: 2;
-    grid-column: 1 / 4;
     font-size: var(--font-lg);
     font: sans-serif;
+    max-height: 60vh;
+    overflow: scroll;
   }
 </style>

@@ -3,8 +3,9 @@
   import { link, location, querystring } from 'svelte-spa-router';
   import type AntibiogramController from '@/infrastructure/view/controllers/AntibiogramController';
   import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
-  import { modal } from '@/infrastructure/view/templates/Modal/ModalStore';
-  import dialogues from '@/infrastructure/view/templates/Modal/Dialogues';
+  import { modal } from '@/infrastructure/view/templates/modal/ModalStore';
+  import about from '@/infrastructure/view/templates/modal/dialogues/About';
+  import disclaimer from '@/infrastructure/view/templates/modal/dialogues/disclaimer';
 
   let vm: WebAntibiogram | null = null;
 
@@ -17,7 +18,6 @@
   $: abgIds !== null && controller.show(abgIds[0]).then((abg) => (vm = abg));
 
   let navMenuHidden = true;
-  let dialogue = new dialogues();
 </script>
 
 <nav>
@@ -47,7 +47,7 @@
     <li
       class="nav-link"
       on:click={() => {
-        modal.setModal(false, 'About', dialogue.getAboutDialogue(), false);
+        modal.setModal(false, 'About', about, false);
         navMenuHidden = !navMenuHidden;
       }}
     >
@@ -56,12 +56,7 @@
     <li
       class="nav-link"
       on:click={() => {
-        modal.setModal(
-          false,
-          'Disclaimer',
-          dialogue.getDisclaimerDialogue(),
-          false
-        );
+        modal.setModal(false, 'Disclaimer', disclaimer, false);
         navMenuHidden = !navMenuHidden;
       }}
     >
