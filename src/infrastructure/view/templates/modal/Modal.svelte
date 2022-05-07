@@ -1,6 +1,18 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { modal } from '@/infrastructure/view/templates/modal/ModalStore';
   import { fade } from 'svelte/transition';
+
+  // IDEA: the disclaimer, and maybe about-us should be moved to domain later
+  // IDEA: use a localStorage repository to manage seen state of disclaimer
+  onMount(() => {
+    if (!window.localStorage) return modal.showDisclaimer();
+    const key = 'seenDisclaimer';
+    const oldVisitor = window.localStorage.getItem(key);
+    if (oldVisitor) return;
+    modal.showDisclaimer();
+    window.localStorage.setItem(key, 'yes');
+  });
 </script>
 
 {#if !$modal.hidden}
