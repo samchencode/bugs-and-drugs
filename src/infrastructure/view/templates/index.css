@@ -60,6 +60,7 @@ main {
   --table-font-size: 15px;
   --table-heading-size: 140px;
   --card-font-size: 27px;
+  --modal-width: 280px;
 
   --space-xxs: 4px;
   --space-xs: 8px;
@@ -152,7 +153,6 @@ main {
   position: relative;
 }
 
-
 @media screen and (min-width: 768px) {
   main {
     display: grid;
@@ -160,6 +160,9 @@ main {
   }
   main > * {
     grid-column: 2 / span 1;
+  }
+  :root {
+    --modal-width: 560px;
   }
 }
 

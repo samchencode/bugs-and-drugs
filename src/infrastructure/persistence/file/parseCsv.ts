@@ -1,4 +1,4 @@
-import { csvParse, type DSVRowArray, type DSVRowString } from '@/lib/d3';
+import { csvParse, type DSVRowArray, type DSVRowString } from '@/vendor/d3';
 
 type RowArray<C extends string> = DSVRowArray<C>;
 
