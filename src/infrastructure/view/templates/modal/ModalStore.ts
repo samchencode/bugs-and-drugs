@@ -1,4 +1,5 @@
 import about from '@/infrastructure/view/templates/dialogues/about';
+import contact from '@/infrastructure/view/templates/dialogues/contact';
 import type { Dialogue } from '@/infrastructure/view/templates/dialogues/Dialogue';
 import disclaimer from '@/infrastructure/view/templates/dialogues/disclaimer';
 import { writable, type Writable } from 'svelte/store';
@@ -20,6 +21,7 @@ const showModal = (dialog: Dialogue) => set({ hidden: false, ...dialog });
 
 const showDisclaimer = () => showModal(disclaimer);
 const showAbout = () => showModal(about);
+const showContact = () => showModal(contact);
 
 const hideModal = () =>
   set({
@@ -32,6 +34,7 @@ const hideModal = () =>
 export const modal = {
   subscribe,
   showDisclaimer,
+  showContact,
   showAbout,
   hideModal,
 };

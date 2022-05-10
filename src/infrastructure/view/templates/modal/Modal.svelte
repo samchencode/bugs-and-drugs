@@ -96,7 +96,7 @@
     grid-row: -2 / span 1;
   }
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 768px) and (min-height: 656px) {
     .modal {
       --max-modal-height: 560px;
     }
