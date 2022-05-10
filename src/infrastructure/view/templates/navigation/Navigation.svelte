@@ -49,7 +49,7 @@
         navMenuHidden = !navMenuHidden;
       }}
     >
-      About
+      About Us
     </li>
     <li
       class="nav-link"
@@ -59,6 +59,15 @@
       }}
     >
       Disclaimer
+    </li>
+    <li
+      class="nav-link"
+      on:click={() => {
+        modal.showContact();
+        navMenuHidden = !navMenuHidden;
+      }}
+    >
+      Contact Us
     </li>
   </ul>
 </nav>
