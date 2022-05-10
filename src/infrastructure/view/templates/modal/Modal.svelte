@@ -98,7 +98,7 @@
 
   @media screen and (min-width: 768px) {
     .modal {
-      --max-modal-height: 560px;
+      --max-modal-height: min(560px, calc(100vh - 2 * 48px));
     }
   }
 </style>
