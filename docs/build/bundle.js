@@ -4883,9 +4883,15 @@ var app = (function () {
   };
 
   const about = {
-      body: 'This application is currently under development by medical students Sam Chen and Andrew Goldmann under the direction of Dr. Joshua Steinberg',
+      body: 'This app was written to put antibiograms in the hands of local and regional clinicians to serve patient care in Upstate New York.  Developed by Sam Chen and Andrew Goldman, class of 2023, SUNY Upstate Medical University College of Medicine, with direction from Dr. Joshua Steinberg, SUNY Upstate Clinical Campus, Binghamton, NY.',
       header: 'About Us',
       dismiss: 'Dismiss',
+  };
+
+  const contact = {
+      header: 'Contact Us',
+      body: 'Please let us know if you have any new feature requests, suggestions for changes, or bug reports at jds.pocapps@gmail.com',
+      dismiss: 'Got it',
   };
 
   const disclaimer = {
@@ -4904,6 +4910,7 @@ var app = (function () {
   const showModal = (dialog) => set(Object.assign({ hidden: false }, dialog));
   const showDisclaimer = () => showModal(disclaimer);
   const showAbout = () => showModal(about);
+  const showContact = () => showModal(contact);
   const hideModal = () => set({
       hidden: true,
       header: '',
@@ -4913,6 +4920,7 @@ var app = (function () {
   const modal = {
       subscribe,
       showDisclaimer,
+      showContact,
       showAbout,
       hideModal,
   };
@@ -5044,6 +5052,8 @@ var app = (function () {
   	let li0;
   	let t4;
   	let li1;
+  	let t6;
+  	let li2;
   	let mounted;
   	let dispose;
   	let if_block0 = !/*onHomePage*/ ctx[3] && create_if_block_3();
@@ -5071,14 +5081,18 @@ var app = (function () {
   			t2 = space();
   			ul = element("ul");
   			li0 = element("li");
-  			li0.textContent = "About";
+  			li0.textContent = "About Us";
   			t4 = space();
   			li1 = element("li");
   			li1.textContent = "Disclaimer";
+  			t6 = space();
+  			li2 = element("li");
+  			li2.textContent = "Contact Us";
   			attr(h1, "class", "title svelte-5zn6op");
   			attr(button, "class", "nav-menu-toggle svelte-5zn6op");
   			attr(li0, "class", "nav-link svelte-5zn6op");
   			attr(li1, "class", "nav-link svelte-5zn6op");
+  			attr(li2, "class", "nav-link svelte-5zn6op");
   			attr(ul, "class", "nav-link-list svelte-5zn6op");
   			toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[2]);
   			attr(nav, "class", "svelte-5zn6op");
@@ -5096,12 +5110,15 @@ var app = (function () {
   			append(ul, li0);
   			append(ul, t4);
   			append(ul, li1);
+  			append(ul, t6);
+  			append(ul, li2);
 
   			if (!mounted) {
   				dispose = [
   					listen(button, "click", /*click_handler*/ ctx[9]),
   					listen(li0, "click", /*click_handler_1*/ ctx[10]),
-  					listen(li1, "click", /*click_handler_2*/ ctx[11])
+  					listen(li1, "click", /*click_handler_2*/ ctx[11]),
+  					listen(li2, "click", /*click_handler_3*/ ctx[12])
   				];
 
   				mounted = true;
@@ -5171,6 +5188,11 @@ var app = (function () {
   		$$invalidate(2, navMenuHidden = !navMenuHidden);
   	};
 
+  	const click_handler_3 = () => {
+  		modal.showContact();
+  		$$invalidate(2, navMenuHidden = !navMenuHidden);
+  	};
+
   	$$self.$$.update = () => {
   		if ($$self.$$.dirty & /*$location*/ 256) {
   			$$invalidate(3, onHomePage = $location === '/');
@@ -5207,7 +5229,8 @@ var app = (function () {
   		$location,
   		click_handler,
   		click_handler_1,
-  		click_handler_2
+  		click_handler_2,
+  		click_handler_3
   	];
   }
 
@@ -5266,12 +5289,12 @@ var app = (function () {
   			t4 = space();
   			button = element("button");
   			t5 = text(t5_value);
-  			attr(div0, "class", "dim-background svelte-q6qhqt");
-  			attr(h1, "class", "modal-header-text svelte-q6qhqt");
-  			attr(div1, "class", "modal-header svelte-q6qhqt");
-  			attr(p, "class", "modal-text svelte-q6qhqt");
-  			attr(button, "class", "close-modal svelte-q6qhqt");
-  			attr(div2, "class", "modal svelte-q6qhqt");
+  			attr(div0, "class", "dim-background svelte-8byvu0");
+  			attr(h1, "class", "modal-header-text svelte-8byvu0");
+  			attr(div1, "class", "modal-header svelte-8byvu0");
+  			attr(p, "class", "modal-text svelte-8byvu0");
+  			attr(button, "class", "close-modal svelte-8byvu0");
+  			attr(div2, "class", "modal svelte-8byvu0");
   		},
   		m(target, anchor) {
   			insert(target, div0, anchor);
