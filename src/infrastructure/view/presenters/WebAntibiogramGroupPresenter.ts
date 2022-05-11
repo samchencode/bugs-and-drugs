@@ -32,8 +32,12 @@ class WebAntibiogramGroupPresenter implements AntibiogramGroupPresenter {
     const places = this.#group((d) => d.place, data);
     const result = places.map(([place, data]) => ({
       place: place.toString(),
-      intervals: this.#group((d) => d.interval, data).map(
-        ([interval, data]) => ({
+      intervals: this.#group((d) => d.interval, data)
+        .sort(
+          ([i1], [i2]) =>
+            i2.getPublishedDate().getTime() - i1.getPublishedDate().getTime()
+        )
+        .map(([interval, data]) => ({
           interval: interval.toString(),
           groups: this.#group((d) => d.info, data).map(([si, data]) => ({
             title: !si.is(new SampleInfo([])) ? si.toString() : 'Antibiogram',
@@ -42,8 +46,7 @@ class WebAntibiogramGroupPresenter implements AntibiogramGroupPresenter {
               id: abg.id.getValue(),
             })),
           })),
-        })
-      ),
+        })),
     }));
 
     return result;
