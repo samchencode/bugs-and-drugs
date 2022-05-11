@@ -1,0 +1,8 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info
+Enterococcus spp.,Ampicillin,#N/A,401,77,urine
+Coagulase negative Staphylococcus,TMP-SMX,#N/A,117,63,urine
+Staphylococcus aureus,TMP-SMX,#N/A,92,95,urine
+Enterococcus spp.,Nitrofurantoin,#N/A,401,90,urine
+Coagulase negative Staphylococcus,Vancomycin,#N/A,117,100,urine
+Enterococcus spp.,Vancomycin,#N/A,401,81,urine
+Staphylococcus aureus,Vancomycin,#N/A,92,100,urine
