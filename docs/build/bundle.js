@@ -7253,15 +7253,17 @@ var app = (function () {
   }
   _RowCollapsible_table = new WeakMap(), _RowCollapsible_collapse = new WeakMap();
 
-  var _SortBehavior_mapping;
+  var _SortBehavior_instances, _SortBehavior_mapping, _SortBehavior_escapeRegExp;
   class SortBehavior {
       constructor(newOrder, originalOrder) {
+          _SortBehavior_instances.add(this);
           _SortBehavior_mapping.set(this, void 0);
+          const r = __classPrivateFieldGet(this, _SortBehavior_instances, "m", _SortBehavior_escapeRegExp);
           __classPrivateFieldSet(this, _SortBehavior_mapping, originalOrder
               .slice()
               .sort((o1, o2) => {
-              const idx1 = newOrder.findIndex((o) => o1.match(o));
-              const idx2 = newOrder.findIndex((o) => o2.match(o));
+              const idx1 = newOrder.findIndex((o) => o1.match(r(o)));
+              const idx2 = newOrder.findIndex((o) => o2.match(r(o)));
               if (idx1 < 0)
                   return 1;
               if (idx2 < 0)
@@ -7280,7 +7282,9 @@ var app = (function () {
           return mat.map((r) => this.arrange(r));
       }
   }
-  _SortBehavior_mapping = new WeakMap();
+  _SortBehavior_mapping = new WeakMap(), _SortBehavior_instances = new WeakSet(), _SortBehavior_escapeRegExp = function _SortBehavior_escapeRegExp(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  };
 
   var _Ordered_table, _Ordered_rowBehavior, _Ordered_columnBehavior, _Ordered_params;
   class Ordered {
@@ -7857,7 +7861,9 @@ var app = (function () {
           const places = __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_group).call(this, (d) => d.place, data);
           const result = places.map(([place, data]) => ({
               place: place.toString(),
-              intervals: __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_group).call(this, (d) => d.interval, data).map(([interval, data]) => ({
+              intervals: __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_group).call(this, (d) => d.interval, data)
+                  .sort(([i1], [i2]) => i2.getPublishedDate().getTime() - i1.getPublishedDate().getTime())
+                  .map(([interval, data]) => ({
                   interval: interval.toString(),
                   groups: __classPrivateFieldGet(this, _WebAntibiogramGroupPresenter_instances, "m", _WebAntibiogramGroupPresenter_group).call(this, (d) => d.info, data).map(([si, data]) => ({
                       title: !si.is(new SampleInfo([])) ? si.toString() : 'Antibiogram',

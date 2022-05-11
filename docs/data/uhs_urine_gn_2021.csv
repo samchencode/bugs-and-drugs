@@ -1,0 +1,82 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info
+Citrobacter freundii,Ampicillin,#N/A,76,R,urine
+Citrobacter koseri,Ampicillin,#N/A,53,R,urine
+Enterobacter (Klebsiella) aerogenes,Ampicillin,#N/A,95,R,urine
+Enterobacter cloacae,Ampicillin,#N/A,146,R,urine
+Escherichia coli,Ampicillin,#N/A,4960,63,urine
+Klebsiella oxytoca,Ampicillin,#N/A,138,R,urine
+Klebsiella pneumoniae,Ampicillin,#N/A,842,R,urine
+Proteus mirabilis,Ampicillin,#N/A,390,86,urine
+Pseudomonas aeruginosa,Ampicillin,#N/A,240,R,urine
+Serratia marcescens,Ampicillin,#N/A,39,R,urine
+Citrobacter freundii,Pip-Tazo,#N/A,76,94,urine
+Citrobacter koseri,Pip-Tazo,#N/A,53,100,urine
+Enterobacter (Klebsiella) aerogenes,Pip-Tazo,#N/A,95,90,urine
+Enterobacter cloacae,Pip-Tazo,#N/A,146,85,urine
+Escherichia coli,Pip-Tazo,#N/A,4960,99,urine
+Klebsiella oxytoca,Pip-Tazo,#N/A,138,97,urine
+Klebsiella pneumoniae,Pip-Tazo,#N/A,842,97,urine
+Proteus mirabilis,Pip-Tazo,#N/A,390,100,urine
+Pseudomonas aeruginosa,Pip-Tazo,#N/A,240,97,urine
+Serratia marcescens,Pip-Tazo,#N/A,39,69,urine
+Citrobacter freundii,Cefazolin/ cephalexin,#N/A,76,R,urine
+Citrobacter koseri,Cefazolin/ cephalexin,#N/A,53,98,urine
+Enterobacter (Klebsiella) aerogenes,Cefazolin/ cephalexin,#N/A,95,R,urine
+Enterobacter cloacae,Cefazolin/ cephalexin,#N/A,146,R,urine
+Escherichia coli,Cefazolin/ cephalexin,#N/A,4960,91,urine
+Klebsiella oxytoca,Cefazolin/ cephalexin,#N/A,138,45,urine
+Klebsiella pneumoniae,Cefazolin/ cephalexin,#N/A,842,91,urine
+Proteus mirabilis,Cefazolin/ cephalexin,#N/A,390,91,urine
+Pseudomonas aeruginosa,Cefazolin/ cephalexin,#N/A,240,R,urine
+Serratia marcescens,Cefazolin/ cephalexin,#N/A,39,R,urine
+Citrobacter koseri,Ceftriaxone,#N/A,53,100,urine
+Escherichia coli,Ceftriaxone,#N/A,4960,95,urine
+Klebsiella oxytoca,Ceftriaxone,#N/A,138,92,urine
+Klebsiella pneumoniae,Ceftriaxone,#N/A,842,92,urine
+Proteus mirabilis,Ceftriaxone,#N/A,390,95,urine
+Pseudomonas aeruginosa,Ceftriaxone,#N/A,240,R,urine
+Citrobacter freundii,Cefepime,#N/A,76,98,urine
+Citrobacter koseri,Cefepime,#N/A,53,100,urine
+Enterobacter (Klebsiella) aerogenes,Cefepime,#N/A,95,96,urine
+Enterobacter cloacae,Cefepime,#N/A,146,92,urine
+Escherichia coli,Cefepime,#N/A,4960,96,urine
+Klebsiella oxytoca,Cefepime,#N/A,138,96,urine
+Klebsiella pneumoniae,Cefepime,#N/A,842,93,urine
+Proteus mirabilis,Cefepime,#N/A,390,95,urine
+Pseudomonas aeruginosa,Cefepime,#N/A,240,92,urine
+Serratia marcescens,Cefepime,#N/A,39,100,urine
+Citrobacter freundii,Gentamicin,#N/A,76,98,urine
+Citrobacter koseri,Gentamicin,#N/A,53,98,urine
+Enterobacter (Klebsiella) aerogenes,Gentamicin,#N/A,95,100,urine
+Enterobacter cloacae,Gentamicin,#N/A,146,96,urine
+Escherichia coli,Gentamicin,#N/A,4960,93,urine
+Klebsiella oxytoca,Gentamicin,#N/A,138,97,urine
+Klebsiella pneumoniae,Gentamicin,#N/A,842,95,urine
+Proteus mirabilis,Gentamicin,#N/A,390,94,urine
+Pseudomonas aeruginosa,Gentamicin,#N/A,240,82,urine
+Serratia marcescens,Gentamicin,#N/A,39,97,urine
+Citrobacter freundii,Ciprofloxacin (Levofloxacin),#N/A,76,93,urine
+Citrobacter koseri,Ciprofloxacin (Levofloxacin),#N/A,53,98,urine
+Enterobacter (Klebsiella) aerogenes,Ciprofloxacin (Levofloxacin),#N/A,95,100,urine
+Enterobacter cloacae,Ciprofloxacin (Levofloxacin),#N/A,146,95,urine
+Escherichia coli,Ciprofloxacin (Levofloxacin),#N/A,4960,87,urine
+Klebsiella oxytoca,Ciprofloxacin (Levofloxacin),#N/A,138,96,urine
+Klebsiella pneumoniae,Ciprofloxacin (Levofloxacin),#N/A,842,93,urine
+Proteus mirabilis,Ciprofloxacin (Levofloxacin),#N/A,390,77,urine
+Pseudomonas aeruginosa,Ciprofloxacin (Levofloxacin),#N/A,240,85,urine
+Serratia marcescens,Ciprofloxacin (Levofloxacin),#N/A,39,92,urine
+Citrobacter freundii,TMP-SMX,#N/A,76,90,urine
+Citrobacter koseri,TMP-SMX,#N/A,53,98,urine
+Enterobacter (Klebsiella) aerogenes,TMP-SMX,#N/A,95,95,urine
+Enterobacter cloacae,TMP-SMX,#N/A,146,88,urine
+Escherichia coli,TMP-SMX,#N/A,4960,83,urine
+Klebsiella oxytoca,TMP-SMX,#N/A,138,93,urine
+Klebsiella pneumoniae,TMP-SMX,#N/A,842,88,urine
+Proteus mirabilis,TMP-SMX,#N/A,390,85,urine
+Pseudomonas aeruginosa,TMP-SMX,#N/A,240,R,urine
+Serratia marcescens,TMP-SMX,#N/A,39,100,urine
+Citrobacter freundii,Nitrofurantoin,#N/A,76,98,urine
+Citrobacter koseri,Nitrofurantoin,#N/A,53,67,urine
+Escherichia coli,Nitrofurantoin,#N/A,4960,98,urine
+Klebsiella oxytoca,Nitrofurantoin,#N/A,138,87,urine
+Klebsiella pneumoniae,Nitrofurantoin,#N/A,842,49,urine
