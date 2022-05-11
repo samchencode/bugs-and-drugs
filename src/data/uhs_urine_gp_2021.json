@@ -1,0 +1,19 @@
+{
+  "column-order": [
+    "Ampicillin",
+    "Pip-Tazo",
+    "Cefazolin/ cephalexin",
+    "Ceftriaxone",
+    "Cefepime",
+    "Gentamicin",
+    "Ciprofloxacin \\(Levofloxacin\\)",
+    "TMP-SMX",
+    "Nitrofurantoin",
+    "Vancomycin"
+  ],
+  "row-order": [
+    "Coagulase negative Staphylococcus",
+    "Enterococcus spp.",
+    "Staphylococcus aureus"
+  ]
+}

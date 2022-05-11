@@ -1,0 +1,13 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info
+Enterococcus spp.,Ampicillin,#N/A,200,65,non-urine
+Coagulase negative Staphylococcus,Oxacillin,#N/A,278,39,non-urine
+Staphylococcus aureus,Oxacillin,#N/A,1283,61,non-urine
+Coagulase negative Staphylococcus,Cefazolin,#N/A,278,42,non-urine
+Staphylococcus aureus,Cefazolin,#N/A,1283,62,non-urine
+Enterococcus spp.,Gentamicin,#N/A,200,81,non-urine
+Staphylococcus aureus,Azithromycin,#N/A,1283,42,non-urine
+Staphylococcus aureus,Clindamycin,#N/A,1283,62,non-urine
+Staphylococcus aureus,Tetracycline,#N/A,1283,89,non-urine
+Coagulase negative Staphylococcus,Vancomycin,#N/A,278,100,non-urine
+Enterococcus spp.,Vancomycin,#N/A,200,67,non-urine
+Staphylococcus aureus,Vancomycin,#N/A,1283,100,non-urine

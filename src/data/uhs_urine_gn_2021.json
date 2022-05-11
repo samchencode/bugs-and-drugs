@@ -1,0 +1,26 @@
+{
+  "column-order": [
+    "Ampicillin",
+    "Pip-Tazo",
+    "Cefazolin/ cephalexin",
+    "Ceftriaxone",
+    "Cefepime",
+    "Gentamicin",
+    "Ciprofloxacin \\(Levofloxacin\\)",
+    "TMP-SMX",
+    "Nitrofurantoin",
+    "Vancomycin"
+  ],
+  "row-order": [
+    "Citrobacter freundii",
+    "Citrobacter koseri",
+    "Enterobacter \\(Klebsiella\\) aerogenes",
+    "Enterobacter cloacae",
+    "Escherichia coli",
+    "Klebsiella oxytoca",
+    "Klebsiella pneumoniae",
+    "Proteus mirabilis",
+    "Pseudomonas aeruginosa",
+    "Serratia marcescens"
+  ]
+}
