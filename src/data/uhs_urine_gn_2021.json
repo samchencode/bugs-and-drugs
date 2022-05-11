@@ -6,7 +6,7 @@
     "Ceftriaxone",
     "Cefepime",
     "Gentamicin",
-    "Ciprofloxacin \\(Levofloxacin\\)",
+    "Ciprofloxacin (Levofloxacin)",
     "TMP-SMX",
     "Nitrofurantoin",
     "Vancomycin"
@@ -14,7 +14,7 @@
   "row-order": [
     "Citrobacter freundii",
     "Citrobacter koseri",
-    "Enterobacter \\(Klebsiella\\) aerogenes",
+    "Enterobacter (Klebsiella) aerogenes",
     "Enterobacter cloacae",
     "Escherichia coli",
     "Klebsiella oxytoca",

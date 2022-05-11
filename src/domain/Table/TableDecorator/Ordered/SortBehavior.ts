@@ -2,11 +2,13 @@ class SortBehavior {
   #mapping: number[];
 
   constructor(newOrder: string[], originalOrder: string[]) {
+    const r = this.#escapeRegExp;
+
     this.#mapping = originalOrder
       .slice()
       .sort((o1, o2) => {
-        const idx1 = newOrder.findIndex((o) => o1.match(o));
-        const idx2 = newOrder.findIndex((o) => o2.match(o));
+        const idx1 = newOrder.findIndex((o) => o1.match(r(o)));
+        const idx2 = newOrder.findIndex((o) => o2.match(r(o)));
         if (idx1 < 0) return 1;
         if (idx2 < 0) return -1;
         return idx1 - idx2;
@@ -23,6 +25,10 @@ class SortBehavior {
 
   arrangeColumns<T>(mat: T[][]): T[][] {
     return mat.map((r) => this.arrange(r));
+  }
+
+  #escapeRegExp(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 }
 
