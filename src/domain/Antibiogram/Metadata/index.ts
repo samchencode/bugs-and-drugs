@@ -5,3 +5,4 @@ export {
 } from '@/domain/Antibiogram/Metadata/Metadata';
 export { default as RowOrder } from '@/domain/Antibiogram/Metadata/RowOrder';
 export { default as ColumnOrder } from '@/domain/Antibiogram/Metadata/ColumnOrder';
+export { default as ResistanceRates } from '@/domain/Antibiogram/Metadata/ResistanceRates';

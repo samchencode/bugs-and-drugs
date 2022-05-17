@@ -15,6 +15,11 @@ class Footnotes extends MetadataValue {
   getValue(): string[] {
     return this.#footnotes;
   }
+  protected isIdentical(v: Footnotes): boolean {
+    if (v.getValue().length !== this.getValue().length) return false;
+    if (v.getValue().find((f, i) => this.getValue()[i] !== f)) return false;
+    return true;
+  }
 }
 
 export default Footnotes;

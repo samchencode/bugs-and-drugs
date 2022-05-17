@@ -66,7 +66,7 @@ function makeAntibiogramTable(abg: Antibiogram) {
   return makeTable(matrix, {
     labels: { rows: rowLabels, columns: columnLabels },
     order: {
-      rows: metadata.get(RowOrder.slug)?.getValue(),
+      rows: metadata.getRowOrder()?.getValue(),
     },
   });
 }
@@ -85,7 +85,7 @@ function makeCompositeAntibiogramTable(abg1: Antibiogram, abg2: Antibiogram) {
     abgs[0].gram.toString(),
     {
       order: {
-        columns: abg1.metadata.get(ColumnOrder.slug)?.getValue(),
+        columns: abg1.metadata.getColumnOrder()?.getValue(),
       },
     }
   );

@@ -1,4 +1,4 @@
-import {
+import Antibiogram, {
   AntibiogramId,
   GramValues,
   IntegerNumberOfIsolates,
@@ -99,7 +99,8 @@ describe('CsvAntibiogramRepository', () => {
           'Phalacrocorax albiventer,OXYMETAZOLINE HYDROCHLORIDE,IV,200,69,non-urine\n' +
           'Climacteris melanura,ondansetron hydrochloride,IV,512,49,"inpatient,urine"\n' +
           'Perameles nasuta,Sodium fluoride,#N/A,340,14,"inpatient,urine"', // without trailing new-line,
-        'meta.json': '{"footnotes":["hello world"]}',
+        'meta.json':
+          '{"footnotes":["hello world"],"resistance-rates":[{"label": "ESBL", "value": 10, "year": 2010}]}',
       })
     );
 
@@ -112,6 +113,16 @@ describe('CsvAntibiogramRepository', () => {
     }
 
     beforeEach(() => (repo = new FileAntibiogramRepository(fs)));
+    const printMetadata = (abg: Antibiogram) => {
+      const var1 = abg.metadata.getArrayOfResistanceRates()?.toString();
+      const var2 = abg.metadata.getColumnOrder()?.getValue();
+      const var3 = abg.metadata.getRowOrder()?.getValue();
+      const var4 = abg.metadata.getFootnotes()?.getValue();
+      if (var1) console.log(var1);
+      if (var2) console.log(var2);
+      if (var3) console.log(var3);
+      if (var4) console.log(var4);
+    };
 
     it('should parse csv and create antibiogram with proper data', () =>
       getBoth().then(([abg1, abg2]) => {
@@ -183,11 +194,13 @@ describe('CsvAntibiogramRepository', () => {
 
     it('should load the metadata file when it exists', () =>
       repo.getAll().then(([abg1, abg2]) => {
-        expect(abg1.metadata.is(new Metadata([]))).toBe(false);
-        expect(abg1.metadata.get('footnotes')?.getValue()).toEqual([
+        expect(abg1.metadata.is(new Metadata({}))).toBe(false);
+        expect(abg1.metadata.getFootnotes()?.getValue()).toEqual([
           'hello world',
         ]);
-        expect(abg2.metadata.is(new Metadata([]))).toBe(true);
+        printMetadata(abg1);
+        printMetadata(abg2);
+        expect(abg2.metadata.is(new Metadata({}))).toBe(true);
       }));
   });
 });

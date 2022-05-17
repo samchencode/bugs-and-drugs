@@ -17,6 +17,9 @@ import {
   Sources,
   type Route,
 } from '@/domain/Antibiogram';
+import { ResistanceRates } from '@/domain/Antibiogram/Metadata';
+import type MetadataParams from '@/domain/Antibiogram/Metadata/MetadataParams';
+import ResistanceRate from '@/domain/Antibiogram/Metadata/ResistanceRate';
 import type { MetadataJson } from '@/infrastructure/persistence/file/MetadataJson';
 
 // IDEA: make this into an abstract factory specific to the shape of the data csv
@@ -81,12 +84,22 @@ export const interval = (start: string, stop: string) => {
 export const id = (id: string) => new AntibiogramId(id);
 
 export const metadata = (metadata: MetadataJson) => {
-  const constructors = {
-    [RowOrder.slug]: RowOrder,
-    [ColumnOrder.slug]: ColumnOrder,
-    [Footnotes.slug]: Footnotes,
-  };
+  const metadataParams: MetadataParams = {};
 
-  const entries = Object.entries(metadata) as [keyof MetadataJson, string[]][];
-  return new Metadata(entries.map(([k, v]) => new constructors[k](v)));
+  if (metadata[RowOrder.slug])
+    metadataParams[RowOrder.slug] = new RowOrder(metadata[RowOrder.slug]);
+  if (metadata[ColumnOrder.slug])
+    metadataParams[ColumnOrder.slug] = new ColumnOrder(
+      metadata[ColumnOrder.slug]
+    );
+  if (metadata[ResistanceRates.slug])
+    metadataParams[ResistanceRates.slug] = new ResistanceRates(
+      metadata[ResistanceRates.slug].map((r) => {
+        return new ResistanceRate(r.label, r.year, r.value);
+      })
+    );
+  if (metadata[Footnotes.slug])
+    metadataParams[Footnotes.slug] = new Footnotes(metadata[Footnotes.slug]);
+
+  return new Metadata(metadataParams);
 };

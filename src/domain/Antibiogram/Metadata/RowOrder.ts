@@ -6,6 +6,11 @@ class RowOrder extends Order {
   getSlug() {
     return RowOrder.slug;
   }
+  protected isIdentical(v: RowOrder): boolean {
+    if (v.getValue().length !== this.getValue().length) return false;
+    if (v.getValue().find((f, i) => this.getValue()[i] !== f)) return false;
+    return true;
+  }
 }
 
 export default RowOrder;

@@ -13,6 +13,8 @@ import Antibiogram, {
   Footnotes,
 } from '@/domain/Antibiogram';
 import Place from '@/domain/Antibiogram/Place';
+import ResistanceRates from '@/domain/Antibiogram/Metadata/ResistanceRates';
+import ResistanceRate from '@/domain/Antibiogram/Metadata/ResistanceRate';
 
 describe('Antibiogram', () => {
   const [data, , data2] = FakeAntibiogramRepository.data;
@@ -75,13 +77,24 @@ describe('Antibiogram', () => {
 
     it('should create antibiogram with metadata', () => {
       const antibiogram = new Antibiogram(id, data, {
-        metadata: new Metadata([new Footnotes(['my footnote'])]),
+        metadata: new Metadata({ footnotes: new Footnotes(['my footnote']) }),
       });
-      const result = antibiogram.metadata.get('footnotes')?.getValue();
+      const result = antibiogram.metadata.getFootnotes()?.getValue();
       expect(result).toEqual(['my footnote']);
     });
-  });
 
+    it('should create antibiogram with resistance rates', () => {
+      const myResistanceRate = new ResistanceRate('ESBL', 2001, 56);
+      const antibiogram = new Antibiogram(id, data, {
+        metadata: new Metadata({
+          'resistance-rates': new ResistanceRates([myResistanceRate]),
+        }),
+      });
+      expect(
+        antibiogram.metadata.getArrayOfResistanceRates()?.toString()
+      ).toEqual('ESBL, 2001, 56');
+    });
+  });
   describe('behavior', () => {
     let antibiogram: Antibiogram;
 
