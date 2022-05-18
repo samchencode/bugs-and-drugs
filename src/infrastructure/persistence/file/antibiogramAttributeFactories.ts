@@ -84,22 +84,21 @@ export const interval = (start: string, stop: string) => {
 export const id = (id: string) => new AntibiogramId(id);
 
 export const metadata = (metadata: MetadataJson) => {
-  const metadataParams: MetadataParams = {};
-
-  if (metadata[RowOrder.slug])
-    metadataParams[RowOrder.slug] = new RowOrder(metadata[RowOrder.slug]);
-  if (metadata[ColumnOrder.slug])
-    metadataParams[ColumnOrder.slug] = new ColumnOrder(
-      metadata[ColumnOrder.slug]
-    );
-  if (metadata[ResistanceRates.slug])
-    metadataParams[ResistanceRates.slug] = new ResistanceRates(
-      metadata[ResistanceRates.slug].map((r) => {
-        return new ResistanceRate(r.label, r.year, r.value);
-      })
-    );
-  if (metadata[Footnotes.slug])
-    metadataParams[Footnotes.slug] = new Footnotes(metadata[Footnotes.slug]);
+  const metadataParams: MetadataParams = {
+    [RowOrder.slug]:
+      metadata[RowOrder.slug] && new RowOrder(metadata[RowOrder.slug]),
+    [ColumnOrder.slug]:
+      metadata[ColumnOrder.slug] && new ColumnOrder(metadata[ColumnOrder.slug]),
+    [Footnotes.slug]:
+      metadata[Footnotes.slug] && new Footnotes(metadata[Footnotes.slug]),
+    [ResistanceRates.slug]:
+      metadata[ResistanceRates.slug] &&
+      new ResistanceRates(
+        metadata[ResistanceRates.slug].map((r) => {
+          return new ResistanceRate(r.label, r.year, r.value);
+        })
+      ),
+  };
 
   return new Metadata(metadataParams);
 };

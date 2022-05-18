@@ -2,7 +2,7 @@ class ResistanceRate {
   #description: string;
   #year: number;
   #rate: number;
-  static readonly slug = 'resistance-rate';
+
   constructor(description: string, year: number, rate: number) {
     this.#description = description;
     this.#rate = rate;
@@ -20,15 +20,7 @@ class ResistanceRate {
   }
 
   toString() {
-    return this.#description.concat(
-      ', ',
-      this.#year.toString(),
-      ', ',
-      this.#rate.toString()
-    );
-  }
-  getSlug(): string {
-    return ResistanceRate.slug;
+    return `${this.#description} ${this.#rate}, ${this.#year}`;
   }
 }
 
