@@ -23,6 +23,9 @@ class ResistanceRates extends MetadataValue {
       });
     return true;
   }
+  isNull() {
+    return false;
+  }
 }
 
 export default ResistanceRates;

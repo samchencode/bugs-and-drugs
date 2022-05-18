@@ -1,26 +1,36 @@
-class ResistanceRate {
-  #description: string;
-  #year: number;
-  #rate: number;
+import ResistanceRateValue from '@/domain/Antibiogram/Metadata/ResistanceRateValue';
 
-  constructor(description: string, year: number, rate: number) {
-    this.#description = description;
-    this.#rate = rate;
+class ResistanceRate {
+  #label: string;
+  #rate: ResistanceRateValue;
+  #year?: number;
+
+  constructor(label: string, rate: string, year?: number) {
+    this.#label = label;
+    this.#rate = new ResistanceRateValue(rate);
     this.#year = year;
   }
 
-  getDescription() {
-    return this.#description;
+  getlabel(): string {
+    return this.#label;
   }
-  getRate() {
+  getRate(): ResistanceRateValue {
     return this.#rate;
   }
   getYear() {
-    return this.#year;
+    if (this.hasYear()) return this.#year;
+    else return undefined;
   }
-
+  hasYear(): boolean {
+    if (this.#year) return true;
+    else return false;
+  }
   toString() {
-    return `${this.#description} ${this.#rate}%, ${this.#year}`;
+    if (this.hasYear())
+      return `${this.#label} ${this.#rate.getValue().toString()}%, ${
+        this.#year
+      }`;
+    else return `${this.#label} ${this.#rate}`;
   }
 }
 

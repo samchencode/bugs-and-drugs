@@ -11,6 +11,9 @@ abstract class Order extends MetadataValue {
   getValue(): string[] {
     return this.#order;
   }
+  isNull() {
+    return false;
+  }
 }
 
 export default Order;

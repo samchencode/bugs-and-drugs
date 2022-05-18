@@ -7,7 +7,7 @@ import { ResistanceRates } from '@/domain/Antibiogram/Metadata';
 
 type ResistanceRate = {
   label: string;
-  value: number;
+  value: string;
   year: number;
 };
 

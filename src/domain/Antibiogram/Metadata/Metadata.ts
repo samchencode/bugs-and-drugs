@@ -1,22 +1,35 @@
 import ColumnOrder from '@/domain/Antibiogram/Metadata/ColumnOrder';
 import Footnotes from '@/domain/Antibiogram/Metadata/Footnotes';
 import type MetadataParams from '@/domain/Antibiogram/Metadata/MetadataParams';
+import NullMetadataValue from '@/domain/Antibiogram/Metadata/NullMetaDataValue';
 import ResistanceRates from '@/domain/Antibiogram/Metadata/ResistanceRates';
 import RowOrder from '@/domain/Antibiogram/Metadata/RowOrder';
 import ValueObject from '@/domain/base/ValueObject';
 
 class Metadata extends ValueObject {
-  #columnOrder?: ColumnOrder;
-  #rowOrder?: RowOrder;
-  #resistanceRates?: ResistanceRates;
-  #footnotes?: Footnotes;
+  #columnOrder: ColumnOrder | NullMetadataValue;
+  #rowOrder: RowOrder | NullMetadataValue;
+  #resistanceRates: ResistanceRates | NullMetadataValue;
+  #footnotes: Footnotes | NullMetadataValue;
 
   constructor(params: MetadataParams) {
     super();
-    this.#columnOrder = params[ColumnOrder.slug];
-    this.#rowOrder = params[RowOrder.slug];
-    this.#resistanceRates = params[ResistanceRates.slug];
-    this.#footnotes = params[Footnotes.slug];
+    const colOrder = params[ColumnOrder.slug];
+    const rowOrder = params[RowOrder.slug];
+    const footnotes = params[Footnotes.slug];
+    const resistancerates = params[ResistanceRates.slug];
+
+    if (colOrder != undefined) this.#columnOrder = colOrder;
+    else this.#columnOrder = new NullMetadataValue();
+
+    if (rowOrder != undefined) this.#rowOrder = rowOrder;
+    else this.#rowOrder = new NullMetadataValue();
+
+    if (resistancerates != undefined) this.#resistanceRates = resistancerates;
+    else this.#resistanceRates = new NullMetadataValue();
+
+    if (footnotes != undefined) this.#footnotes = footnotes;
+    else this.#footnotes = new NullMetadataValue();
   }
   getColumnOrder() {
     return this.#columnOrder;
@@ -28,7 +41,7 @@ class Metadata extends ValueObject {
     return this.#resistanceRates;
   }
   getArrayOfResistanceRates() {
-    return this.#resistanceRates?.getResistanceRates();
+    return this.#resistanceRates.getResistanceRates();
   }
   getFootnotes() {
     return this.#footnotes;

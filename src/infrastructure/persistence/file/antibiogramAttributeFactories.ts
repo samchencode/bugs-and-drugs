@@ -95,7 +95,7 @@ export const metadata = (metadata: MetadataJson) => {
       metadata[ResistanceRates.slug] &&
       new ResistanceRates(
         metadata[ResistanceRates.slug].map((r) => {
-          return new ResistanceRate(r.label, r.year, r.value);
+          return new ResistanceRate(r.label, r.value, r.year);
         })
       ),
   };
