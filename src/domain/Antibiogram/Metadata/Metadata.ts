@@ -44,15 +44,7 @@ class Metadata extends ValueObject {
     if (this.#footnotes != undefined)
       if (!this.#footnotes.is(v.getFootnotes())) return false;
 
-    if (
-      v.getColumnOrder() == undefined &&
-      v.getRowOrder() == undefined &&
-      v.getResistanceRates() == undefined &&
-      v.getFootnotes() == undefined
-    )
-      return true;
-
-    return false;
+    return true;
   }
 }
 
