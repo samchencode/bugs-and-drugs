@@ -20,7 +20,7 @@ class ResistanceRate {
   }
 
   toString() {
-    return `${this.#description} ${this.#rate}, ${this.#year}`;
+    return `${this.#description} ${this.#rate}%, ${this.#year}`;
   }
 }
 

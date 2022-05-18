@@ -92,7 +92,7 @@ describe('Antibiogram', () => {
       });
       expect(
         antibiogram.metadata.getArrayOfResistanceRates()?.toString()
-      ).toEqual('ESBL, 2001, 56');
+      ).toEqual('ESBL 56%, 2001');
     });
   });
   describe('behavior', () => {
