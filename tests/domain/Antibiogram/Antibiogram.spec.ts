@@ -94,16 +94,6 @@ describe('Antibiogram', () => {
         antibiogram.metadata.getArrayOfResistanceRates()?.toString()
       ).toEqual('ESBL 56%, 2001');
     });
-    it('should throw error if the resistance rate is  not valid', () => {
-      try {
-        const r = new ResistanceRate('ESBL', 'f56Lbd', 2001);
-      } catch (e) {
-        expect(e).toHaveProperty(
-          'message',
-          'Invalid resistance rate value: f56Lbd'
-        );
-      }
-    });
   });
   describe('behavior', () => {
     let antibiogram: Antibiogram;

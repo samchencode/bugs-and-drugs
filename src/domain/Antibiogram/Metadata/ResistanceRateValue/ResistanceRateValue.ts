@@ -12,10 +12,10 @@ class ResistanceRateValue extends ValueObject {
     else this.#value = new PercentValue(+value);
   }
   getValue() {
-    return this.#value.getValue();
+    return this.#value;
   }
   protected isIdentical(v: ResistanceRateValue): boolean {
-    return this.#value.getValue() == v.getValue();
+    return this.#value == v.getValue();
   }
 
   validateInput(value: string) {

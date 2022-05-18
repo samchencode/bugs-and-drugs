@@ -22,15 +22,15 @@ class ResistanceRate {
     else return undefined;
   }
   hasYear(): boolean {
-    if (this.#year) return true;
+    if (this.#year != undefined) return true;
     else return false;
   }
   toString() {
     if (this.hasYear())
-      return `${this.#label} ${this.#rate.getValue().toString()}%, ${
+      return `${this.#label} ${this.#rate.getValue().toString()}, ${
         this.#year
       }`;
-    else return `${this.#label} ${this.#rate}`;
+    else return `${this.#label} ${this.#rate.getValue().toString()}`;
   }
 }
 
