@@ -2,6 +2,8 @@
   import type { WebAntibiogram } from '@/infrastructure/view/presenters/WebAntibiogramPresenter';
   import Table from '@/infrastructure/view/templates/table/Table.svelte';
   import NoTable from '@/infrastructure/view/templates/table/NoTable.svelte';
+  import Footnotes from '@/infrastructure/view/templates/footnotes/Footnotes.svelte';
+  import ResistanceRates from '@/infrastructure/view/templates/footnotes/ResistanceRates.svelte';
 
   export let vm: WebAntibiogram | null;
 </script>
@@ -17,6 +19,8 @@
       </ul>
     </header>
     <Table table={vm.table} />
+    <Footnotes footnotes={vm.footnotes} />
+    <ResistanceRates resistanceRates={vm.resistanceRates} />
   {/if}
 </section>
 

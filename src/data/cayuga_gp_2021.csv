@@ -1,0 +1,58 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info
+Enterococcus faecium,AMPICILLIN,IV/PO,97,13,#N/A
+Enterococcus faecalis,AMPICILLIN,IV/PO,505,99,#N/A
+"Beta Strep, Grp B",AMPICILLIN,IV/PO,119,100,#N/A
+Strep pneumoniae,CEFTRIAXONE,IV,8,100,meningitis
+Strep pneumoniae,CEFTRIAXONE,IV,8,100,non-meningitis
+Strep pneumoniae,CEFOTAXIME,IV/PO,8,100,meningitis
+Strep pneumoniae,CEFOTAXIME,IV/PO,8,100,non-meningitis
+Strep pneumoniae,AUGMENTIN,PO,8,100,#N/A
+Strep pneumoniae,AZITHROMYCIN,IV/PO,8,75,#N/A
+Strep pneumoniae,CEFACLOR,PO,8,86,#N/A
+Strep pneumoniae,CEFUROXIME,IV/PO,8,100,#N/A
+Staph aureus(total),CLINDAMYCIN,IV/PO,1030,75,#N/A
+MRSA,CLINDAMYCIN,IV/PO,402,70,#N/A
+non-MRSA,CLINDAMYCIN,IV/PO,628,78,#N/A
+"Beta Strep, Grp B",CLINDAMYCIN,IV/PO,119,17,#N/A
+Strep pneumoniae,CLINDAMYCIN,IV/PO,8,75,#N/A
+Staph aureus(total),ERYTHROMYCIN,IV/PO,1030,46,#N/A
+MRSA,ERYTHROMYCIN,IV/PO,402,17,#N/A
+non-MRSA,ERYTHROMYCIN,IV/PO,628,65,#N/A
+Strep pneumoniae,ERYTHROMYCIN,IV/PO,8,75,#N/A
+Staph aureus(total),GENTAMICIN,IV,1030,99,#N/A
+MRSA,GENTAMICIN,IV,402,99,#N/A
+non-MRSA,GENTAMICIN,IV,628,100,#N/A
+Enterococcus faecium,LEVOFLOXACIN,IV/PO,97,10,#N/A
+Enterococcus faecalis,LEVOFLOXACIN,IV/PO,505,88,#N/A
+"Beta Strep, Grp B",LEVOFLOXACIN,IV/PO,119,100,#N/A
+Strep pneumoniae,LEVOFLOXACIN,IV/PO,8,100,#N/A
+Staph aureus(total),OXACILLIN,IV,1030,61,#N/A
+non-MRSA,OXACILLIN,IV,628,100,#N/A
+Enterococcus faecium,PENICILLIN,IV/PO,97,11,#N/A
+Enterococcus faecalis,PENICILLIN,IV/PO,505,98,#N/A
+Strep pneumoniae,PENICILLIN,IV/PO,8,86,oral
+Strep pneumoniae,PENICILLIN,IV/PO,8,100,non-meningitis
+Strep pneumoniae,PENICILLIN,IV/PO,8,86,meningitis
+Enterococcus faecium,TETRACYCLINE,PO,97,14,#N/A
+Enterococcus faecalis,TETRACYCLINE,PO,505,30,#N/A
+Staph aureus(total),TETRACYCLINE,PO,1030,91,#N/A
+MRSA,TETRACYCLINE,PO,402,90,#N/A
+non-MRSA,TETRACYCLINE,PO,628,92,#N/A
+"Beta Strep, Grp B",TETRACYCLINE,PO,119,18,#N/A
+Strep pneumoniae,TETRACYCLINE,PO,8,63,#N/A
+Enterococcus faecium,VANCOMYCIN,IV,97,36,#N/A
+Enterococcus faecalis,VANCOMYCIN,IV,505,97,#N/A
+Staph aureus(total),VANCOMYCIN,IV,1030,99,#N/A
+MRSA,VANCOMYCIN,IV,402,99,#N/A
+non-MRSA,VANCOMYCIN,IV,628,100,#N/A
+"Beta Strep, Grp B",VANCOMYCIN,IV,119,100,#N/A
+Strep pneumoniae,VANCOMYCIN,IV,8,100,#N/A
+Enterococcus faecium,NITROFURANTOIN,PO,97,28,#N/A
+Enterococcus faecalis,NITROFURANTOIN,PO,505,98,#N/A
+Staph aureus(total),NITROFURANTOIN,PO,1030,99,#N/A
+MRSA,NITROFURANTOIN,PO,402,100,#N/A
+non-MRSA,NITROFURANTOIN,PO,628,99,#N/A
+Staph aureus(total),TRIMETH/SULFA,IV/PO,1030,91,#N/A
+MRSA,TRIMETH/SULFA,IV/PO,402,84,#N/A
+non-MRSA,TRIMETH/SULFA,IV/PO,628,96,#N/A
+Strep pneumoniae,TRIMETH/SULFA,IV/PO,8,71,#N/A

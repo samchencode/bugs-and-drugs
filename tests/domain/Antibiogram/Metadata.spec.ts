@@ -1,10 +1,9 @@
 import { Footnotes, Metadata } from '@/domain/Antibiogram';
-import MetadataParams from '@/domain/Antibiogram/Metadata/MetadataParams';
 import ResistanceRate from '@/domain/Antibiogram/Metadata/ResistanceRate';
 import ResistanceRates from '@/domain/Antibiogram/Metadata/ResistanceRates';
 
 describe('metadata', () => {
-  it('should create metadata with nulMetadataValues for undefined parameters', () => {
+  it('should create metadata with nullMetadataValues for undefined parameters', () => {
     const myMetaData = new Metadata({
       footnotes: new Footnotes(['myFootnote1', 'myFootnote2']),
     });
