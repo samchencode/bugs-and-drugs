@@ -20,7 +20,7 @@
     </header>
     <Table table={vm.table} />
     <Footnotes footnotes={vm.footnotes} />
-    <ResistanceRates resistanceRates={vm.resistanceRates} />
+    <!-- <ResistanceRates resistanceRates={vm.resistanceRates} /> -->
   {/if}
 </section>
 
