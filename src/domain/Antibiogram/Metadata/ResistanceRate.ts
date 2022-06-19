@@ -26,11 +26,9 @@ class ResistanceRate {
     else return false;
   }
   toString() {
-    if (this.hasYear())
-      return `${this.#label} ${this.#rate.getValue().toString()}, ${
-        this.#year
-      }`;
-    else return `${this.#label} ${this.#rate.getValue().toString()}`;
+    return this.hasYear()
+      ? `${this.#label} ${this.#rate.toString()}, ${this.#year}`
+      : `${this.#label} ${this.#rate.toString()}`;
   }
 }
 
