@@ -16,8 +16,8 @@ class NullMetadataValue extends MetadataValue {
   getResistanceRates(): ResistanceRate[] {
     return [];
   }
-  protected isIdentical(v: MetadataValue): boolean {
-    return v.isNull();
+  protected isIdentical(): boolean {
+    return true;
   }
 }
 
