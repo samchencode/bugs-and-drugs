@@ -14,22 +14,11 @@ class Metadata extends ValueObject {
 
   constructor(params: MetadataParams) {
     super();
-    const colOrder = params[ColumnOrder.slug];
-    const rowOrder = params[RowOrder.slug];
-    const footnotes = params[Footnotes.slug];
-    const resistancerates = params[ResistanceRates.slug];
-
-    if (colOrder != undefined) this.#columnOrder = colOrder;
-    else this.#columnOrder = new NullMetadataValue();
-
-    if (rowOrder != undefined) this.#rowOrder = rowOrder;
-    else this.#rowOrder = new NullMetadataValue();
-
-    if (resistancerates != undefined) this.#resistanceRates = resistancerates;
-    else this.#resistanceRates = new NullMetadataValue();
-
-    if (footnotes != undefined) this.#footnotes = footnotes;
-    else this.#footnotes = new NullMetadataValue();
+    this.#columnOrder = params[ColumnOrder.slug] ?? new NullMetadataValue();
+    this.#rowOrder = params[RowOrder.slug] ?? new NullMetadataValue();
+    this.#resistanceRates =
+      params[ResistanceRates.slug] ?? new NullMetadataValue();
+    this.#footnotes = params[Footnotes.slug] ?? new NullMetadataValue();
   }
   getColumnOrder() {
     return this.#columnOrder;
@@ -48,14 +37,10 @@ class Metadata extends ValueObject {
   }
 
   protected isIdentical(v: Metadata): boolean {
-    if (this.#columnOrder != undefined)
-      if (!this.#columnOrder.is(v.getColumnOrder())) return false;
-    if (this.#rowOrder != undefined)
-      if (!this.#rowOrder.is(v.getRowOrder())) return false;
-    if (this.#resistanceRates != undefined)
-      if (!this.#resistanceRates.is(v.getResistanceRates())) return false;
-    if (this.#footnotes != undefined)
-      if (!this.#footnotes.is(v.getFootnotes())) return false;
+    if (!this.#columnOrder.is(v.getColumnOrder())) return false;
+    if (!this.#rowOrder.is(v.getRowOrder())) return false;
+    if (!this.#resistanceRates.is(v.getResistanceRates())) return false;
+    if (!this.#footnotes.is(v.getFootnotes())) return false;
 
     return true;
   }
