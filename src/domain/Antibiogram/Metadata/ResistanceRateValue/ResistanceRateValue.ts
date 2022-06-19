@@ -32,7 +32,6 @@ class ResistanceRateValue extends ValueObject {
 }
 
 function stringContainsNumber(input: string) {
-  if (!input.trim) console.log(input, input.trim, typeof input);
   if (input.trim().length === 0) return false;
   const coercedToNaN = Number.isNaN(percentToInteger(input));
   if (coercedToNaN) return false;
