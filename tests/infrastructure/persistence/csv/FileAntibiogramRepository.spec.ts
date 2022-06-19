@@ -1,4 +1,4 @@
-import Antibiogram, {
+import {
   AntibiogramId,
   GramValues,
   IntegerNumberOfIsolates,

@@ -22,7 +22,7 @@
     "Pseudomonas aeruginosa"
   ],
   "resistance-rates": [
-    { "label": "ESBL", "rate": "5" },
-    { "label": "CRE", "rate": "<1%" }
+    { "label": "ESBL", "value": "5%" },
+    { "label": "CRE", "value": "<1%" }
   ]
 }

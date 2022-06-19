@@ -27,5 +27,5 @@
     "Levofloxacin susceptibilty not published, however Ciprofloxacin traditionally closely predicts levofloxacin activity for Pseudomonas",
     "R= Intrinsic (i.e. not acquired) resistance. All wild-type isolates are expected to display resistance"
   ],
-  "resistance-rates": [{ "label": "ESBL", "rate": "17.3", "year": 2021 }]
+  "resistance-rates": [{ "label": "ESBL", "value": "17.3%", "year": 2021 }]
 }

@@ -19,7 +19,7 @@
     "non-MRSA"
   ],
   "resistance-rates": [
-    { "label": "MRSA", "rate": "50" },
-    { "label": "VRE", "rate": "14" }
+    { "label": "MRSA", "value": "50%" },
+    { "label": "VRE", "value": "14%" }
   ]
 }
