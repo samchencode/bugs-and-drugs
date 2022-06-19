@@ -8,29 +8,40 @@ class ResistanceRateValue extends ValueObject {
 
   constructor(value: string) {
     super();
-    if (value == '<1%') this.#value = new LessThanOnePercentValue(value);
-    else this.#value = new PercentValue(+value);
+    this.validateInput(value);
+
+    this.#value =
+      value === '<1%'
+        ? new LessThanOnePercentValue()
+        : new PercentValue(percentToInteger(value));
   }
-  getValue() {
-    return this.#value;
+
+  toString() {
+    return this.#value.toString();
   }
+
   protected isIdentical(v: ResistanceRateValue): boolean {
-    return this.#value == v.getValue();
+    return this.#value.toString() === v.toString();
   }
 
   validateInput(value: string) {
-    if (value == '<1%') return true;
+    if (value === '<1%') return;
     if (!stringContainsNumber(value))
       throw new SensitivityValueValidationError(value);
   }
 }
 
 function stringContainsNumber(input: string) {
-  const trimmedInput = input.trim();
-  if (trimmedInput.length === 0) return false;
-  const coercedToNaN = Number.isNaN(+trimmedInput);
+  if (!input.trim) console.log(input, input.trim, typeof input);
+  if (input.trim().length === 0) return false;
+  const coercedToNaN = Number.isNaN(percentToInteger(input));
   if (coercedToNaN) return false;
   return true;
+}
+
+function percentToInteger(percent: string) {
+  const last = percent.split('').pop();
+  return last === '%' ? +percent.slice(0, -1) : +percent;
 }
 
 class SensitivityValueValidationError extends Error {
@@ -39,4 +50,5 @@ class SensitivityValueValidationError extends Error {
     this.message = 'Invalid resistance rate value: ' + inputValue;
   }
 }
+
 export default ResistanceRateValue;

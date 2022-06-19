@@ -5,12 +5,15 @@ class PercentValue implements ResistanceRateValueBehavior {
   constructor(value: number) {
     this.#value = value;
   }
+
   isLessThanOnePercent(): boolean {
     return false;
   }
-  getValue(): number | '<1%' {
+
+  getValue(): number {
     return this.#value;
   }
+
   toString(): string {
     return '' + Math.round(this.#value) + '%';
   }

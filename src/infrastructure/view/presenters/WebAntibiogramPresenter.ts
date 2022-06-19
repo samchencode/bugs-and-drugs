@@ -51,10 +51,9 @@ class WebAntibiogramPresenter implements AntibiogramPresenter {
         .getResistanceRates()
         .getResistanceRates()
         .map((resistanceRate) => {
-          console.log(resistanceRate.getRate().getValue().toString());
           return new WebResistanceRate(
             resistanceRate.getlabel(),
-            resistanceRate.getRate().getValue().toString(),
+            resistanceRate.getRate().toString(),
             resistanceRate.getYear()
           );
         }),
