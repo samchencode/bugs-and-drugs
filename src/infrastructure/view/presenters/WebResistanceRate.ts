@@ -7,7 +7,7 @@ class WebResistanceRate {
     this.#label = label;
     this.#year = year;
   }
-  getlabel(): string {
+  getLabel(): string {
     return this.#label;
   }
   getRate(): string {
