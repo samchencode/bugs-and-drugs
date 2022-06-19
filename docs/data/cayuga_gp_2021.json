@@ -1,0 +1,37 @@
+{
+  "column-order": [
+    "AMPICILLIN",
+    "CEFTRIAXONE",
+    "CEFOTAXIME",
+    "AUGMENTIN",
+    "AZITHROMYCIN",
+    "CEFACLOR",
+    "CEFUROXIME",
+    "CLINDAMYCIN",
+    "ERYTHROMYCIN",
+    "GENTAMICIN",
+    "LEVOFLOXACIN",
+    "OXACILLIN",
+    "PENICILLIN",
+    "TETRACYCLINE",
+    "VANCOMYCIN",
+    "NITROFURANTOIN",
+    "TRIMETH/SULFA"
+  ],
+  "row-order": [
+    "Enterococcus faecium",
+    "Enterococcus faecalis",
+    "Staph aureus(total)",
+    "MRSA",
+    "non-MRSA",
+    "Beta Strep, Grp B",
+    "Strep pneumoniae"
+  ],
+  "footnotes": [
+    "Interpretation of Susceptibility Results: Results are reported as minimum inhibitory concentrations (MIC), the minimum amount of drug needed to inhibit growth. Interpretive criteria are based on achievable serum levels. Thus, for certain antibiotics, the amount excreted into the urine via the kidneys is above the MIC, and may be reported as resistant, but the agent iseffective clinically in this site. Intermediate results (I) especially for beta lactam agents, indicate that the organism may be susceptible or resistant but the in vitro tests are not sensitive enough to determine specifically. For this antibiogram, intermediate results are not included within the %S category."
+  ],
+  "resistance-rates": [
+    { "label": "MRSA", "value": "39%" },
+    { "label": "VRE", "value": "13%" }
+  ]
+}

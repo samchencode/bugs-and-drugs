@@ -19,5 +19,13 @@
     "Klebsiella pneumoniae",
     "Proteus mirabilis",
     "Pseudomonas aeruginosa"
-  ]
+  ],
+  "footnotes": [
+    "Organisms with less than 30 isolates are excluded due to small sample size",
+    "CLSI breakpoints for pip/tazo and cefepime applied to Pseudomonas spp.",
+    "Tetracycline predicts doxycycline activity",
+    "Levofloxacin susceptibilty not published, however Ciprofloxacin traditionally closely predicts levofloxacin activity for Pseudomonas",
+    "R= Intrinsic (i.e. not acquired) resistance. All wild-type isolates are expected to display resistance"
+  ],
+  "resistance-rates": [{ "label": "ESBL", "value": "17.3%", "year": 2021 }]
 }
