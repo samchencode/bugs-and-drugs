@@ -41,7 +41,7 @@ describe('metadata', () => {
     });
     it('should throw an error if the resistance rate is  not valid', () => {
       try {
-        const r = new ResistanceRate('ESBL', 'f56Lbd', 2001);
+        new ResistanceRate('ESBL', 'f56Lbd', 2001);
       } catch (e) {
         expect(e).toHaveProperty(
           'message',
