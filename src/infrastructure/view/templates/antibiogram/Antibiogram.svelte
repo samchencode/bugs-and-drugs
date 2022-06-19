@@ -17,10 +17,10 @@
       <ul>
         <li>{vm.publishedAt} {'\u2212'} {vm.expiresAt}</li>
       </ul>
+      <ResistanceRates resistanceRates={vm.resistanceRates} />
     </header>
     <Table table={vm.table} />
     <Footnotes footnotes={vm.footnotes} />
-    <!-- <ResistanceRates resistanceRates={vm.resistanceRates} /> -->
   {/if}
 </section>
 

@@ -1,8 +1,8 @@
 region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gram,csv,metadata
-"Binghamton, NY",Lourdes,201906,202006,1,inpatient,positive,oll_inpt_gp_2019.csv,oll_inpt_gp_2019.json
-"Binghamton, NY",Lourdes,201906,202006,2,inpatient,negative,oll_inpt_gn_2019.csv,oll_inpt_gn_2019.json
-"Binghamton, NY",Lourdes,201906,202006,3,outpatient,positive,oll_outpt_gp_2019.csv,oll_outpt_gp_2019.json
-"Binghamton, NY",Lourdes,201906,202006,4,outpatient,negative,oll_outpt_gn_2019.csv,oll_outpt_gn_2019.json
+"Binghamton, NY",Lourdes,201906,202006,1,inpatient,positive,oll_inpt_gp_2019.csv,oll_inpt_2019.json
+"Binghamton, NY",Lourdes,201906,202006,2,inpatient,negative,oll_inpt_gn_2019.csv,oll_inpt_2019.json
+"Binghamton, NY",Lourdes,201906,202006,3,outpatient,positive,oll_outpt_gp_2019.csv,oll_outpt_2019.json
+"Binghamton, NY",Lourdes,201906,202006,4,outpatient,negative,oll_outpt_gn_2019.csv,oll_outpt_2019.json
 "Binghamton, NY",UHS,202001,202101,5,non-urine,negative,uhs_nonurine_gn_2020.csv,uhs_nonurine_gn_2020.json
 "Binghamton, NY",UHS,202001,202101,6,non-urine,positive,uhs_nonurine_gp_2020.csv,uhs_nonurine_gp_2020.json
 "Binghamton, NY",UHS,202001,202101,7,urine,unspecified,uhs_urine_2020.csv,uhs_urine_2020.json
@@ -10,11 +10,11 @@ region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gr
 "Ithaca, NY",Cayuga Medical Center,202001,202101,9,#N/A,positive,cayuga_gp_2020.csv,cayuga_gp_2020.json
 "Montour Falls, NY",Schuyler,202001,202101,10,#N/A,negative,schuyer_gn_2020.csv,schuyer_gn_2020.json
 "Montour Falls, NY",Schuyler,202001,202101,11,#N/A,positive,schuyer_gp_2020.csv,schuyer_gp_2020.json
-"Binghamton, NY",UHS,202101,202201,12,non-urine,positive,uhs_nonurine_gp_2021.csv,uhs_nonurine_gp_2021.json
-"Binghamton, NY",UHS,202101,202201,13,urine,positive,uhs_urine_gp_2021.csv,uhs_urine_gp_2021.json
-"Binghamton, NY",UHS,202101,202201,14,non-urine,negative,uhs_nonurine_gn_2021.csv,uhs_nonurine_gn_2021.json
-"Binghamton, NY",UHS,202101,202201,15,urine,negative,uhs_urine_gn_2021.csv,uhs_urine_gn_2021.json
-"Ithaca, NY",Cayuga Medical Center,202101,202201,16,#N/A,negative,cayuga_gn_2021.csv,cayuga_gn_2021.json
-"Ithaca, NY",Cayuga Medical Center,202101,202201,17,#N/A,positive,cayuga_gp_2021.csv,cayuga_gp_2021.json
-"Montour Falls, NY",Schuyler,202101,202201,18,#N/A,negative,schuyer_gn_2021.csv,schuyer_gn_2021.json
-"Montour Falls, NY",Schuyler,202101,202201,19,#N/A,positive,schuyer_gp_2021.csv,schuyer_gp_2021.json
+"Binghamton, NY",UHS,202101,202201,12,non-urine,positive,uhs_nonurine_gp_2021.csv,uhs_nonurine_2021.json
+"Binghamton, NY",UHS,202101,202201,13,urine,positive,uhs_urine_gp_2021.csv,uhs_urine_2021.json
+"Binghamton, NY",UHS,202101,202201,14,non-urine,negative,uhs_nonurine_gn_2021.csv,uhs_nonurine_2021.json
+"Binghamton, NY",UHS,202101,202201,15,urine,negative,uhs_urine_gn_2021.csv,uhs_urine_2021.json
+"Ithaca, NY",Cayuga Medical Center,202101,202201,16,#N/A,negative,cayuga_gn_2021.csv,cayuga_2021.json
+"Ithaca, NY",Cayuga Medical Center,202101,202201,17,#N/A,positive,cayuga_gp_2021.csv,cayuga_2021.json
+"Montour Falls, NY",Schuyler,202101,202201,18,#N/A,negative,schuyer_gn_2021.csv,schuyer_2021.json
+"Montour Falls, NY",Schuyler,202101,202201,19,#N/A,positive,schuyer_gp_2021.csv,schuyer_2021.json

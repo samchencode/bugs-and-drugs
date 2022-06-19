@@ -1,0 +1,35 @@
+{
+  "column-order": [
+    "AMOX/CLAV",
+    "AMPICILLIN",
+    "AZTREONAM",
+    "CEFAZOLIN",
+    "CEFTRIAXONE",
+    "CEFIPIME",
+    "CIPROFLOXACIN",
+    "GENTAMICIN",
+    "IMIPENIM",
+    "LEVOFLOXACIN",
+    "MEROPENEM",
+    "NITROFURANTOIN",
+    "PIP/TAZOBACTAM",
+    "TRIMETH/SUFLA"
+  ],
+  "row-order": [
+    "Escherichia coli",
+    "Klebsiella pneumoniae",
+    "Proteus mirabilis",
+    "Pseudomonas aeruginosa",
+    "Enterococcus faecium",
+    "Enterococcus faecalis",
+    "Staph aureus(total)",
+    "MRSA",
+    "non-MRSA"
+  ],
+  "resistance-rates": [
+    { "label": "MRSA", "value": "50%" },
+    { "label": "ESBL", "value": "5%" },
+    { "label": "CRE", "value": "<1%" },
+    { "label": "VRE", "value": "14%" }
+  ]
+}

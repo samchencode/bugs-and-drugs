@@ -1,0 +1,44 @@
+{
+  "column-order": [
+    "Nitrofurantoin--Urine use only",
+    "Tetracycline",
+    "Levofloxacin",
+    "Ceftriaxone",
+    "Ciprofloxacin",
+    "Gentamicin",
+    "Cefazolin",
+    "Clindamycin",
+    "Cefepime",
+    "Vancomycin",
+    "Ceftazidime",
+    "Piperacillin/tazobactam",
+    "Meropenem",
+    "Penicillin",
+    "Oxacillin",
+    "Trimethroprim/sulfamethoxazole",
+    "Ampicillin",
+    "Erythromycin"
+  ],
+  "row-order": [
+    "E. COLI",
+    "PSEUDOMONAS AERUGINOSA",
+    "KLEB.PNEUMO.",
+    "PROTEUS MIRABILIS",
+    "ACINETOBACTER BAUMANNII",
+    "ENTEROBACTER CLOACAE",
+    "MORGANELLA MORGANII",
+    "S. MALTOPHILIA (Inpt + Outpt)",
+    "HAEMOPHILUS INFLUENZAE (Inpt +Outpt)",
+    "ENTEROCOCCUS FAECALIS",
+    "ENTEROCOCCUS FAECIUM",
+    "COAGULASE NEG. STAPH",
+    "MRSA",
+    "MSSA",
+    "S. PNEUMONIAE (Inpt + outpt)"
+  ],
+  "resistance-rates": [
+    { "value": "9%", "label": "ESBL (E. coli)" },
+    { "value": "9%", "label": "ESBL (K. pneumoniae)" },
+    { "value": "1%", "label": "CRE" }
+  ]
+}

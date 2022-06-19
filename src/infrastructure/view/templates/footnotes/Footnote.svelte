@@ -2,7 +2,7 @@
   export let footnote;
 </script>
 
-<h1 class="footnote">{footnote}</h1>
+<p class="footnote">{footnote}</p>
 
 <style>
   .footnote {
