@@ -14,10 +14,10 @@
   {:else}
     <header class="header">
       <h1 class="header-title">{vm.info}</h1>
-      <ul>
+      <ul class="metadata">
         <li>{vm.publishedAt} {'\u2212'} {vm.expiresAt}</li>
+        <ResistanceRates resistanceRates={vm.resistanceRates} />
       </ul>
-      <ResistanceRates resistanceRates={vm.resistanceRates} />
     </header>
     <Table table={vm.table} />
     <Footnotes footnotes={vm.footnotes} />
@@ -29,6 +29,14 @@
     box-shadow: var(--bs);
     padding: var(--space-sm);
     margin-bottom: var(--space-lg);
+  }
+
+  .metadata {
+    margin-top: var(--space-xxs);
+  }
+
+  .metadata * {
+    margin-bottom: var(--space-sm);
   }
 
   .header {

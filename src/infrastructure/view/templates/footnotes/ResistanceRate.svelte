@@ -3,4 +3,15 @@
   export let resistanceRate: WebResistanceRate;
 </script>
 
-<h1>{resistanceRate.toString()}</h1>
+<p class="resistance-rate">
+  {resistanceRate.toString()}
+</p>
+
+<style>
+  .resistance-rate {
+    font-size: var(--font-sm);
+    padding: var(--space-xxs);
+    border-radius: 500px;
+    background-color: var(--main-surface-emphasis-color);
+  }
+</style>

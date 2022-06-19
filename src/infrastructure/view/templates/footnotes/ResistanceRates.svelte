@@ -4,10 +4,21 @@
   export let resistanceRates: WebResistanceRate[];
 </script>
 
-<ul>
+<ul class="resistance-rates">
   {#each resistanceRates as resistanceRate}
-    <li>
+    <li class="resistance-rates__item">
       <ResistanceRate {resistanceRate} />
     </li>
   {/each}
 </ul>
+
+<style>
+  .resistance-rates {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .resistance-rates__item {
+    margin: 0 var(--space-xs) var(--space-xs) 0;
+  }
+</style>
