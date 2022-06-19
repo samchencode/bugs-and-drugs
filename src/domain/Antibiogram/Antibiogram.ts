@@ -51,7 +51,7 @@ class Antibiogram extends Entity {
     this.gram = params?.gram ?? GramValues.UNSPECIFIED;
     this.place = params?.place ?? new UnknownPlace();
     this.interval = params?.interval ?? new DefaultInterval();
-    this.metadata = params?.metadata ?? new Metadata([]);
+    this.metadata = params?.metadata ?? new Metadata({});
   }
 
   isEmpty() {

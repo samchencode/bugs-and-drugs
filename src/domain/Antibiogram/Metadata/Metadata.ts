@@ -1,22 +1,47 @@
-import type MetadataValue from '@/domain/Antibiogram/Metadata/MetadataValue';
+import ColumnOrder from '@/domain/Antibiogram/Metadata/ColumnOrder';
+import Footnotes from '@/domain/Antibiogram/Metadata/Footnotes';
+import type MetadataParams from '@/domain/Antibiogram/Metadata/MetadataParams';
+import NullMetadataValue from '@/domain/Antibiogram/Metadata/NullMetaDataValue';
+import ResistanceRates from '@/domain/Antibiogram/Metadata/ResistanceRates';
+import RowOrder from '@/domain/Antibiogram/Metadata/RowOrder';
 import ValueObject from '@/domain/base/ValueObject';
 
 class Metadata extends ValueObject {
-  #values: Map<string, MetadataValue>;
+  #columnOrder: ColumnOrder | NullMetadataValue;
+  #rowOrder: RowOrder | NullMetadataValue;
+  #resistanceRates: ResistanceRates | NullMetadataValue;
+  #footnotes: Footnotes | NullMetadataValue;
 
-  constructor(values: MetadataValue[]) {
+  constructor(params: MetadataParams) {
     super();
-    this.#values = new Map(values.map((v) => [v.getSlug(), v]));
+    this.#columnOrder = params[ColumnOrder.slug] ?? new NullMetadataValue();
+    this.#rowOrder = params[RowOrder.slug] ?? new NullMetadataValue();
+    this.#resistanceRates =
+      params[ResistanceRates.slug] ?? new NullMetadataValue();
+    this.#footnotes = params[Footnotes.slug] ?? new NullMetadataValue();
   }
-
-  get(slug: string) {
-    return this.#values.get(slug);
+  getColumnOrder() {
+    return this.#columnOrder;
+  }
+  getRowOrder() {
+    return this.#rowOrder;
+  }
+  getResistanceRates() {
+    return this.#resistanceRates;
+  }
+  getArrayOfResistanceRates() {
+    return this.#resistanceRates.getResistanceRates();
+  }
+  getFootnotes() {
+    return this.#footnotes;
   }
 
   protected isIdentical(v: Metadata): boolean {
-    for (const [key, value] of this.#values.entries()) {
-      if (!v.get(key)?.is(value)) return false;
-    }
+    if (!this.#columnOrder.is(v.getColumnOrder())) return false;
+    if (!this.#rowOrder.is(v.getRowOrder())) return false;
+    if (!this.#resistanceRates.is(v.getResistanceRates())) return false;
+    if (!this.#footnotes.is(v.getFootnotes())) return false;
+
     return true;
   }
 }

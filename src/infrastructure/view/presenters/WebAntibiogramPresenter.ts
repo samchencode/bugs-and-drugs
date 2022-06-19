@@ -6,6 +6,7 @@ import type {
 } from '@/domain/ports/AntibiogramPresenter';
 import type { WebTable } from '@/infrastructure/view/presenters/WebTablePresenter';
 import type WebTablePresenter from '@/infrastructure/view/presenters/WebTablePresenter';
+import WebResistanceRate from '@/infrastructure/view/presenters/WebResistanceRate';
 
 type WebAntibiogram = {
   table: WebTable;
@@ -16,6 +17,8 @@ type WebAntibiogram = {
   expiresAt: string;
   gram: string;
   info: string;
+  footnotes: string[];
+  resistanceRates: WebResistanceRate[];
 };
 
 class WebAntibiogramPresenter implements AntibiogramPresenter {
@@ -34,7 +37,6 @@ class WebAntibiogramPresenter implements AntibiogramPresenter {
   buildViewModel(): WebAntibiogram | null {
     const table = this.#tablePresenter.buildViewModel();
     if (!this.#abg || !table) return null;
-
     return {
       table,
       antibiogramId: this.#abg.id.getValue(),
@@ -44,6 +46,17 @@ class WebAntibiogramPresenter implements AntibiogramPresenter {
       expiresAt: this.#abg.interval.expiresAtToString(),
       gram: this.#abg.gram.toString(),
       info: this.#makeSampleInfoString(this.#abg.info),
+      footnotes: this.#abg.metadata.getFootnotes().getValue(),
+      resistanceRates: this.#abg.metadata
+        .getResistanceRates()
+        .getResistanceRates()
+        .map((resistanceRate) => {
+          return new WebResistanceRate(
+            resistanceRate.getlabel(),
+            resistanceRate.getRate().toString(),
+            resistanceRate.getYear()
+          );
+        }),
     };
   }
 

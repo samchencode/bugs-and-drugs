@@ -1,0 +1,46 @@
+{
+  "column-order": [
+    "Ampicillin",
+    "Pip-Tazo",
+    "Oxacillin",
+    "Cefazolin",
+    "Ceftriaxone",
+    "Cefepime",
+    "Meropenem",
+    "Gentamicin",
+    "Tobramicin",
+    "Ciprofloxacin",
+    "Levofloxacin",
+    "TMP-SMX",
+    "Azithromycin",
+    "Clindamycin",
+    "Tetracycline",
+    "Vancomycin"
+  ],
+  "row-order": [
+    "Enterobacter cloacae",
+    "Escherichia coli",
+    "Klebsiella pneumoniae",
+    "Proteus mirabilis",
+    "Pseudomonas aeruginosa",
+    "Coagulase negative Staphylococcus",
+    "Enterococcus spp.",
+    "Staphylococcus aureus"
+  ],
+  "footnotes": [
+    "Organisms with less than 30 isolates are excluded due to small sample size",
+    "CLSI breakpoints for pip/tazo and cefepime applied to Pseudomonas spp.",
+    "Tetracycline predicts doxycycline activity",
+    "Levofloxacin susceptibilty not published, however Ciprofloxacin traditionally closely predicts levofloxacin activity for Pseudomonas",
+    "R = Intrinsic (i.e. not acquired) resistance. All wild-type isolates are expected to display resistance"
+  ],
+  "resistance-rates": [
+    { "label": "ESBL", "value": "17.3%", "year": 2021 },
+    { "label": "VRE", "year": 2021, "value": "33%" },
+    { "label": "VRE", "year": 2019, "value": "25%" },
+    { "label": "VRE", "year": 2018, "value": "32%" },
+    { "label": "MRSA", "year": 2021, "value": "39%" },
+    { "label": "MRSA", "year": 2019, "value": "51%" },
+    { "label": "MRSA", "year": 2018, "value": "42%" }
+  ]
+}

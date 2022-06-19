@@ -1,0 +1,45 @@
+{
+  "column-order": [
+    "Ampicillin",
+    "Pip-Tazo",
+    "Cefazolin/ cephalexin",
+    "Ceftriaxone",
+    "Cefepime",
+    "Gentamicin",
+    "Ciprofloxacin (Levofloxacin)",
+    "TMP-SMX",
+    "Nitrofurantoin",
+    "Vancomycin"
+  ],
+  "row-order": [
+    "Citrobacter freundii",
+    "Citrobacter koseri",
+    "Enterobacter (Klebsiella) aerogenes",
+    "Enterobacter cloacae",
+    "Escherichia coli",
+    "Klebsiella oxytoca",
+    "Klebsiella pneumoniae",
+    "Proteus mirabilis",
+    "Pseudomonas aeruginosa",
+    "Serratia marcescens",
+    "Coagulase negative Staphylococcus",
+    "Enterococcus spp.",
+    "Staphylococcus aureus"
+  ],
+  "resistance-rates": [
+    { "label": "ESBL", "year": 2021, "value": "3.9%" },
+    { "label": "VRE", "year": 2021, "value": "19%" },
+    { "label": "VRE", "year": 2019, "value": "25%" },
+    { "label": "VRE", "year": 2018, "value": "32%" },
+    { "label": "MRSA", "year": 2021, "value": "39%" },
+    { "label": "MRSA", "year": 2019, "value": "51%" },
+    { "label": "MRSA", "year": 2018, "value": "42%" }
+  ],
+  "footnotes": [
+    "Organisms with less than 30 isolates are excluded due to small sample size",
+    "CLSI breakpoints for pip/tazo and cefepime applied to Pseudomonas spp.",
+    "Enterobacter, Citrobacter freundii, and Serratia may develop resistance during prolonged therapy with 3rd-generation cephalosporins as a result of derepression of AmpC B-lactamase. Therefore, isolates that are initially susceptible may become resistant within 3 to 4 days after start of therapy.",
+    "Levofloxacin susceptibilty not published, however Ciprofloxacin traditionally closely predicts levofloxacin activity for Pseudomonas",
+    "R = Intrinsic (i.e. not acquired) resistance. All wild-type isolates are expected to display resistance"
+  ]
+}

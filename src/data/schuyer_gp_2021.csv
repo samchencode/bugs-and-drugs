@@ -1,0 +1,34 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info
+Enterococcus faecium,AMPICILLIN,IV/PO,8,33,#N/A
+Enterococcus faecalis,AMPICILLIN,IV/PO,43,98,#N/A
+Staph aureus(total),CLINDAMYCIN,IV/PO,103,76,#N/A
+MRSA,CLINDAMYCIN,IV/PO,52,77,#N/A
+non-MRSA,CLINDAMYCIN,IV/PO,51,75,#N/A
+Staph aureus(total),ERYTHROMYCIN,IV/PO,103,37,#N/A
+MRSA,ERYTHROMYCIN,IV/PO,52,17,#N/A
+non-MRSA,ERYTHROMYCIN,IV/PO,51,57,#N/A
+Staph aureus(total),GENTAMICIN,IV,103,100,#N/A
+MRSA,GENTAMICIN,IV,52,100,#N/A
+non-MRSA,GENTAMICIN,IV,51,100,#N/A
+Enterococcus faecium,LEVOFLOXACIN,IV/PO,8,17,#N/A
+Enterococcus faecalis,LEVOFLOXACIN,IV/PO,43,79,#N/A
+Staph aureus(total),OXACILLIN,IV,103,50,#N/A
+non-MRSA,OXACILLIN,IV,51,100,#N/A
+Enterococcus faecium,TETRACYCLINE,PO,8,50,#N/A
+Enterococcus faecalis,TETRACYCLINE,PO,43,9,#N/A
+Staph aureus(total),TETRACYCLINE,PO,103,95,#N/A
+MRSA,TETRACYCLINE,PO,52,90,#N/A
+non-MRSA,TETRACYCLINE,PO,51,100,#N/A
+Enterococcus faecium,VANCOMYCIN,IV,8,33,#N/A
+Enterococcus faecalis,VANCOMYCIN,IV,43,98,#N/A
+Staph aureus(total),VANCOMYCIN,IV,103,100,#N/A
+MRSA,VANCOMYCIN,IV,52,100,#N/A
+non-MRSA,VANCOMYCIN,IV,51,100,#N/A
+Enterococcus faecium,NITROFURANTOIN,PO,8,17,#N/A
+Enterococcus faecalis,NITROFURANTOIN,PO,43,98,#N/A
+Staph aureus(total),NITROFURANTOIN,PO,103,99,#N/A
+MRSA,NITROFURANTOIN,PO,52,98,#N/A
+non-MRSA,NITROFURANTOIN,PO,51,100,#N/A
+Staph aureus(total),TRIMETH/SULFA,IV/PO,103,95,#N/A
+MRSA,TRIMETH/SULFA,IV/PO,52,92,#N/A
+non-MRSA,TRIMETH/SULFA,IV/PO,51,98,#N/A

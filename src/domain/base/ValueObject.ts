@@ -1,7 +1,8 @@
 abstract class ValueObject {
   protected abstract isIdentical(v: ValueObject): boolean;
 
-  is(v: ValueObject) {
+  is(v: ValueObject | undefined) {
+    if (v == undefined) return false;
     const { constructor } = Object.getPrototypeOf(v);
     if (!(this instanceof constructor)) return false;
     return this.isIdentical(v);

@@ -14,7 +14,10 @@ import Antibiogram, {
   GramValues as G,
   Place,
   Interval,
+  Metadata,
 } from '@/domain/Antibiogram';
+import { ResistanceRates } from '@/domain/Antibiogram/Metadata';
+import ResistanceRate from '@/domain/Antibiogram/Metadata/ResistanceRate';
 
 const fakeData: SensitivityData[][] = [
   [
@@ -660,6 +663,13 @@ const fakeAntibiograms = [
     gram: G.POSITIVE,
     place: new Place('NY', 'Gotham City'),
     interval: new Interval(new Date(2020, 0), new Date(2021, 0)),
+    metadata: new Metadata({
+      'resistance-rates': new ResistanceRates([
+        new ResistanceRate('MRSA', '2%'),
+        new ResistanceRate('ESBL', '20%', 2022),
+        new ResistanceRate('VRE', '<1%'),
+      ]),
+    }),
   }),
 ];
 

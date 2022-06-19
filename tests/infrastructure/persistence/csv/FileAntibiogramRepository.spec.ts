@@ -99,7 +99,8 @@ describe('CsvAntibiogramRepository', () => {
           'Phalacrocorax albiventer,OXYMETAZOLINE HYDROCHLORIDE,IV,200,69,non-urine\n' +
           'Climacteris melanura,ondansetron hydrochloride,IV,512,49,"inpatient,urine"\n' +
           'Perameles nasuta,Sodium fluoride,#N/A,340,14,"inpatient,urine"', // without trailing new-line,
-        'meta.json': '{"footnotes":["hello world"]}',
+        'meta.json':
+          '{"footnotes":["hello world"],"resistance-rates":[{"label": "ESBL", "value": "10%", "year": 2010}]}',
       })
     );
 
@@ -183,11 +184,14 @@ describe('CsvAntibiogramRepository', () => {
 
     it('should load the metadata file when it exists', () =>
       repo.getAll().then(([abg1, abg2]) => {
-        expect(abg1.metadata.is(new Metadata([]))).toBe(false);
-        expect(abg1.metadata.get('footnotes')?.getValue()).toEqual([
+        expect(abg1.metadata.is(new Metadata({}))).toBe(false);
+        expect(abg1.metadata.getFootnotes()?.getValue()).toEqual([
           'hello world',
         ]);
-        expect(abg2.metadata.is(new Metadata([]))).toBe(true);
+        expect(
+          abg1.metadata.getArrayOfResistanceRates().map((rr) => rr.toString())
+        ).toEqual(['ESBL 10%, 2010']);
+        expect(abg2.metadata.is(new Metadata({}))).toBe(true);
       }));
   });
 });
