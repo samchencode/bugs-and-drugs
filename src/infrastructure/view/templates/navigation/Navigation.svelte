@@ -69,6 +69,15 @@
     >
       Contact Us
     </li>
+    <li
+      class="nav-link"
+      on:click={() => {
+        modal.showContribute();
+        navMenuHidden = !navMenuHidden;
+      }}
+    >
+      Contrubute Data
+    </li>
   </ul>
 </nav>
 
