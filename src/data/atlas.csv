@@ -15,3 +15,7 @@
 "Binghamton, NY",Lourdes,202106,202205,21,inpatient,positive,oll_inpt_gp_2021.csv,oll_inpt_gp_2021.json		
 "Binghamton, NY",Lourdes,202106,202205,22,outpatient,negative,oll_outpt_gn_2021.csv,oll_outpt_gn_2021.json								
 "Binghamton, NY",Lourdes,202106,202205,23,outpatient,positive,oll_outpt_gp_2021.csv,oll_outpt_gp_2021.json
+"Geneva and Penn Yan, NY",Finger Lakes Health (Long Term Care),202101,202201,24,#N/A,negative,Finger Lakes Health (LTC)_gn_2021.csv,Finger Lakes Health (LTC)_gn_2021.json
+"Geneva and Penn Yan, NY",Finger Lakes Health (Long Term Care),202101,202201,25,#N/A,positive,Finger Lakes Health (LTC)_gp_2021.csv,Finger Lakes Health (LTC)_gp_2021.json
+"Geneva and Penn Yan, NY",Finger Lakes Health,202101,202201,26,inpatient,negative,Finger Lakes Health_inpt_gn_2021.csv,Finger Lakes Health_inpt_gn_2021.json
+"Geneva and Penn Yan, NY",Finger Lakes Health,202101,202201,27,inpatient,positive,Finger Lakes Health_inpt_gp_2021.csv,Finger Lakes Health_inpt_gp_2021.json
