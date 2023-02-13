@@ -20,4 +20,5 @@ region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gr
 "Montour Falls, NY",Schuyler,202101,202201,19,#N/A,positive,schuyer_gp_2021.csv,schuyer_2021.json
 "Binghamton, NY",Lourdes,202106,202205,20,inpatient,negative,oll_inpt_gn_2021.csv,oll_inpt_gn_2021.json
 "Binghamton, NY",Lourdes,202106,202205,21,inpatient,positive,oll_inpt_gp_2021.csv,oll_inpt_gp_2021.json								
-								
+"Binghamton, NY",Lourdes,202106,202205,22,outpatient,negative,oll_outpt_gn_2021.csv,oll_outpt_gn_2021.json								
+"Binghamton, NY",Lourdes,202106,202205,23,outpatient,positive,oll_outpt_gp_2021.csv,oll_outpt_gp_2021.json
