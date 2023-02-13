@@ -11,3 +11,5 @@
 "Ithaca, NY",Cayuga Medical Center,202101,202201,17,#N/A,positive,cayuga_gp_2021.csv,cayuga_2021.json
 "Montour Falls, NY",Schuyler,202101,202201,18,#N/A,negative,schuyer_gn_2021.csv,schuyer_2021.json
 "Montour Falls, NY",Schuyler,202101,202201,19,#N/A,positive,schuyer_gp_2021.csv,schuyer_2021.json
+"Binghamton, NY",Lourdes,202106,202205,20,inpatient,negative,oll_inpt_gn_2021.csv,oll_inpt_gn_2021.json
+"Binghamton, NY",Lourdes,202106,202205,21,inpatient,positive,oll_inpt_gp_2021.csv,oll_inpt_gp_2021.json		

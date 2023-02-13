@@ -1,0 +1,55 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info,row,column
+ENTEROCOCCUS FAECALIS,Nitrofurantoin--Urine use only,#N/A,113,100,#N/A,0,0
+ENTEROCOCCUS FAECALIS,Tetracycline,#N/A,113,16,#N/A,0,1
+ENTEROCOCCUS FAECALIS,Levofloxacin,#N/A,113,72,#N/A,0,2
+ENTEROCOCCUS FAECALIS,Ciprofloxacin,#N/A,113,72,#N/A,0,4
+ENTEROCOCCUS FAECALIS,Gentamicin,#N/A,113,67,#N/A,0,5
+ENTEROCOCCUS FAECALIS,Vancomycin,#N/A,113,96,#N/A,0,9
+ENTEROCOCCUS FAECALIS,Penicillin,#N/A,113,97,#N/A,0,13
+ENTEROCOCCUS FAECALIS,Ampicillin,#N/A,113,100,#N/A,0,16
+ENTEROCOCCUS FAECIUM,Nitrofurantoin--Urine use only,#N/A,55,14,#N/A,1,0
+ENTEROCOCCUS FAECIUM,Tetracycline,#N/A,55,9,#N/A,1,1
+ENTEROCOCCUS FAECIUM,Levofloxacin,#N/A,55,5,#N/A,1,2
+ENTEROCOCCUS FAECIUM,Ciprofloxacin,#N/A,55,5,#N/A,1,4
+ENTEROCOCCUS FAECIUM,Gentamicin,#N/A,55,93,#N/A,1,5
+ENTEROCOCCUS FAECIUM,Vancomycin,#N/A,55,21,#N/A,1,9
+ENTEROCOCCUS FAECIUM,Penicillin,#N/A,55,5,#N/A,1,13
+ENTEROCOCCUS FAECIUM,Ampicillin,#N/A,55,5,#N/A,1,16
+COAGULASE NEG. STAPH,Nitrofurantoin--Urine use only,#N/A,85,99,#N/A,2,0
+COAGULASE NEG. STAPH,Tetracycline,#N/A,85,80,#N/A,2,1
+COAGULASE NEG. STAPH,Levofloxacin,#N/A,85,66,#N/A,2,2
+COAGULASE NEG. STAPH,Ciprofloxacin,#N/A,85,65,#N/A,2,4
+COAGULASE NEG. STAPH,Gentamicin,#N/A,85,86,#N/A,2,5
+COAGULASE NEG. STAPH,Clindamycin,#N/A,85,54,#N/A,2,7
+COAGULASE NEG. STAPH,Vancomycin,#N/A,85,100,#N/A,2,9
+COAGULASE NEG. STAPH,Oxacillin,#N/A,85,35,#N/A,2,14
+COAGULASE NEG. STAPH,Trimeth/sulfamethoxazole,#N/A,85,65,#N/A,2,15
+COAGULASE NEG. STAPH,Erythromycin,#N/A,85,44,#N/A,2,17
+Methicillin Sensitive Staph aureus (MSSA),Nitrofurantoin--Urine use only,#N/A,130,99,#N/A,3,0
+Methicillin Sensitive Staph aureus (MSSA),Tetracycline,#N/A,130,94,#N/A,3,1
+Methicillin Sensitive Staph aureus (MSSA),Levofloxacin,#N/A,130,92,#N/A,3,2
+Methicillin Sensitive Staph aureus (MSSA),Ciprofloxacin,#N/A,130,92,#N/A,3,4
+Methicillin Sensitive Staph aureus (MSSA),Gentamicin,#N/A,130,99,#N/A,3,5
+Methicillin Sensitive Staph aureus (MSSA),Cefazolin,#N/A,130,100,#N/A,3,6
+Methicillin Sensitive Staph aureus (MSSA),Clindamycin,#N/A,130,74,#N/A,3,7
+Methicillin Sensitive Staph aureus (MSSA),Vancomycin,#N/A,130,100,#N/A,3,9
+Methicillin Sensitive Staph aureus (MSSA),Oxacillin,#N/A,130,100,#N/A,3,14
+Methicillin Sensitive Staph aureus (MSSA),Trimeth/sulfamethoxazole,#N/A,130,99,#N/A,3,15
+Methicillin Sensitive Staph aureus (MSSA),Erythromycin,#N/A,130,59,#N/A,3,17
+Methicillin Resistant Staph aureus (MRSA),Nitrofurantoin--Urine use only,#N/A,108,100,#N/A,4,0
+Methicillin Resistant Staph aureus (MRSA),Tetracycline,#N/A,108,84,#N/A,4,1
+Methicillin Resistant Staph aureus (MRSA),Levofloxacin,#N/A,108,33,#N/A,4,2
+Methicillin Resistant Staph aureus (MRSA),Ciprofloxacin,#N/A,108,30,#N/A,4,4
+Methicillin Resistant Staph aureus (MRSA),Gentamicin,#N/A,108,100,#N/A,4,5
+Methicillin Resistant Staph aureus (MRSA),Cefazolin,#N/A,108,0,#N/A,4,6
+Methicillin Resistant Staph aureus (MRSA),Clindamycin,#N/A,108,51,#N/A,4,7
+Methicillin Resistant Staph aureus (MRSA),Vancomycin,#N/A,108,100,#N/A,4,9
+Methicillin Resistant Staph aureus (MRSA),Oxacillin,#N/A,108,0,#N/A,4,14
+Methicillin Resistant Staph aureus (MRSA),Trimeth/sulfamethoxazole,#N/A,108,95,#N/A,4,15
+Methicillin Resistant Staph aureus (MRSA),Erythromycin,#N/A,108,9,#N/A,4,17
+S. PNEUMONIAE (Inpt + outpt),Levofloxacin,#N/A,35,100,#N/A,5,2
+S. PNEUMONIAE (Inpt + outpt),Ceftriaxone,#N/A,35,100,#N/A,5,3
+S. PNEUMONIAE (Inpt + outpt),Vancomycin,#N/A,35,100,#N/A,5,9
+S. PNEUMONIAE (Inpt + outpt),Penicillin,#N/A,35,100,#N/A,5,13
+S. PNEUMONIAE (Inpt + outpt),Trimeth/sulfamethoxazole,#N/A,35,97,#N/A,5,15
+S. PNEUMONIAE (Inpt + outpt),Erythromycin,#N/A,35,82,#N/A,5,17
