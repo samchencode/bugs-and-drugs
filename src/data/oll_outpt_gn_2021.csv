@@ -1,0 +1,57 @@
+organism_name,antibiotic_name,antibiotic_route,isolates,value,sample_info,row,column
+E. COLI,Nitrofurantoin--Urine only,#N/A,3118,97,#N/A,0,0
+E. COLI,Levofloxacin,#N/A,3118,86,#N/A,0,2
+E. COLI,Ceftriaxone,#N/A,3118,95,#N/A,0,3
+E. COLI,Gentamicin,#N/A,3118,93,#N/A,0,5
+E. COLI,Cefazolin,#N/A,3118,93,#N/A,0,6
+E. COLI,Cefepime,#N/A,3118,97,#N/A,0,8
+E. COLI,Piperacillin/tazobactam,#N/A,3118,98,#N/A,0,11
+E. COLI,Meropenem,#N/A,3118,100,#N/A,0,12
+E. COLI,Trimeth/sulfamethoxazole,#N/A,3118,82,#N/A,0,15
+E. COLI,Ampicillin,#N/A,3118,61,#N/A,0,16
+E. COLI,Ampicillin/sulbactam,#N/A,3118,69,#N/A,0,18
+PSEUDOMONAS AERUGINOSA,Levofloxacin,#N/A,272,84,#N/A,1,2
+PSEUDOMONAS AERUGINOSA,Ciprofloxacin,#N/A,272,89,#N/A,1,4
+PSEUDOMONAS AERUGINOSA,Gentamicin,#N/A,272,97,#N/A,1,5
+PSEUDOMONAS AERUGINOSA,Cefepime,#N/A,272,95,#N/A,1,8
+PSEUDOMONAS AERUGINOSA,Piperacillin/tazobactam,#N/A,272,94,#N/A,1,11
+PSEUDOMONAS AERUGINOSA,Meropenem,#N/A,272,96,#N/A,1,12
+KLEB.PNEUMO.,Nitrofurantoin--Urine only,#N/A,606,28,#N/A,2,0
+KLEB.PNEUMO.,Levofloxacin,#N/A,606,98,#N/A,2,2
+KLEB.PNEUMO.,Ceftriaxone,#N/A,606,98,#N/A,2,3
+KLEB.PNEUMO.,Gentamicin,#N/A,606,98,#N/A,2,5
+KLEB.PNEUMO.,Cefazolin,#N/A,606,95,#N/A,2,6
+KLEB.PNEUMO.,Cefepime,#N/A,606,96,#N/A,2,8
+KLEB.PNEUMO.,Meropenem,#N/A,606,99,#N/A,2,12
+KLEB.PNEUMO.,Trimeth/sulfamethoxazole,#N/A,606,92,#N/A,2,15
+KLEB.PNEUMO.,Ampicillin/sulbactam,#N/A,606,86,#N/A,2,18
+ENTEROBACTER CLOACAE,Nitrofurantoin--Urine only,#N/A,133,24,#N/A,3,0
+ENTEROBACTER CLOACAE,Levofloxacin,#N/A,133,98,#N/A,3,2
+ENTEROBACTER CLOACAE,Ceftriaxone,#N/A,133,91,#N/A,3,3
+ENTEROBACTER CLOACAE,Gentamicin,#N/A,133,98,#N/A,3,5
+ENTEROBACTER CLOACAE,Cefepime,#N/A,133,98,#N/A,3,8
+ENTEROBACTER CLOACAE,Meropenem,#N/A,133,99,#N/A,3,12
+ENTEROBACTER CLOACAE,Trimeth/sulfamethoxazole,#N/A,133,91,#N/A,3,15
+ENTEROBACTER CLOACAE,Ampicillin/sulbactam,#N/A,133,92,#N/A,3,18
+PROTEUS MIRABILIS,Levofloxacin,#N/A,337,85,#N/A,4,2
+PROTEUS MIRABILIS,Ceftriaxone,#N/A,337,93,#N/A,4,3
+PROTEUS MIRABILIS,Gentamicin,#N/A,337,92,#N/A,4,5
+PROTEUS MIRABILIS,Cefazolin,#N/A,337,90,#N/A,4,6
+PROTEUS MIRABILIS,Cefepime,#N/A,337,94,#N/A,4,8
+PROTEUS MIRABILIS,Meropenem,#N/A,337,100,#N/A,4,12
+PROTEUS MIRABILIS,Trimeth/sulfamethoxazole,#N/A,337,77,#N/A,4,15
+PROTEUS MIRABILIS,Ampicillin,#N/A,337,82,#N/A,4,16
+PROTEUS MIRABILIS,Ampicillin/sulbactam,#N/A,337,88,#N/A,4,18
+MORGANELLA MORGANI,Levofloxacin,#N/A,48,92,#N/A,5,2
+MORGANELLA MORGANI,Ceftriaxone,#N/A,48,94,#N/A,5,3
+MORGANELLA MORGANI,Gentamicin,#N/A,48,98,#N/A,5,5
+MORGANELLA MORGANI,Cefazolin,#N/A,48,2,#N/A,5,6
+MORGANELLA MORGANI,Cefepime,#N/A,48,100,#N/A,5,8
+MORGANELLA MORGANI,Meropenem,#N/A,48,100,#N/A,5,12
+MORGANELLA MORGANI,Trimeth/sulfamethoxazole,#N/A,48,92,#N/A,5,15
+MORGANELLA MORGANI,Ampicillin,#N/A,48,2,#N/A,5,16
+MORGANELLA MORGANI,Ampicillin/sulbactam,#N/A,48,10,#N/A,5,18
+HAEMOPHILUS INFLUENZAE (Inpt +Outpt),Ampicillin,#N/A,182,74,#N/A,6,16
+S. MALTOPHILIA (Inpt + Outpt),Levofloxacin,#N/A,30,90,#N/A,7,2
+S. MALTOPHILIA (Inpt + Outpt),Trimeth/sulfamethoxazole,#N/A,30,93,#N/A,7,15
+S. MALTOPHILIA (Inpt + Outpt),Minocycline,#N/A,30,100,#N/A,7,19
