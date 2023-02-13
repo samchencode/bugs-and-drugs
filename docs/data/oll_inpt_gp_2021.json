@@ -1,0 +1,35 @@
+{
+  "column-order": [
+    "Nitrofurantoin--Urine use only",
+    "Tetracycline",
+    "Levofloxacin",
+    "Ceftriaxone",
+    "Ciprofloxacin",
+    "Gentamicin",
+    "Cefazolin",
+    "Clindamycin",
+    "Cefepime",
+    "Vancomycin",
+    "Ceftazidime",
+    "Piperacillin/tazobactam",
+    "Meropenem",
+    "Penicillin",
+    "Oxacillin",
+    "Trimeth/sulfamethoxazole",
+    "Ampicillin",
+    "Erythromycin",
+    "Minocycline"
+  ],
+  "row-order": [
+    "ENTEROCOCCUS FAECALIS",
+    "ENTEROCOCCUS FAECIUM",
+    "COAGULASE NEG. STAPH",
+    "Methicillin Sensitive Staph aureus (MSSA)",
+    "Methicillin Resistant Staph aureus (MRSA)",
+    "S. PNEUMONIAE (Inpt + outpt)"
+  ],
+  "footnotes": [
+    "ENTEROCOCCUS FAECALIS and ENTEROCOCCUS FAECIUM have synergistic resistance to gentamicin"
+  ],
+  "resistance-rates": [{ "label": "MRSA", "value": "45%" }]
+}

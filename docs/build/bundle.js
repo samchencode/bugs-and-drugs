@@ -5396,6 +5396,14 @@ var app = (function () {
       dismiss: 'Got it',
   };
 
+  const contribute = {
+      body: `Please send us your institution's Antibiogram if you you are permitted to do so. More data means more utility for all of our users! You can send us your basic Antibiogram format, or to expedite the process you can make a copy of the following google sheet and send us the filled out template:
+
+  https://docs.google.com/spreadsheets/d/1PX5rarRr56tViyypWGZMep6F95fmDW9QNwtBdMMjnP8/edit?usp=sharing`,
+      header: 'Contribute Data!',
+      dismiss: 'Thank you!',
+  };
+
   const disclaimer = {
       body: 'Dear Colleague, please note carefully that these antibiograms only reflect the testing results for the year and locales noted. You have to know how to interpret the data here and you have to know how to use antibiogram information when making clinical care decisions. This app is no substitute for knowledge, training, and experience treating infections. The app is merely a quick reference for commonly used information to assist local clinicians. Remember, always do your own thinking.',
       header: 'Disclaimer',
@@ -5413,6 +5421,7 @@ var app = (function () {
   const showDisclaimer = () => showModal(disclaimer);
   const showAbout = () => showModal(about);
   const showContact = () => showModal(contact);
+  const showContribute = () => showModal(contribute);
   const hideModal = () => set({
       hidden: true,
       header: '',
@@ -5424,6 +5433,7 @@ var app = (function () {
       showDisclaimer,
       showContact,
       showAbout,
+      showContribute,
       hideModal,
   };
 
@@ -5556,6 +5566,8 @@ var app = (function () {
   	let li1;
   	let t6;
   	let li2;
+  	let t8;
+  	let li3;
   	let mounted;
   	let dispose;
   	let if_block0 = !/*onHomePage*/ ctx[3] && create_if_block_3();
@@ -5590,11 +5602,15 @@ var app = (function () {
   			t6 = space();
   			li2 = element("li");
   			li2.textContent = "Contact Us";
+  			t8 = space();
+  			li3 = element("li");
+  			li3.textContent = "Contrubute Data";
   			attr(h1, "class", "title svelte-5zn6op");
   			attr(button, "class", "nav-menu-toggle svelte-5zn6op");
   			attr(li0, "class", "nav-link svelte-5zn6op");
   			attr(li1, "class", "nav-link svelte-5zn6op");
   			attr(li2, "class", "nav-link svelte-5zn6op");
+  			attr(li3, "class", "nav-link svelte-5zn6op");
   			attr(ul, "class", "nav-link-list svelte-5zn6op");
   			toggle_class(ul, "nav-link-list--hidden", /*navMenuHidden*/ ctx[2]);
   			attr(nav, "class", "svelte-5zn6op");
@@ -5614,13 +5630,16 @@ var app = (function () {
   			append(ul, li1);
   			append(ul, t6);
   			append(ul, li2);
+  			append(ul, t8);
+  			append(ul, li3);
 
   			if (!mounted) {
   				dispose = [
   					listen(button, "click", /*click_handler*/ ctx[9]),
   					listen(li0, "click", /*click_handler_1*/ ctx[10]),
   					listen(li1, "click", /*click_handler_2*/ ctx[11]),
-  					listen(li2, "click", /*click_handler_3*/ ctx[12])
+  					listen(li2, "click", /*click_handler_3*/ ctx[12]),
+  					listen(li3, "click", /*click_handler_4*/ ctx[13])
   				];
 
   				mounted = true;
@@ -5695,6 +5714,11 @@ var app = (function () {
   		$$invalidate(2, navMenuHidden = !navMenuHidden);
   	};
 
+  	const click_handler_4 = () => {
+  		modal.showContribute();
+  		$$invalidate(2, navMenuHidden = !navMenuHidden);
+  	};
+
   	$$self.$$.update = () => {
   		if ($$self.$$.dirty & /*$location*/ 256) {
   			$$invalidate(3, onHomePage = $location === '/');
@@ -5732,7 +5756,8 @@ var app = (function () {
   		click_handler,
   		click_handler_1,
   		click_handler_2,
-  		click_handler_3
+  		click_handler_3,
+  		click_handler_4
   	];
   }
 
