@@ -1,0 +1,42 @@
+{
+  "column-order": [
+    "AMPICILLIN/SULBACTAM(UNASYN)",
+    "AMPICILLIN",
+    "AUGEMENTIN",
+    "AZTREONAM",
+    "CEFEPIME",
+    "CEFTRIAXONE",
+    "CEFTAZADIME/AVIBACTAM",
+    "CIPROFLOXACIN",
+    "CLINDAMYCIN",
+    "ERTAPENEM",
+    "ERYTHROMYCIN",
+    "GENTAMICIN",
+    "LEVOFLOXACIN",
+    "MEROPENEM",
+    "NITROFURANTOIN                 (URINE ISOLATES ONLY)",
+    "OXACILLIN",
+    "PIPERACILLIN/TAZO",
+    "TRIMETH/SULFAMETH",
+    "VANCOMYCIN"
+  ],
+  "row-order": [
+    "ACINETOBACTER BAUMANNII",
+    "CITROBACTER FREUNDII",
+    "KLEBSIELLA AEROGENES",
+    "ENTEROBACTER CLOACAE",
+    "ESCHERICHIA COLI",
+    "KLEBSIELLA OXYTOCA",
+    "KLEBSIELLA PNEUMONIAE",
+    "PSEUDOMONAS AERUGINOSA",
+    "PROTEUS MIRABILIS"
+  ],
+  "footnotes": [
+    "According to the Clinical Laboratory Standards Institute (CLSI) document M39-A2 \"The minimum number of isolates of each species listed is 30…\" explanation: small numbers potentiate large interval changes in percent susceptible. ",
+    "43% OF STAPH AUREUS ARE MRSA, 70% OF E. FAECIUM ARE VRE",
+    "STREPTOCOCCUS PNEUMONIAE TOTAL OF 2 ISOLATES WITH 100% SUSCEPTIBLE TO PENICILLIN",
+    "*ISOLATES INCLUDE BOTH METHICILLIN-SENSITIVE AND METHICILLIN-RESISTANT STRAINS.",
+    "ALL METHICILLIN-RESISTANT STRAINS ARE RESISTANT TO ALL CEPHALOSPORINS AND PENICILLINS."
+  ],
+  "resistance-rates": []
+}
