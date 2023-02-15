@@ -1,8 +1,4 @@
 ﻿region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gram,csv,metadata
-"Binghamton, NY",Lourdes,201906,202006,1,inpatient,positive,oll_inpt_gp_2019.csv,oll_inpt_2019.json
-"Binghamton, NY",Lourdes,201906,202006,2,inpatient,negative,oll_inpt_gn_2019.csv,oll_inpt_2019.json
-"Binghamton, NY",Lourdes,201906,202006,3,outpatient,positive,oll_outpt_gp_2019.csv,oll_outpt_2019.json
-"Binghamton, NY",Lourdes,201906,202006,4,outpatient,negative,oll_outpt_gn_2019.csv,oll_outpt_2019.json
 "Binghamton, NY",UHS,202101,202201,12,non-urine,positive,uhs_nonurine_gp_2021.csv,uhs_nonurine_2021.json
 "Binghamton, NY",UHS,202101,202201,13,urine,positive,uhs_urine_gp_2021.csv,uhs_urine_2021.json
 "Binghamton, NY",UHS,202101,202201,14,non-urine,negative,uhs_nonurine_gn_2021.csv,uhs_nonurine_2021.json
@@ -15,7 +11,7 @@
 "Binghamton, NY",Lourdes,202106,202205,21,inpatient,positive,oll_inpt_gp_2021.csv,oll_inpt_gp_2021.json		
 "Binghamton, NY",Lourdes,202106,202205,22,outpatient,negative,oll_outpt_gn_2021.csv,oll_outpt_gn_2021.json								
 "Binghamton, NY",Lourdes,202106,202205,23,outpatient,positive,oll_outpt_gp_2021.csv,oll_outpt_gp_2021.json
-"Geneva and Penn Yan, NY",Finger Lakes Health (Long Term Care),202101,202201,24,#N/A,negative,Finger Lakes Health (LTC)_gn_2021.csv,Finger Lakes Health (LTC)_gn_2021.json
-"Geneva and Penn Yan, NY",Finger Lakes Health (Long Term Care),202101,202201,25,#N/A,positive,Finger Lakes Health (LTC)_gp_2021.csv,Finger Lakes Health (LTC)_gp_2021.json
-"Geneva and Penn Yan, NY",Finger Lakes Health,202101,202201,26,inpatient,negative,Finger Lakes Health_inpt_gn_2021.csv,Finger Lakes Health_inpt_gn_2021.json
-"Geneva and Penn Yan, NY",Finger Lakes Health,202101,202201,27,inpatient,positive,Finger Lakes Health_inpt_gp_2021.csv,Finger Lakes Health_inpt_gp_2021.json
+"Geneva & Penn Yan, NY",Finger Lakes Health,202101,202201,24,long term care,negative,Finger-Lakes-Health-(LTC)_gn_2021.csv,Finger-Lakes-Health-(LTC)_gn_2021.json
+"Geneva & Penn Yan, NY",Finger Lakes Health,202101,202201,25,long term care,positive,Finger Lakes Health (LTC)_gp_2021.csv,Finger Lakes Health (LTC)_gp_2021.json
+"Geneva & Penn Yan, NY",Finger Lakes Health,202101,202201,26,inpatient,negative,Finger Lakes Health_inpt_gn_2021.csv,Finger Lakes Health_inpt_gn_2021.json
+"Geneva & Penn Yan, NY",Finger Lakes Health,202101,202201,27,inpatient,positive,Finger Lakes Health_inpt_gp_2021.csv,Finger Lakes Health_inpt_gp_2021.json
