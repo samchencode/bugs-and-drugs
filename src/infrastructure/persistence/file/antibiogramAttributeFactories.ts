@@ -51,6 +51,7 @@ export const infoItem = (value: string) => {
   if (value === 'meningitis') return Sources.MENINGITIS;
   if (value === 'non-meningitis') return Sources.NONMENINGITIS;
   if (value === 'oral') return Sources.ORAL;
+  if (value === 'long term care') return Settings.LTC;
   throw new Error('Unknown Sample Info Item' + value);
 };
 
