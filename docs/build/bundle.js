@@ -6265,12 +6265,24 @@ var app = (function () {
       }
   }
 
+  class LongTermCare extends SettingValue {
+      toString() {
+          return 'Long Term Care';
+      }
+      isIdentical() {
+          return true;
+      }
+  }
+
   const Settings = {
       get INPATIENT() {
           return new Setting(new InPatient());
       },
       get OUTPATIENT() {
           return new Setting(new OutPatient());
+      },
+      get LTC() {
+          return new Setting(new LongTermCare());
       },
   };
 
@@ -9050,6 +9062,8 @@ var app = (function () {
           return Sources.NONMENINGITIS;
       if (value === 'oral')
           return Sources.ORAL;
+      if (value === 'long term care')
+          return Settings.LTC;
       throw new Error('Unknown Sample Info Item' + value);
   };
   const info = (listStr) => {
