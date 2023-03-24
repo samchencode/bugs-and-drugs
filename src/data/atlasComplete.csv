@@ -26,3 +26,7 @@ region,institution,year_month_start,year_month_end,antibiogram_id,sample_info,gr
 "Geneva & Penn Yan, NY",Finger Lakes Health,202101,202201,25,long term care,positive,Finger Lakes Health (LTC)_gp_2021.csv,Finger Lakes Health (LTC)_gp_2021.json
 "Geneva & Penn Yan, NY",Finger Lakes Health,202101,202201,26,inpatient,negative,Finger Lakes Health_inpt_gn_2021.csv,Finger Lakes Health_inpt_gn_2021.json
 "Geneva & Penn Yan, NY",Finger Lakes Health,202101,202201,27,inpatient,positive,Finger Lakes Health_inpt_gp_2021.csv,Finger Lakes Health_inpt_gp_2021.json
+"Syracuse, NY",Crouse Hospital,202101,202112,28,inpatient,unspecified,Crouse Hospital_inpt_2021.csv,Crouse Hospital_inpt_2021.json
+"Syracuse, NY",Crouse Hospital,202101,202112,29,outpatient,unspecified,Crouse Hospital_outpt_2021.csv,Crouse Hospital_outpt_2021.json
+"Syracuse, NY",St. Joseph’s Health,202101,202112,30,outpatient,unspecified,St. Joseph’s Health_outpt_2021.csv,St. Joseph’s Health_outpt_2021.json
+"Syracuse, NY",St. Joseph’s Health,202101,202112,31,inpatient,unspecified,St. Joseph’s Health_inpt_2021.csv,St. Joseph’s Health_inpt_2021.json
